@@ -56,8 +56,10 @@ jobs:
       - name: Pages return 200 with content
         run: |
           check() {
-            body=$(curl -sf "http://localhost:8080/$1") || { echo "FAIL (HTTP): $1"; exit 1; }
-            echo "$body" | grep -q "$2" || { echo "FAIL (content): $1 missing '$2'"; exit 1; }
+            curl -sf "http://localhost:8080/$1" -o /tmp/body || { echo "FAIL (HTTP): $1"; exit 1; }
+            if [ -n "$2" ]; then
+              grep -qF -- "$2" /tmp/body || { echo "FAIL (content): $1 missing '$2'"; exit 1; }
+            fi
             echo "OK: $1"
           }
           check "" "MayaTrail"
