@@ -1,0 +1,71 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build and smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t mayatrail-site:pr .
+
+      - name: No internal files in the image
+        run: |
+          leaked=$(docker run --rm mayatrail-site:pr \
+            find /usr/share/nginx/html \
+              \( -name '*Pitch*' -o -name '*Market*' -o -name '*GTM*' \
+                 -o -name '*Battlecards*' -o -name '*Demo Script*' \
+                 -o -name '*deck-stage*' \
+                 -o -path '*/internal/*' -o -path '*/logo/*' \))
+          [ -z "$leaked" ] || { echo "Internal files leaked into the image:"; echo "$leaked"; exit 1; }
+
+      - name: Run container
+        run: |
+          docker run -d --name site-pr -p 8080:80 mayatrail-site:pr
+          # wait for nginx to come up
+          for i in $(seq 1 10); do
+            curl -sf http://localhost:8080/health && break
+            sleep 1
+          done
+
+      - name: Pages return 200 with content
+        run: |
+          check() {
+            curl -sf "http://localhost:8080/$1" -o /tmp/body || { echo "FAIL (HTTP): $1"; exit 1; }
+            if [ -n "$2" ]; then
+              grep -qF -- "$2" /tmp/body || { echo "FAIL (content): $1 missing '$2'"; exit 1; }
+            fi
+            echo "OK: $1"
+          }
+          check "" "MayaTrail"
+          check "MayaTrail%20Landing.html" "MayaTrail"
+          check "MayaTrail%20Run.html" "MayaTrail"
+          check "MayaTrail%20Scenarios.html" "MayaTrail"
+          check "MayaTrail%20Coverage.html" "MayaTrail"
+          check "MayaTrail%20Research.html" "MayaTrail"
+          check "MayaTrail%20Pricing.html" "MayaTrail"
+          check "MayaTrail%20Playbook.html" "MayaTrail"
+          check "mayatrail-base.css" "--cool"
+          check "scripts/landing-vault.jsx" ""
+          check "scripts/tweaks-panel.jsx" ""
+          check "scripts/run-experience.jsx" ""
+
+      - name: Link check
+        run: |
+          docker run --rm --network host lycheeverse/lychee:latest \
+            --offline=false \
+            --exclude 'github\.com|fonts\.|unpkg\.com|cdn-cgi|mailto:' \
+            --accept 200,204,301,302 \
+            --no-progress \
+            http://localhost:8080/ \
+            "http://localhost:8080/MayaTrail%20Landing.html" \
+            "http://localhost:8080/MayaTrail%20Run.html"
+
+      - name: Container logs on failure
+        if: failure()
+        run: docker logs site-pr || true
