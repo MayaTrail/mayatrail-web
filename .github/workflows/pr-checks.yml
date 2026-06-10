@@ -1,0 +1,89 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  sanity:
+    name: Sanity checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Required files exist
+        run: |
+          for f in site/index.html site/favicon.svg site/mayatrail-base.css \
+                   "site/MayaTrail Landing.html" "site/MayaTrail Run.html" \
+                   site/scripts/landing-vault.jsx \
+                   site/scripts/tweaks-panel.jsx \
+                   site/scripts/run-experience.jsx; do
+            [ -f "$f" ] || { echo "Missing required file: $f"; exit 1; }
+          done
+
+      - name: No internal files in site/
+        run: |
+          for pattern in "Pitch" "Market" "GTM" "Battlecards" "Demo Script" "deck-stage"; do
+            found=$(find site/ -name "*${pattern}*" -not -path "site/internal/*" 2>/dev/null)
+            [ -z "$found" ] || { echo "Internal file outside internal/: $found"; exit 1; }
+          done
+
+  build-and-test:
+    name: Build and smoke test
+    runs-on: ubuntu-latest
+    needs: sanity
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t mayatrail-site:pr .
+
+      - name: Internal files must not be in the image
+        run: |
+          leaked=$(docker run --rm mayatrail-site:pr \
+            sh -c 'ls /usr/share/nginx/html/internal /usr/share/nginx/html/logo 2>/dev/null' || true)
+          [ -z "$leaked" ] || { echo "internal/ or logo/ leaked into the image"; exit 1; }
+
+      - name: Run container
+        run: |
+          docker run -d --name site-pr -p 8080:80 mayatrail-site:pr
+          # wait for nginx to come up
+          for i in $(seq 1 10); do
+            curl -sf http://localhost:8080/health && break
+            sleep 1
+          done
+
+      - name: Pages return 200 with content
+        run: |
+          check() {
+            body=$(curl -sf "http://localhost:8080/$1") || { echo "FAIL (HTTP): $1"; exit 1; }
+            echo "$body" | grep -q "$2" || { echo "FAIL (content): $1 missing '$2'"; exit 1; }
+            echo "OK: $1"
+          }
+          check "" "MayaTrail"
+          check "MayaTrail%20Landing.html" "MayaTrail"
+          check "MayaTrail%20Run.html" "MayaTrail"
+          check "MayaTrail%20Scenarios.html" "MayaTrail"
+          check "MayaTrail%20Coverage.html" "MayaTrail"
+          check "MayaTrail%20Research.html" "MayaTrail"
+          check "MayaTrail%20Pricing.html" "MayaTrail"
+          check "MayaTrail%20Playbook.html" "MayaTrail"
+          check "mayatrail-base.css" "--cool"
+          check "scripts/landing-vault.jsx" ""
+          check "scripts/tweaks-panel.jsx" ""
+          check "scripts/run-experience.jsx" ""
+
+      - name: Link check
+        run: |
+          docker run --rm --network host lycheeverse/lychee:latest \
+            --offline=false \
+            --exclude 'github\.com|fonts\.|unpkg\.com|cdn-cgi|mailto:' \
+            --accept 200,204,301,302 \
+            --no-progress \
+            http://localhost:8080/ \
+            "http://localhost:8080/MayaTrail%20Landing.html" \
+            "http://localhost:8080/MayaTrail%20Run.html"
+
+      - name: Container logs on failure
+        if: failure()
+        run: docker logs site-pr || true
