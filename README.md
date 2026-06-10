@@ -2,7 +2,7 @@
 
 The official website for **MayaTrail** — cloud attack emulation for detection engineers.
 
-🌐 **Live at [mayatrail.tech](https://mayatrail.tech)**
+**Live at [mayatrail.tech](https://mayatrail.tech)**
 
 ## About
 
