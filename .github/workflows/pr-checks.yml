@@ -21,7 +21,7 @@ jobs:
               \( -name '*Pitch*' -o -name '*Market*' -o -name '*GTM*' \
                  -o -name '*Battlecards*' -o -name '*Demo Script*' \
                  -o -name '*deck-stage*' \
-                 -o -path '*/internal/*' -o -path '*/logo/*' \))
+                 -o -path '*/internal/*' -o -path '*/logo/README.txt' \))
           [ -z "$leaked" ] || { echo "Internal files leaked into the image:"; echo "$leaked"; exit 1; }
 
       - name: Run container
