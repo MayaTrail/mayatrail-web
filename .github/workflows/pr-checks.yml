@@ -43,13 +43,13 @@ jobs:
             echo "OK: $1"
           }
           check "" "MayaTrail"
-          check "MayaTrail%20Landing.html" "MayaTrail"
-          check "MayaTrail%20Run.html" "MayaTrail"
-          check "MayaTrail%20Scenarios.html" "MayaTrail"
-          check "MayaTrail%20Coverage.html" "MayaTrail"
-          check "MayaTrail%20Research.html" "MayaTrail"
-          check "MayaTrail%20Pricing.html" "MayaTrail"
-          check "MayaTrail%20Playbook.html" "MayaTrail"
+          check "index.html" "MayaTrail"
+          check "run.html" "MayaTrail"
+          check "scenarios.html" "MayaTrail"
+          check "coverage.html" "MayaTrail"
+          check "research.html" "MayaTrail"
+          check "pricing.html" "MayaTrail"
+          check "playbook.html" "MayaTrail"
           check "mayatrail-base.css" "--cool"
           check "scripts/landing-vault.jsx" ""
           check "scripts/tweaks-panel.jsx" ""
@@ -63,8 +63,8 @@ jobs:
             --accept 200,204,301,302 \
             --no-progress \
             http://localhost:8080/ \
-            "http://localhost:8080/MayaTrail%20Landing.html" \
-            "http://localhost:8080/MayaTrail%20Run.html"
+            "http://localhost:8080/index.html" \
+            "http://localhost:8080/run.html"
 
       - name: Container logs on failure
         if: failure()

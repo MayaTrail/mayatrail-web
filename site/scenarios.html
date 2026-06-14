@@ -196,20 +196,19 @@
 <!-- ============== NAV ============== -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="brand" href="MayaTrail Landing.html"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
+    <a class="brand" href="index.html"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
     <div class="nav-links">
-      <a href="MayaTrail Landing.html">Platform</a>
-      <a href="MayaTrail Scenarios.html" class="active">Scenarios</a>
-      <a href="MayaTrail Run.html">Run</a>
-      <a href="MayaTrail Coverage.html">Coverage</a>
-      <a href="#">Docs</a>
-      <a href="MayaTrail Pricing.html">Pricing</a>
-      <a href="MayaTrail Research.html">Research</a>
+      <a href="index.html">Platform</a>
+      <a href="scenarios.html" class="active">Scenarios</a>
+      <a href="run.html">Run</a>
+      <a href="coverage.html">Coverage</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="research.html">Research</a>
     </div>
     <div class="nav-readout">
-      <span class="stat">v0.4.1 · operational</span>
+      <span class="stat">v0.1 · private beta</span>
     </div>
-    <a class="nav-cta">Request access</a>
+    <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
   </div>
 </nav>
 
@@ -217,21 +216,22 @@
 <div class="console">
   <div class="console-bar">
     <span class="lbl">CATALOGUE</span><span class="sep">·</span>
-    <span>6 chains · 28 techniques</span><span class="sep">·</span>
-    <span>last commit · ab12fc · 2 days ago</span>
+    <span>APT chains · cloud techniques</span><span class="sep">·</span>
+    <span>shipped from the repo</span>
     <div class="right">
       <span class="pulse"></span>
-      <span>peer-reviewed · open source</span>
+      <span>open source</span>
     </div>
   </div>
 
   <section class="page-head">
     <div class="eyebrow">Attack catalogue</div>
-    <h1 class="h-1">Six chains. <span class="em">Every step published, audited, reproducible.</span></h1>
+    <h1 class="h-1">Our APT chains, your detection sources. <span class="em">Every step published and reproducible.</span></h1>
     <p class="lede">
-      Each scenario is a Pulumi stack, a peer-reviewed boto3 module, and a runnable chain.
+      Each scenario is a Pulumi stack, a boto3 module, and a runnable chain.
       We publish the technique map, the CloudTrail it produces, and the detection rule that
-      should catch it.
+      should catch it. Six full campaigns below, plus 43 atomic single-technique tests in the
+      <a href="coverage.html" style="color:var(--cool); text-decoration:none;">coverage matrix</a>.
     </p>
 
     <div class="filters">
@@ -258,16 +258,16 @@
       <div class="meta">
         <div class="num"><span class="hash">§</span>01</div>
         <span class="sev crit">Critical</span>
-        <div class="ttf"><b>~12s</b>median run</div>
+        <div class="ttf"><b>DangerDev</b>UNC-attributed</div>
       </div>
       <div class="center">
-        <h3 class="title">AttachRolePolicy chain</h3>
-        <p class="desc">A leaked IAM user assumes a role that holds <code style="background:var(--bg-3); padding:1px 5px; color:var(--cool); font-family:var(--mono); font-size:13px;">iam:AttachRolePolicy</code> on itself, then attaches AdministratorAccess. One of the most-seen privilege paths in real breach forensics.</p>
+        <h3 class="title">DangerDev - phishing to broad cloud compromise</h3>
+        <p class="desc">Spearphishing and a trusted-relationship foothold escalate into new cloud roles, wide service discovery, RDP lateral movement and resource hijacking. The broadest of our chains - 16 techniques across nine tactics.</p>
         <div class="mitre">
-          <span class="tag hot">T1548.005</span>
-          <span class="tag hot">T1098</span>
-          <span class="tag">T1078.004</span>
-          <span class="tag">T1550.001</span>
+          <span class="tag hot">T1566.002</span>
+          <span class="tag hot">T1098.003</span>
+          <span class="tag">T1526</span>
+          <span class="tag">T1496</span>
         </div>
         <div class="cta">
           <a class="run">▶ Run scenario</a>
@@ -277,11 +277,11 @@
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step"><span class="ord">1</span><span class="b">IAM USER <span class="api">u/maint-bot</span></span></div>
+          <div class="step"><span class="ord">1</span><span class="b">Spearphishing link <span class="api">T1566.002</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">2</span><span class="b">ROLE assumed <span class="api">sts:AssumeRole</span></span></div>
+          <div class="step hot"><span class="ord">2</span><span class="b">Add cloud roles <span class="api">iam:CreateRole · AttachRolePolicy</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">AdminAccess attached <span class="api">iam:AttachRolePolicy</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Resource hijack <span class="api">run compute · T1496</span></span></div>
         </div>
       </div>
     </div>
@@ -291,16 +291,16 @@
       <div class="meta">
         <div class="num"><span class="hash">§</span>02</div>
         <span class="sev crit">Critical</span>
-        <div class="ttf"><b>~1m04s</b>median run</div>
+        <div class="ttf"><b>AmberSquid</b>Sysdig, 2023</div>
       </div>
       <div class="center">
-        <h3 class="title">KMS-imported ransomware</h3>
-        <p class="desc">Create a new KMS key with external key material, re-encrypt every object in a bucket with it, then drop the import. The data is technically intact and absolutely unreadable. CISA put out an alert in 2024.</p>
+        <h3 class="title">AmberSquid - multi-service cryptomining</h3>
+        <p class="desc">Burst-provisions miners across Amplify, ECS Fargate, SageMaker, CodeBuild and Auto Scaling, then disables CloudTrail and deletes the trail. Hits the under-monitored services GuardDuty doesn't watch. This is the chain you can run live on the Run page.</p>
         <div class="mitre">
-          <span class="tag hot">T1486</span>
-          <span class="tag hot">T1485</span>
-          <span class="tag">T1548.005</span>
-          <span class="tag">T1578</span>
+          <span class="tag hot">T1059.009</span>
+          <span class="tag hot">T1496</span>
+          <span class="tag">T1610</span>
+          <span class="tag">T1070</span>
         </div>
         <div class="cta">
           <a class="run">▶ Run scenario</a>
@@ -310,11 +310,11 @@
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step warm"><span class="ord">1</span><span class="b">Create external KMS key <span class="api">kms:CreateKey origin=EXTERNAL</span></span></div>
+          <div class="step warm"><span class="ord">1</span><span class="b">Create roles &amp; assume <span class="api">iam:CreateRole · sts:AssumeRole</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">2</span><span class="b">Re-encrypt S3 objects <span class="api">s3:CopyObject with new SSE-KMS</span></span></div>
+          <div class="step hot"><span class="ord">2</span><span class="b">Burst-provision miners <span class="api">amplify · sagemaker · ecs</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Delete imported material <span class="api">kms:DeleteImportedKeyMaterial</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Disable CloudTrail <span class="api">cloudtrail:StopLogging</span></span></div>
         </div>
       </div>
     </div>
@@ -324,16 +324,16 @@
       <div class="meta">
         <div class="num"><span class="hash">§</span>03</div>
         <span class="sev high">High</span>
-        <div class="ttf"><b>~42s</b>median run</div>
+        <div class="ttf"><b>SCARLETEEL</b>Sysdig, 2023</div>
       </div>
       <div class="center">
-        <h3 class="title">S3 enumeration &amp; exfiltration</h3>
-        <p class="desc">List every bucket, identify the readable ones, sweep <code style="background:var(--bg-3); padding:1px 5px; color:var(--cool); font-family:var(--mono); font-size:13px;">GetObject</code> with parallel sessions, exfiltrate to an attacker-controlled bucket in a different region. Matches the Capital One IR pattern.</p>
+        <h3 class="title">SCARLETEEL - compute exploit to cloud theft</h3>
+        <p class="desc">Exploits a public-facing compute workload, steals credentials from the instance metadata API and files, disables cloud logging, then sweeps cloud storage and runs miners. The original cloud-native data-theft chain.</p>
         <div class="mitre">
-          <span class="tag hot">T1530</span>
-          <span class="tag hot">T1567.002</span>
-          <span class="tag">T1119</span>
-          <span class="tag">T1580</span>
+          <span class="tag hot">T1190</span>
+          <span class="tag hot">T1552.005</span>
+          <span class="tag">T1562.008</span>
+          <span class="tag">T1530</span>
         </div>
         <div class="cta">
           <a class="run">▶ Run scenario</a>
@@ -343,11 +343,11 @@
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">List buckets &amp; policies <span class="api">s3:ListAllMyBuckets</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Exploit public app <span class="api">T1190</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step warm"><span class="ord">2</span><span class="b">Parallel GetObject sweep <span class="api">12 sessions · 4.2 GB</span></span></div>
+          <div class="step warm"><span class="ord">2</span><span class="b">Steal creds via IMDS <span class="api">169.254.169.254</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Exfil to attacker bucket <span class="api">s3:PutObject (cross-region)</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Disable logs, sweep S3 <span class="api">cloudtrail off · s3:GetObject</span></span></div>
         </div>
       </div>
     </div>
@@ -357,16 +357,16 @@
       <div class="meta">
         <div class="num"><span class="hash">§</span>04</div>
         <span class="sev high">High</span>
-        <div class="ttf"><b>~18s</b>median run</div>
+        <div class="ttf"><b>SCARLETEEL2</b>evolved variant</div>
       </div>
       <div class="center">
-        <h3 class="title">IAM eventual consistency window</h3>
-        <p class="desc">An access key is revoked, but IAM propagation takes seconds-to-minutes. We race the window - open a session before revocation lands, run a chain of mutations before the cached creds invalidate. Disclosed 2020, still works.</p>
+        <h3 class="title">SCARLETEEL2 - exploit plus token theft</h3>
+        <p class="desc">The evolved variant: same exploit entry, but steals an application access token, mints additional cloud credentials, disables logging and exfiltrates over an alternative protocol to evade egress monitoring.</p>
         <div class="mitre">
-          <span class="tag hot">T1078</span>
-          <span class="tag hot">T1098</span>
-          <span class="tag">T1531</span>
-          <span class="tag">T1528</span>
+          <span class="tag hot">T1528</span>
+          <span class="tag hot">T1048</span>
+          <span class="tag">T1098.001</span>
+          <span class="tag">T1562.008</span>
         </div>
         <div class="cta">
           <a class="run">▶ Run scenario</a>
@@ -376,11 +376,11 @@
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">Cache valid session <span class="api">boto3.Session before revoke</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Exploit + steal token <span class="api">T1190 · T1528</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step warm"><span class="ord">2</span><span class="b">Trigger revocation <span class="api">iam:DeleteAccessKey</span></span></div>
+          <div class="step warm"><span class="ord">2</span><span class="b">Mint cloud creds <span class="api">T1098.001</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Mutate during window <span class="api">iam:DetachRolePolicy · iam:DeleteRole</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Exfil over alt protocol <span class="api">T1048</span></span></div>
         </div>
       </div>
     </div>
@@ -390,16 +390,16 @@
       <div class="meta">
         <div class="num"><span class="hash">§</span>05</div>
         <span class="sev med">Medium</span>
-        <div class="ttf"><b>~31s</b>median run</div>
+        <div class="ttf"><b>CodeFinger</b>2025</div>
       </div>
       <div class="center">
-        <h3 class="title">Service permission mapping</h3>
-        <p class="desc">A precursor, not a payload. We sweep <code style="background:var(--bg-3); padding:1px 5px; color:var(--cool); font-family:var(--mono); font-size:13px;">iam:SimulatePrincipalPolicy</code> across IAM / EC2 / Lambda / RDS / KMS to enumerate exactly which actions a stolen identity can call. Cheap, quiet, hugely valuable to an attacker.</p>
+        <h3 class="title">CodeFinger - S3 ransomware via SSE-C</h3>
+        <p class="desc">Uses valid cloud credentials to re-encrypt S3 objects with an attacker-supplied SSE-C key, then sets a short lifecycle to destroy originals - inhibiting recovery. The data stays in place and is unreadable without the attacker's key.</p>
         <div class="mitre">
-          <span class="tag cool">T1087.004</span>
-          <span class="tag cool">T1580</span>
-          <span class="tag">T1526</span>
-          <span class="tag">T1069.003</span>
+          <span class="tag hot">T1486</span>
+          <span class="tag hot">T1490</span>
+          <span class="tag">T1485</span>
+          <span class="tag">T1530</span>
         </div>
         <div class="cta">
           <a class="run">▶ Run scenario</a>
@@ -409,11 +409,11 @@
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">Enumerate principals <span class="api">iam:ListUsers · ListRoles</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Valid cloud creds <span class="api">T1078.004</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step cool"><span class="ord">2</span><span class="b">Simulate per-service <span class="api">iam:SimulatePrincipalPolicy × 47</span></span></div>
+          <div class="step hot"><span class="ord">2</span><span class="b">Re-encrypt with SSE-C <span class="api">s3:CopyObject · customer key</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step cool"><span class="ord">3</span><span class="b">Build action graph <span class="api">→ ./runs/05/graph.json</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Inhibit recovery <span class="api">lifecycle expiry · T1490</span></span></div>
         </div>
       </div>
     </div>
@@ -423,15 +423,16 @@
       <div class="meta">
         <div class="num"><span class="hash">§</span>06</div>
         <span class="sev high">High</span>
-        <div class="ttf"><b>~27s</b>median run</div>
+        <div class="ttf"><b>LUCR-3</b>Scattered Spider</div>
       </div>
       <div class="center">
-        <h3 class="title">CloudTrail blind-spot abuse</h3>
-        <p class="desc">Not every API call lands in CloudTrail. We chain a quiet read (e.g. <code style="background:var(--bg-3); padding:1px 5px; color:var(--cool); font-family:var(--mono); font-size:13px;">sts:GetCallerIdentity</code>) into a non-logged action, then resume normal traffic. The chain is invisible to log-only detections.</p>
+        <h3 class="title">LUCR-3 - identity-first intrusion</h3>
+        <p class="desc">The Scattered Spider playbook: MFA fatigue and interception, device registration for persistence, secrets-manager raids, SaaS and code-repo collection, and cloud-log tampering. The broadest identity-driven chain - 19 techniques.</p>
         <div class="mitre">
-          <span class="tag hot">T1556.005</span>
-          <span class="tag">T1078</span>
-          <span class="tag">T1027</span>
+          <span class="tag hot">T1621</span>
+          <span class="tag hot">T1111</span>
+          <span class="tag">T1098.005</span>
+          <span class="tag">T1555.006</span>
         </div>
         <div class="cta">
           <a class="run">▶ Run scenario</a>
@@ -441,11 +442,11 @@
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">Quiet identity check <span class="api">sts:GetCallerIdentity</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">MFA fatigue / intercept <span class="api">T1621 · T1111</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step warm"><span class="ord">2</span><span class="b">Non-logged action <span class="api">(action redacted in catalogue)</span></span></div>
+          <div class="step warm"><span class="ord">2</span><span class="b">Register device, raid secrets <span class="api">T1098.005 · T1555.006</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Resume normal traffic <span class="api">indistinguishable in trail</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Collect &amp; tamper logs <span class="api">code repos · T1562.008</span></span></div>
         </div>
       </div>
     </div>
@@ -456,19 +457,22 @@
   <div class="foot-cta">
     <div>
       <h3>Have a chain we should ship next?</h3>
-      <p>The catalogue is community-driven. Open an RFC on GitHub or email <code style="font-family:var(--mono); color:var(--cool);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="74061107111506171c3419150d150006151d185a0011171c">[email&#160;protected]</a></code>.</p>
+      <p>The catalogue is open. Open an RFC on GitHub or email <a href="mailto:admin@mayatrail.tech" style="font-family:var(--mono); color:var(--cool); text-decoration:none;">admin@mayatrail.tech</a>.</p>
     </div>
-    <a class="btn">Open an RFC <span class="arrow">→</span></a>
+    <a class="btn" href="https://github.com/MayaTrail">Open an RFC <span class="arrow">→</span></a>
   </div>
 
 </div>
 
 <footer>
-  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.4.1</span>
+  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1</span>
   <div class="links">
-    <a href="MayaTrail Landing.html">Landing</a>
-    <a href="MayaTrail Coverage.html">Coverage</a>
-    <a href="MayaTrail Research.html">Research</a>
+    <a href="index.html">Platform</a>
+    <a href="scenarios.html">Scenarios</a>
+    <a href="run.html">Run</a>
+    <a href="coverage.html">Coverage</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="research.html">Research</a>
     <a href="https://github.com/MayaTrail">GitHub ↗</a>
   </div>
 </footer>
