@@ -21,7 +21,7 @@ jobs:
               \( -name '*Pitch*' -o -name '*Market*' -o -name '*GTM*' \
                  -o -name '*Battlecards*' -o -name '*Demo Script*' \
                  -o -name '*deck-stage*' \
-                 -o -path '*/internal/*' -o -path '*/logo/*' \))
+                 -o -path '*/internal/*' -o -path '*/logo/README.txt' \))
           [ -z "$leaked" ] || { echo "Internal files leaked into the image:"; echo "$leaked"; exit 1; }
 
       - name: Run container
@@ -43,17 +43,23 @@ jobs:
             echo "OK: $1"
           }
           check "" "MayaTrail"
-          check "MayaTrail%20Landing.html" "MayaTrail"
-          check "MayaTrail%20Run.html" "MayaTrail"
-          check "MayaTrail%20Scenarios.html" "MayaTrail"
-          check "MayaTrail%20Coverage.html" "MayaTrail"
-          check "MayaTrail%20Research.html" "MayaTrail"
-          check "MayaTrail%20Pricing.html" "MayaTrail"
-          check "MayaTrail%20Playbook.html" "MayaTrail"
+          check "index.html" "MayaTrail"
+          check "run.html" "MayaTrail"
+          check "scenarios.html" "MayaTrail"
+          check "coverage.html" "MayaTrail"
+          check "research.html" "MayaTrail"
+          check "pricing.html" "MayaTrail"
+          check "playbook.html" "MayaTrail"
           check "mayatrail-base.css" "--cool"
           check "scripts/landing-vault.jsx" ""
           check "scripts/tweaks-panel.jsx" ""
           check "scripts/run-experience.jsx" ""
+          check "logo/mark-constellation.svg" ""
+          check "logo/mark-triangle.svg" ""
+          check "logo/mayatrail-lockup-constellation-dark.svg" ""
+          check "logo/mayatrail-lockup-constellation-light.svg" ""
+          check "logo/mayatrail-lockup-triangle-dark.svg" ""
+          check "logo/mayatrail-lockup-triangle-light.svg" ""
 
       - name: Link check
         run: |
@@ -63,8 +69,8 @@ jobs:
             --accept 200,204,301,302 \
             --no-progress \
             http://localhost:8080/ \
-            "http://localhost:8080/MayaTrail%20Landing.html" \
-            "http://localhost:8080/MayaTrail%20Run.html"
+            "http://localhost:8080/index.html" \
+            "http://localhost:8080/run.html"
 
       - name: Container logs on failure
         if: failure()
