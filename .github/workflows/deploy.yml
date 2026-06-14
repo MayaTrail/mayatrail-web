@@ -14,7 +14,7 @@ permissions:
 
 env:
   AWS_REGION: ap-south-1
-  IMAGE_NAME: mayatrail-site
+  IMAGE_NAME: mayatrail-web
 
 jobs:
   deploy:
