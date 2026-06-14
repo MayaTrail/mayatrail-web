@@ -54,6 +54,12 @@ jobs:
           check "scripts/landing-vault.jsx" ""
           check "scripts/tweaks-panel.jsx" ""
           check "scripts/run-experience.jsx" ""
+          check "logo/mark-constellation.svg" ""
+          check "logo/mark-triangle.svg" ""
+          check "logo/mayatrail-lockup-constellation-dark.svg" ""
+          check "logo/mayatrail-lockup-constellation-light.svg" ""
+          check "logo/mayatrail-lockup-triangle-dark.svg" ""
+          check "logo/mayatrail-lockup-triangle-light.svg" ""
 
       - name: Link check
         run: |
