@@ -55,10 +55,11 @@ jobs:
         run: |
           cat > /tmp/commands.json <<EOF
           {"commands": [
+            "set -euo pipefail",
             "docker pull $IMAGE",
-            "docker stop mayatrail-site || true",
-            "docker rm mayatrail-site || true",
-            "docker run -d --name mayatrail-site -p 0.0.0.0:80:80 --restart unless-stopped $IMAGE",
+            "docker stop mayatrail-web || true",
+            "docker rm mayatrail-web || true",
+            "docker run -d --name mayatrail-web -p 0.0.0.0:80:80 --restart unless-stopped $IMAGE",
             "docker image prune -af"
           ]}
           EOF
