@@ -47,6 +47,7 @@ jobs:
           check "run.html" "MayaTrail"
           check "scenarios.html" "MayaTrail"
           check "coverage.html" "MayaTrail"
+          check "services.html" "MayaTrail"
           check "research.html" "MayaTrail"
           check "pricing.html" "MayaTrail"
           check "playbook.html" "MayaTrail"
