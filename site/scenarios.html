@@ -4,34 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MayaTrail - Scenarios</title>
+<meta name="description" content="The AWS attack campaigns MayaTrail emulates - SCARLETEEL, AMBERSQUID, Codefinger, DangerDev and ECScape - each one runnable as code." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="mayatrail-base.css" />
 <style>
-  /* ============== FILTERS ============== */
-  .filters {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    padding: 14px 0 0;
-    margin-top: 28px;
-    border-top: 1px solid var(--rule);
-  }
-  .filters .lbl {
-    font-family: var(--mono); font-size: 10px;
-    text-transform: uppercase; letter-spacing: 0.16em;
-    color: var(--ink-3);
-    margin-right: 10px;
-  }
-  .filters .chip {
+  .page-head .lede a { color: var(--cool); text-decoration: none; }
+  .page-head .lede a:hover { text-decoration: underline; }
+  .row .center .cta .pkg {
     font-family: var(--mono); font-size: 10.5px;
-    text-transform: uppercase; letter-spacing: 0.12em;
-    padding: 5px 11px;
-    border: 1px solid var(--rule-2);
-    background: transparent;
-    color: var(--ink-2);
-    cursor: pointer;
-    transition: all 0.15s;
+    color: var(--ink-3); letter-spacing: 0.04em;
+    text-transform: none; margin-left: auto;
   }
-  .filters .chip:hover { color: var(--ink); border-color: var(--ink-3); }
-  .filters .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
   /* ============== CATALOGUE ============== */
   .catalogue {
@@ -205,6 +191,7 @@
       <a href="services.html">Services</a>
       <a href="pricing.html">Pricing</a>
       <a href="research.html">Research</a>
+      <a href="blog/">Blog</a>
     </div>
     <div class="nav-readout">
       <span class="stat">v0.1 · private beta</span>
@@ -226,228 +213,166 @@
   </div>
 
   <section class="page-head">
-    <div class="eyebrow">Attack catalogue</div>
-    <h1 class="h-1">Our APT chains, your detection sources. <span class="em">Every step published and reproducible.</span></h1>
+    <h1 class="h-1">Five campaigns, <span class="em">every step published.</span></h1>
     <p class="lede">
-      Each scenario is a Pulumi stack, a boto3 module, and a runnable chain.
-      We publish the technique map, the CloudTrail it produces, and the detection rule that
-      should catch it. Six full campaigns below, plus 43 atomic single-technique tests in the
-      <a href="coverage.html" style="color:var(--cool); text-decoration:none;">coverage matrix</a>.
+      Each one is a Pulumi stack, a boto3 module and a runnable chain, traced back to
+      public incident research. The phases below are read from the package manifest the
+      platform actually runs &mdash; not a summary written around it. Forty single-technique
+      tests live beside them in the <a href="coverage.html">coverage matrix</a>.
     </p>
-
-    <div class="filters">
-      <span class="lbl">Filter</span>
-      <button class="chip active">All</button>
-      <button class="chip">Critical</button>
-      <button class="chip">High</button>
-      <button class="chip">Medium</button>
-      <span style="width:1px; height:18px; background:var(--rule-2); margin:0 6px;"></span>
-      <button class="chip">IAM</button>
-      <button class="chip">STS</button>
-      <button class="chip">S3</button>
-      <button class="chip">KMS</button>
-      <button class="chip">Lambda</button>
-      <span style="margin-left:auto; font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-3);">sort · severity ▾</span>
-    </div>
   </section>
 
   <!-- ============== CATALOGUE ============== -->
   <div class="catalogue">
 
-    <!-- 01 -->
     <div class="row">
       <div class="meta">
-        <div class="num"><span class="hash">§</span>01</div>
+        <div class="num"><span class="hash">&sect;</span>01</div>
         <span class="sev crit">Critical</span>
-        <div class="ttf"><b>DangerDev</b>UNC-attributed</div>
+        <div class="ttf"><b>SCARLETEEL 2.0</b>Sysdig TRT &middot; Feb &amp; Jul 2023</div>
       </div>
       <div class="center">
-        <h3 class="title">DangerDev - phishing to broad cloud compromise</h3>
-        <p class="desc">Spearphishing and a trusted-relationship foothold escalate into new cloud roles, wide service discovery, RDP lateral movement and resource hijacking. The broadest of our chains - 16 techniques across nine tactics.</p>
-        <div class="mitre">
-          <span class="tag hot">T1566.002</span>
-          <span class="tag hot">T1098.003</span>
-          <span class="tag">T1526</span>
-          <span class="tag">T1496</span>
-        </div>
+        <h3 class="title">SCARLETEEL 2.0 &mdash; container RCE to cloud data theft</h3>
+        <p class="desc">Exploits a public-facing container workload, lifts credentials from IMDSv1, then moves laterally into AWS, exfiltrates Terraform state and leaves a Lambda backdoor behind. The original cloud-native data-theft chain.</p>
+        <div class="mitre"><span class="tag hot">T1190</span><span class="tag hot">T1552.005</span><span class="tag">T1562.008</span><span class="tag">T1098</span></div>
         <div class="cta">
-          <a class="run">▶ Run scenario</a>
-          <a>View teardown ↗</a>
-          <a>Detection rule ↗</a>
+          <a class="run" href="run.html">&#9654; See a run</a>
+          <a href="coverage.html">Coverage &#8599;</a>
+          <a href="playbook.html">Playbook &#8599;</a>
+          <code class="pkg">scarleteel &middot; 8 techniques</code>
         </div>
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step"><span class="ord">1</span><span class="b">Spearphishing link <span class="api">T1566.002</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Initial access <span class="api">T1190 &middot; exploit public-facing app</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">2</span><span class="b">Add cloud roles <span class="api">iam:CreateRole · AttachRolePolicy</span></span></div>
+          <div class="step cool"><span class="ord">2</span><span class="b">Credential access <span class="api">T1552.005 &middot; IMDSv1</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Resource hijack <span class="api">run compute · T1496</span></span></div>
+          <div class="step warm"><span class="ord">3</span><span class="b">Discovery <span class="api">T1087.004 &middot; T1552.001</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">4</span><span class="b">Defense evasion <span class="api">T1562.008 &middot; disable cloud logs</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step warm"><span class="ord">5</span><span class="b">Lateral movement <span class="api">T1555.006 &middot; cloud secrets store</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">6</span><span class="b">Persistence <span class="api">T1098 &middot; Lambda backdoor</span></span></div>
         </div>
       </div>
     </div>
 
-    <!-- 02 -->
     <div class="row">
       <div class="meta">
-        <div class="num"><span class="hash">§</span>02</div>
+        <div class="num"><span class="hash">&sect;</span>02</div>
         <span class="sev crit">Critical</span>
-        <div class="ttf"><b>AmberSquid</b>Sysdig, 2023</div>
+        <div class="ttf"><b>AMBERSQUID</b>Sysdig TRT &middot; 2023</div>
       </div>
       <div class="center">
-        <h3 class="title">AmberSquid - multi-service cryptomining</h3>
-        <p class="desc">Burst-provisions miners across Amplify, ECS Fargate, SageMaker, CodeBuild and Auto Scaling, then disables CloudTrail and deletes the trail. Hits the under-monitored services GuardDuty doesn't watch. This is the chain you can run live on the Run page.</p>
-        <div class="mitre">
-          <span class="tag hot">T1059.009</span>
-          <span class="tag hot">T1496</span>
-          <span class="tag">T1610</span>
-          <span class="tag">T1070</span>
-        </div>
+        <h3 class="title">AMBERSQUID &mdash; multi-service cryptomining</h3>
+        <p class="desc">Victim credentials arrive inside a malicious container image, IAM roles are stood up for persistence, then miners burst across Amplify, ECS Fargate, SageMaker and CodeBuild &mdash; the services GuardDuty watches least &mdash; before CloudTrail is stopped.</p>
+        <div class="mitre"><span class="tag hot">T1204.003</span><span class="tag hot">T1496</span><span class="tag">T1578.002</span><span class="tag">T1070</span></div>
         <div class="cta">
-          <a class="run">▶ Run scenario</a>
-          <a>View teardown ↗</a>
-          <a>Detection rule ↗</a>
+          <a class="run" href="run.html">&#9654; See a run</a>
+          <a href="coverage.html">Coverage &#8599;</a>
+          <a href="playbook.html">Playbook &#8599;</a>
+          <code class="pkg">ambersquid &middot; 13 techniques</code>
         </div>
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step warm"><span class="ord">1</span><span class="b">Create roles &amp; assume <span class="api">iam:CreateRole · sts:AssumeRole</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Resource development <span class="api">T1583.001 &middot; T1608.001</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">2</span><span class="b">Burst-provision miners <span class="api">amplify · sagemaker · ecs</span></span></div>
+          <div class="step cool"><span class="ord">2</span><span class="b">Initial execution <span class="api">T1204.003 &middot; malicious image</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Disable CloudTrail <span class="api">cloudtrail:StopLogging</span></span></div>
+          <div class="step warm"><span class="ord">3</span><span class="b">Persistence &amp; priv-esc <span class="api">T1136.003 &middot; T1098.001</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">4</span><span class="b">Multi-service miners <span class="api">T1059.009 &middot; T1525 &middot; T1610</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">5</span><span class="b">Evasion &amp; impact <span class="api">T1070 &middot; T1496 &middot; StopLogging</span></span></div>
         </div>
       </div>
     </div>
 
-    <!-- 03 -->
     <div class="row">
       <div class="meta">
-        <div class="num"><span class="hash">§</span>03</div>
+        <div class="num"><span class="hash">&sect;</span>03</div>
+        <span class="sev crit">Critical</span>
+        <div class="ttf"><b>Codefinger</b>Halcyon RISE Team &middot; Jan 2025</div>
+      </div>
+      <div class="center">
+        <h3 class="title">Codefinger &mdash; S3 ransomware via SSE-C</h3>
+        <p class="desc">Harvests credentials from a public Terraform state bucket, enumerates S3, then re-encrypts objects with an attacker-held AES-256 SSE-C key and purges version history so there is nothing to roll back to. The data never leaves the account.</p>
+        <div class="mitre"><span class="tag hot">T1486</span><span class="tag hot">T1490</span><span class="tag">T1485</span><span class="tag">T1530</span></div>
+        <div class="cta">
+          <a class="run" href="run.html">&#9654; See a run</a>
+          <a href="coverage.html">Coverage &#8599;</a>
+          <a href="playbook.html">Playbook &#8599;</a>
+          <code class="pkg">codefinger &middot; 5 techniques</code>
+        </div>
+      </div>
+      <div class="chain">
+        <div class="chain-stage">
+          <div class="step cool"><span class="ord">1</span><span class="b">Credential harvest <span class="api">T1078.004 &middot; public state bucket</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step cool"><span class="ord">2</span><span class="b">Collection <span class="api">T1530 &middot; enumerate S3</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">SSE-C re-encryption <span class="api">T1486 &middot; attacker-held key</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">4</span><span class="b">Lifecycle auto-delete <span class="api">T1485 &middot; simulated</span></span></div>
+          <div class="step-arrow"></div>
+          <div class="step hot"><span class="ord">5</span><span class="b">Version history purge <span class="api">T1490 &middot; inhibit recovery</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="meta">
+        <div class="num"><span class="hash">&sect;</span>04</div>
         <span class="sev high">High</span>
-        <div class="ttf"><b>SCARLETEEL</b>Sysdig, 2023</div>
+        <div class="ttf"><b>DangerDev</b>Invictus IR &middot; Jan 2024</div>
       </div>
       <div class="center">
-        <h3 class="title">SCARLETEEL - compute exploit to cloud theft</h3>
-        <p class="desc">Exploits a public-facing compute workload, steals credentials from the instance metadata API and files, disables cloud logging, then sweeps cloud storage and runs miners. The original cloud-native data-theft chain.</p>
-        <div class="mitre">
-          <span class="tag hot">T1190</span>
-          <span class="tag hot">T1552.005</span>
-          <span class="tag">T1562.008</span>
-          <span class="tag">T1530</span>
-        </div>
+        <h3 class="title">DangerDev &mdash; leaked key to full account hijack</h3>
+        <p class="desc">Bootstraps from a leaked long-term admin key and calls GetUser rather than GetCallerIdentity, dodging the identity-check fingerprint most rules watch for. Ends in cross-account trust backdoors, GPU mining recon and SES/Route53 phishing infrastructure.</p>
+        <div class="mitre"><span class="tag hot">T1078.004</span><span class="tag hot">T1098.003</span><span class="tag">T1136.003</span><span class="tag">T1496</span></div>
         <div class="cta">
-          <a class="run">▶ Run scenario</a>
-          <a>View teardown ↗</a>
-          <a>Detection rule ↗</a>
+          <a class="run" href="run.html">&#9654; See a run</a>
+          <a href="coverage.html">Coverage &#8599;</a>
+          <a href="playbook.html">Playbook &#8599;</a>
+          <code class="pkg">dangerdev &middot; 17 techniques</code>
         </div>
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">Exploit public app <span class="api">T1190</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Access &amp; persistence <span class="api">T1078.004 &middot; T1136.003 &middot; T1098.003</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step warm"><span class="ord">2</span><span class="b">Steal creds via IMDS <span class="api">169.254.169.254</span></span></div>
+          <div class="step warm"><span class="ord">2</span><span class="b">Discovery &amp; compute <span class="api">T1580 &middot; T1578.002 &middot; T1496</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Disable logs, sweep S3 <span class="api">cloudtrail off · s3:GetObject</span></span></div>
+          <div class="step hot"><span class="ord">3</span><span class="b">Evasion &amp; phishing infra <span class="api">T1070 &middot; T1566.002 &middot; T1583.001</span></span></div>
         </div>
       </div>
     </div>
 
-    <!-- 04 -->
     <div class="row">
       <div class="meta">
-        <div class="num"><span class="hash">§</span>04</div>
+        <div class="num"><span class="hash">&sect;</span>05</div>
         <span class="sev high">High</span>
-        <div class="ttf"><b>SCARLETEEL2</b>evolved variant</div>
+        <div class="ttf"><b>ECScape</b>Sweet Security research &middot; 2025</div>
       </div>
       <div class="center">
-        <h3 class="title">SCARLETEEL2 - exploit plus token theft</h3>
-        <p class="desc">The evolved variant: same exploit entry, but steals an application access token, mints additional cloud credentials, disables logging and exfiltrates over an alternative protocol to evade egress monitoring.</p>
-        <div class="mitre">
-          <span class="tag hot">T1528</span>
-          <span class="tag hot">T1048</span>
-          <span class="tag">T1098.001</span>
-          <span class="tag">T1562.008</span>
-        </div>
+        <h3 class="title">ECScape &mdash; cross-task credential hijack in ECS</h3>
+        <p class="desc">A deny-all task impersonates the ECS agent and harvests every co-resident task&rsquo;s role and execution-role credentials from the same container instance. Task isolation is the control that fails.</p>
+        <div class="mitre"><span class="tag hot">T1552.005</span><span class="tag hot">T1552.007</span><span class="tag">T1134</span></div>
         <div class="cta">
-          <a class="run">▶ Run scenario</a>
-          <a>View teardown ↗</a>
-          <a>Detection rule ↗</a>
+          <a class="run" href="run.html">&#9654; See a run</a>
+          <a href="coverage.html">Coverage &#8599;</a>
+          <a href="playbook.html">Playbook &#8599;</a>
+          <code class="pkg">ecscape &middot; 3 techniques</code>
         </div>
       </div>
       <div class="chain">
         <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">Exploit + steal token <span class="api">T1190 · T1528</span></span></div>
+          <div class="step cool"><span class="ord">1</span><span class="b">Credential access <span class="api">T1552.005 &middot; T1552.007 &middot; IMDS</span></span></div>
           <div class="step-arrow"></div>
-          <div class="step warm"><span class="ord">2</span><span class="b">Mint cloud creds <span class="api">T1098.001</span></span></div>
-          <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Exfil over alt protocol <span class="api">T1048</span></span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 05 -->
-    <div class="row">
-      <div class="meta">
-        <div class="num"><span class="hash">§</span>05</div>
-        <span class="sev med">Medium</span>
-        <div class="ttf"><b>CodeFinger</b>2025</div>
-      </div>
-      <div class="center">
-        <h3 class="title">CodeFinger - S3 ransomware via SSE-C</h3>
-        <p class="desc">Uses valid cloud credentials to re-encrypt S3 objects with an attacker-supplied SSE-C key, then sets a short lifecycle to destroy originals - inhibiting recovery. The data stays in place and is unreadable without the attacker's key.</p>
-        <div class="mitre">
-          <span class="tag hot">T1486</span>
-          <span class="tag hot">T1490</span>
-          <span class="tag">T1485</span>
-          <span class="tag">T1530</span>
-        </div>
-        <div class="cta">
-          <a class="run">▶ Run scenario</a>
-          <a>View teardown ↗</a>
-          <a>Detection rule ↗</a>
-        </div>
-      </div>
-      <div class="chain">
-        <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">Valid cloud creds <span class="api">T1078.004</span></span></div>
-          <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">2</span><span class="b">Re-encrypt with SSE-C <span class="api">s3:CopyObject · customer key</span></span></div>
-          <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Inhibit recovery <span class="api">lifecycle expiry · T1490</span></span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 06 -->
-    <div class="row">
-      <div class="meta">
-        <div class="num"><span class="hash">§</span>06</div>
-        <span class="sev high">High</span>
-        <div class="ttf"><b>LUCR-3</b>Scattered Spider</div>
-      </div>
-      <div class="center">
-        <h3 class="title">LUCR-3 - identity-first intrusion</h3>
-        <p class="desc">The Scattered Spider playbook: MFA fatigue and interception, device registration for persistence, secrets-manager raids, SaaS and code-repo collection, and cloud-log tampering. The broadest identity-driven chain - 19 techniques.</p>
-        <div class="mitre">
-          <span class="tag hot">T1621</span>
-          <span class="tag hot">T1111</span>
-          <span class="tag">T1098.005</span>
-          <span class="tag">T1555.006</span>
-        </div>
-        <div class="cta">
-          <a class="run">▶ Run scenario</a>
-          <a>View teardown ↗</a>
-          <a>Detection rule ↗</a>
-        </div>
-      </div>
-      <div class="chain">
-        <div class="chain-stage">
-          <div class="step cool"><span class="ord">1</span><span class="b">MFA fatigue / intercept <span class="api">T1621 · T1111</span></span></div>
-          <div class="step-arrow"></div>
-          <div class="step warm"><span class="ord">2</span><span class="b">Register device, raid secrets <span class="api">T1098.005 · T1555.006</span></span></div>
-          <div class="step-arrow"></div>
-          <div class="step hot"><span class="ord">3</span><span class="b">Collect &amp; tamper logs <span class="api">code repos · T1562.008</span></span></div>
+          <div class="step hot"><span class="ord">2</span><span class="b">Privilege escalation <span class="api">T1134 &middot; assume neighbour roles</span></span></div>
         </div>
       </div>
     </div>
@@ -475,10 +400,11 @@
     <a href="services.html">Services</a>
     <a href="pricing.html">Pricing</a>
     <a href="research.html">Research</a>
+    <a href="blog/">Blog</a>
     <a href="https://github.com/MayaTrail">GitHub ↗</a>
   </div>
 </footer>
 
 </main>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</body>
 </html>

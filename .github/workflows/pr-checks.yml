@@ -11,8 +11,45 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Run recording carries no identifiers
+        run: |
+          # The recording is built by allowlist in the app repo and checked
+          # again by scripts/build_run.py. This is the third check, at the
+          # point of no return: once this merges it is on a public website.
+          # Deliberately independent of the Python so a bug in the builder
+          # cannot also disable its own guard.
+          shopt -s nullglob
+          for f in recordings/*.json; do
+            echo "checking $f"
+            # Account ids, access key ids, emails. ARNs and IPs need the
+            # context-aware check in build_run.py (AWS-managed policy ARNs and
+            # private addresses are legitimate), which the build step runs.
+            # -w anchors each match on word boundaries, so a 12-digit run
+            # inside a longer number is not reported as an account id.
+            if grep -owE '[0-9]{12}' "$f"; then
+              echo "FAIL: $f contains what looks like an AWS account id"; exit 1
+            fi
+            if grep -owE '(AKIA|ASIA|AIDA|AROA|AIPA|ANPA|ANVA)[A-Z0-9]{12,}' "$f"; then
+              echo "FAIL: $f contains an AWS key id"; exit 1
+            fi
+            if grep -oE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[.][A-Za-z]{2,}' "$f"; then
+              echo "FAIL: $f contains an email address"; exit 1
+            fi
+            echo "OK: $f"
+          done
+
       - name: Build image
         run: docker build -t mayatrail-site:pr .
+
+      - name: Blog sources stay out of the image
+        run: |
+          leaked=$(docker run --rm mayatrail-site:pr find /usr/share/nginx/html -name '*.md')
+          [ -z "$leaked" ] || { echo "Markdown leaked into the image:"; echo "$leaked"; exit 1; }
+
+      - name: JSX source stays out of the image
+        run: |
+          leaked=$(docker run --rm mayatrail-site:pr find /usr/share/nginx/html -name '*.jsx')
+          [ -z "$leaked" ] || { echo "JSX leaked into the image:"; echo "$leaked"; exit 1; }
 
       - name: No internal files in the image
         run: |
@@ -51,16 +88,38 @@ jobs:
           check "research.html" "MayaTrail"
           check "pricing.html" "MayaTrail"
           check "playbook.html" "MayaTrail"
+          check "playbook.html" "id=\"containment\""
+          check "blog/" "Field notes"
+          check "blog/feed.xml" "<rss"
           check "mayatrail-base.css" "--cool"
-          check "scripts/landing-vault.jsx" ""
-          check "scripts/tweaks-panel.jsx" ""
-          check "scripts/run-experience.jsx" ""
+          check "mayatrail-blog.css" ".prose"
+          check "scripts/run-experience.js" ""
+          check "vendor/react.production.min.js" ""
+          check "vendor/react-dom.production.min.js" ""
           check "logo/mark-constellation.svg" ""
           check "logo/mark-triangle.svg" ""
           check "logo/mayatrail-lockup-constellation-dark.svg" ""
           check "logo/mayatrail-lockup-constellation-light.svg" ""
           check "logo/mayatrail-lockup-triangle-dark.svg" ""
           check "logo/mayatrail-lockup-triangle-light.svg" ""
+
+      - name: Pages render without third-party JavaScript
+        run: |
+          # playbook.html used to compile its Markdown in the browser with
+          # marked.js from jsdelivr, and run.html pulled React plus
+          # Babel-standalone from unpkg to transpile JSX on every load. Both
+          # are built ahead of time now. Guard against a CDN <script> creeping
+          # back onto any page.
+          for page in index.html coverage.html scenarios.html services.html \
+                      pricing.html research.html playbook.html run.html; do
+            body=$(curl -sf "http://localhost:8080/$page")
+            if echo "$body" | grep -qE '<script[^>]+src="https?://'; then
+              echo "FAIL: $page loads a third-party script"
+              echo "$body" | grep -oE '<script[^>]+src="https?://[^"]*"'
+              exit 1
+            fi
+            echo "OK (no external JS): $page"
+          done
 
       - name: Link check
         run: |

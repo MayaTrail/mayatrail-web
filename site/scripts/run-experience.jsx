@@ -95,9 +95,19 @@ function PlanView({ onRun }) {
               <span style={{ width: 7, height: 7, background: 'var(--ok)', borderRadius: '50%', boxShadow: '0 0 8px var(--ok)' }} />
               READY TO RUN
             </span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>
-              FIDELITY {(RUN.fidelity_score * 100).toFixed(0)}%
-            </span>
+            {/* Two different claims, and they must not be confused. A recorded
+                run reports the share of its rules that actually fired, which is
+                measured. Everything else is a walkthrough, and says so rather
+                than asserting a score nothing produced. */}
+            {RUN.recorded && typeof RUN.detection_rate === 'number' ? (
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-3)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>
+                DETECTIONS FIRED {(RUN.detection_rate * 100).toFixed(0)}%
+              </span>
+            ) : (
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--warm)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>
+                ILLUSTRATIVE WALKTHROUGH
+              </span>
+            )}
           </div>
 
           <table style={{ width: '100%', fontFamily: 'var(--mono)', fontSize: 11.5, color: 'var(--ink-2)', borderCollapse: 'collapse' }}>

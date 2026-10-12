@@ -1,0 +1,7 @@
+# Blog build toolchain. Used by the builder stage in the Dockerfile and by
+# scripts/build_blog.py when previewing locally. Nothing here reaches the
+# runtime image: the builder renders blog/*.md to HTML and only site/ is copied
+# into the nginx stage.
+Markdown==3.7
+Pygments==2.18.0
+PyYAML==6.0.2

@@ -1,0 +1,10 @@
+.git
+.github
+.claude
+archive
+reference
+node_modules
+# Regenerated inside the builder stages; never copy a stale local build in.
+site/blog
+site/vendor
+site/scripts/run-experience.js
