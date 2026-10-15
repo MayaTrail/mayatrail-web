@@ -30,6 +30,35 @@
   --serif: 'Instrument Serif', Georgia, serif;
 }
 
+
+/* ============== PAGE TRANSITIONS ==============
+   Cross-document view transitions. The nav, the brand and the footer are named,
+   so they hold still while the body of the page crossfades: moving between the
+   four pages reads as one surface rather than four separate loads. This is CSS
+   only, no router and no script; a browser without support just navigates.
+   Smooth in-page scrolling comes from the same place, and both are turned off
+   for anyone who has asked for reduced motion. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+.nav       { view-transition-name: site-nav; }
+.brand     { view-transition-name: site-brand; }
+footer     { view-transition-name: site-footer; }
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
 * { box-sizing: border-box; }
 
 /* ============== BROWSER SURFACES ==============

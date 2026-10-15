@@ -28,7 +28,7 @@
   text-decoration: none; color: var(--ink);
   transition: background 0.15s;
 }
-.entry:hover { background: rgba(106,168,255,0.03); }
+.entry:hover { background: transparent; border-color: var(--rule-3); }
 .entry__meta {
   display: flex; flex-direction: column; gap: 6px;
   font-family: var(--mono); font-size: 11px;
@@ -50,7 +50,7 @@
 }
 
 .empty {
-  border: 1px solid var(--rule); background: var(--bg-1);
+  border: 1px solid var(--rule); background: transparent;
   padding: clamp(40px, 6vw, 64px) 32px;
   text-align: center;
 }
@@ -137,13 +137,13 @@
 
 .prose code {
   font-family: var(--mono); font-size: 0.86em;
-  background: var(--bg-2); border: 1px solid var(--rule);
+  background: transparent; border: 1px solid var(--rule);
   padding: 1px 6px; color: var(--ink);
 }
 
 /* Fenced blocks. codehilite wraps them in .highlight; a plain block is bare. */
 .prose pre, .prose .highlight {
-  background: var(--bg-1);
+  background: transparent;
   border: 1px solid var(--rule);
   padding: 18px 20px;
   overflow-x: auto;
@@ -164,7 +164,7 @@
   border: 1px solid var(--rule); padding: 11px 14px; text-align: left;
 }
 .prose th {
-  background: var(--bg-2); color: var(--ink);
+  background: transparent; color: var(--ink);
   font-family: var(--mono); font-size: 11px; font-weight: 500;
   text-transform: uppercase; letter-spacing: 0.14em;
 }
@@ -206,12 +206,12 @@
 .around__link {
   flex: 1 1 260px;
   display: flex; flex-direction: column; gap: 8px;
-  border: 1px solid var(--rule); background: var(--bg-1);
+  border: 1px solid var(--rule); background: transparent;
   padding: 22px 24px;
   text-decoration: none; color: var(--ink);
   transition: border-color 0.15s, background 0.15s;
 }
-.around__link:hover { border-color: var(--cool); background: var(--bg-2); }
+.around__link:hover { border-color: var(--rule-3); background: transparent; }
 .around__link--next { text-align: right; align-items: flex-end; }
 .around__dir {
   font-family: var(--mono); font-size: 11px;

@@ -4,122 +4,117 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MayaTrail - Services</title>
-<meta name="description" content="MayaTrail services: AWS security training, incident-response drills, posture review, red teaming, CI/CD and infrastructure hardening." />
+<meta name="description" content="MayaTrail engagements: AWS security training, incident response training, security assessment, red teaming, CI/CD security and infrastructure security." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="mayatrail-base.css" />
-<style>
+<link rel="stylesheet" href="mayatrail-base.css">
 
+<style>
+  /* ====================================================================
+     SERVICES - page-specific styles
+     Same world as the platform page: square and transparent surfaces,
+     one blue ramp for sequence, actions are the only round things.
+     ==================================================================== */
+
+  /* ============== HERO ============== */
   .svc-hero {
-    max-width: 1100px; margin: 0 auto; padding: 80px 28px 30px;
+    max-width: 1320px; margin: 0 auto;
+    padding: clamp(64px, 9vh, 104px) 28px clamp(40px, 5vh, 68px);
   }
   .svc-hero h1 {
-    font-family: var(--sans); font-weight: 600;
-    font-size: clamp(34px, 5.5vw, 56px); line-height: 1.08;
-    letter-spacing: -0.028em; margin: 18px 0 0;
+    font-family: var(--sans); font-weight: 700;
+    font-size: clamp(36px, 5.2vw, 62px);
+    line-height: 1.06; letter-spacing: -0.035em;
+    color: var(--ink); margin: 0 0 22px; max-width: 18ch;
   }
-  .svc-hero h1 .em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cool); }
+  .svc-hero h1 .rest { color: var(--ink-3); }
   .svc-hero p {
-    font-family: var(--sans); font-size: clamp(15px, 2.2vw, 18px); line-height: 1.6;
-    color: var(--ink-2); margin: 22px 0 0; max-width: 720px;
+    font-family: var(--sans); font-size: clamp(16px, 2vw, 18px);
+    line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 62ch;
   }
 
-  /* engagement chain */
-  .chain {
-    max-width: 1100px; margin: 30px auto 0; padding: 0 28px;
+  /* ============== ENGAGEMENT RAIL ==============
+     The same numbered ramp as the four steps of a run on the platform page,
+     turned on its side. Rules, not boxes. */
+  .eng {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px clamp(56px, 6vw, 88px);
   }
-  .chain-rail {
-    border: 1px solid var(--rule);
-    background: var(--bg-1);
+  .eng__row {
+    display: grid; grid-template-columns: 62px minmax(0, 1fr);
+    gap: 0 28px; padding: 32px 0;
+    border-top: 1px solid var(--rule);
   }
-  .chain-step {
-    display: grid; grid-template-columns: 84px 1fr;
-    border-bottom: 1px solid var(--rule);
-    position: relative;
+  .eng__row:last-child { border-bottom: 1px solid var(--rule); }
+  .eng__rail { display: flex; flex-direction: column; align-items: center; }
+  .eng__n {
+    flex: none; width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid currentColor;
+    font-family: var(--mono); font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
   }
-  .chain-step:last-child { border-bottom: 0; }
-  .chain-step .spine {
-    border-right: 1px solid var(--rule);
-    background: var(--bg-2);
-    display: flex; flex-direction: column; align-items: center;
-    padding: 22px 0; position: relative;
-  }
-  .chain-step .spine .num {
-    font-family: var(--mono); font-size: 12px; color: var(--ink-3);
-    letter-spacing: 0.14em; margin-bottom: 12px;
-  }
-  .chain-step .spine .dot {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--cool); box-shadow: 0 0 12px var(--cool-dim);
-    z-index: 1;
-  }
-  .chain-step .spine .dot.hot { background: var(--hot); box-shadow: 0 0 12px var(--hot-dim); }
-  /* connector */
-  .chain-step .spine::after {
-    content: ''; position: absolute; top: 50px; bottom: -1px; width: 1px;
-    background: var(--rule-2);
-  }
-  .chain-step:last-child .spine::after { display: none; }
+  .eng__line { flex: 1 1 auto; width: 1px; margin-top: 14px; }
+  .eng__row:last-child .eng__line { display: none; }
 
-  .chain-step .body { padding: 22px 26px; }
-  .chain-step .body h2 {
-    font-family: var(--sans); font-size: 19px; font-weight: 600;
-    letter-spacing: -0.015em; margin: 0; color: var(--ink);
+  .eng__row:nth-child(1) .eng__n { color: rgba(106,168,255,0.35); }
+  .eng__row:nth-child(2) .eng__n { color: rgba(106,168,255,0.48); }
+  .eng__row:nth-child(3) .eng__n { color: rgba(106,168,255,0.61); }
+  .eng__row:nth-child(4) .eng__n { color: rgba(106,168,255,0.74); }
+  .eng__row:nth-child(5) .eng__n { color: rgba(106,168,255,0.87); }
+  .eng__row:nth-child(6) .eng__n { color: var(--cool); }
+  .eng__row:nth-child(1) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.35), rgba(106,168,255,0.48)); }
+  .eng__row:nth-child(2) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.48), rgba(106,168,255,0.61)); }
+  .eng__row:nth-child(3) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.61), rgba(106,168,255,0.74)); }
+  .eng__row:nth-child(4) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.74), rgba(106,168,255,0.87)); }
+  .eng__row:nth-child(5) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.87), var(--cool)); }
+  .eng__n b { color: var(--ink-3); font-weight: 400; }
+  .eng__row:nth-child(6) .eng__n b { color: var(--cool); }
+
+  .eng__t {
+    font-family: var(--sans); font-size: clamp(19px, 2.2vw, 23px);
+    font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
+    margin: 2px 0 12px;
   }
-  .chain-step .body .tag-row {
-    display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 0;
+  .eng__tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
+  .eng__tags span {
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-3); border: 1px solid var(--rule-2);
+    padding: 3px 9px;
   }
-  .chain-step .body .tag-row span {
-    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.12em; color: var(--ink-3);
-    border: 1px solid var(--rule-2); padding: 3px 8px;
-  }
-  .chain-step .body p {
-    font-family: var(--sans); font-size: 14.5px; line-height: 1.55;
-    color: var(--ink-2); margin: 12px 0 0; max-width: 640px;
+  .eng__d {
+    font-family: var(--sans); font-size: 15px; line-height: 1.6;
+    color: var(--ink-2); margin: 0; max-width: 72ch;
   }
 
-  /* CTA band */
+  /* ============== CLOSE ============== */
   .svc-cta {
-    max-width: 1100px; margin: 30px auto 80px; padding: 0 28px;
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px;
   }
-  .svc-cta .inner {
-    border: 1px solid var(--rule-2);
-    background:
-      radial-gradient(ellipse 600px 200px at 50% 0%, rgba(106,168,255,0.06), transparent 70%),
-      var(--bg-1);
-    padding: 44px 40px; text-align: center;
-    position: relative; overflow: hidden;
+  .svc-cta__inner {
+    border: 1px solid var(--rule-2); background: transparent;
+    padding: clamp(32px, 4vw, 56px); text-align: center;
   }
-  .svc-cta .inner::before, .svc-cta .inner::after {
-    content: ''; position: absolute; width: 48px; height: 48px;
-    border: 1px solid var(--cool); opacity: 0.3;
+  .svc-cta__inner p {
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
+    color: var(--ink-2); max-width: 600px; margin: 16px auto 0;
   }
-  .svc-cta .inner::before { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
-  .svc-cta .inner::after { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
-  .svc-cta h2 {
-    font-family: var(--sans); font-weight: 600; font-size: clamp(24px, 4vw, 34px);
-    letter-spacing: -0.02em; margin: 0; line-height: 1.12;
+  .svc-cta__row {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-top: 28px;
   }
-  .svc-cta h2 .em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cool); }
-  .svc-cta p {
-    font-family: var(--sans); font-size: 15px; color: var(--ink-2);
-    max-width: 520px; margin: 16px auto 0; line-height: 1.55;
-  }
-  .svc-cta .row { display: flex; gap: 10px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
 
-  @media (max-width: 680px) {
-    .chain-step { grid-template-columns: 56px 1fr; }
-    .chain-step .body { padding: 18px 18px; }
-    .svc-cta .row { flex-direction: column; }
-    .svc-cta .row .btn { width: 100%; text-align: center; justify-content: center; }
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 720px) {
+    .svc-hero, .eng, .svc-cta { padding-left: 18px; padding-right: 18px; }
+    .eng__row { grid-template-columns: 42px minmax(0, 1fr); gap: 0 18px; }
   }
 </style>
 </head>
 <body>
-<main>
 
 <!-- ============== NAV ============== -->
 <nav class="nav">
@@ -136,99 +131,99 @@
   </div>
 </nav>
 
-<!-- ============== HERO ============== -->
-<section class="svc-hero">
-  <h1>The platform finds the gaps. <span class="em">Our team closes them.</span></h1>
-  <p>
-    MayaTrail the product runs the attacks. When you want people on the problem, we run the whole
-    arc, from training your team to red-teaming your cloud and hardening the pipeline that builds it.
-    Each engagement chains into the next, so a workshop can grow into a full program.
-  </p>
-</section>
+<main>
 
-<!-- ============== ENGAGEMENT CHAIN ============== -->
-<div class="chain">
-  <div class="chain-rail">
+  <!-- ============== HERO ============== -->
+  <section class="svc-hero">
+    <h1>The platform finds the gaps. <span class="rest">Our team closes them.</span></h1>
+    <p>
+      MayaTrail the product runs the attacks. When you want people on the problem, we run the whole
+      arc, from training your team to red-teaming your cloud and hardening the pipeline that builds it.
+      Each engagement chains into the next, so a workshop can grow into a full program.
+    </p>
+  </section>
 
-    <div class="chain-step">
-      <div class="spine"><span class="num">01</span><span class="dot"></span></div>
-      <div class="body">
-        <h2>AWS Security training</h2>
-        <div class="tag-row"><span>workshop</span><span>hands-on</span><span>team upskilling</span></div>
-        <p>Hands-on sessions on the real AWS attack surface, IAM, STS and the data services, taught through live emulations instead of slides. Your engineers learn how attackers actually move, by watching it happen.</p>
+  <!-- ============== ENGAGEMENT RAIL ============== -->
+  <section class="eng">
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>01</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">AWS Security training</h2>
+        <div class="eng__tags"><span>workshop</span><span>hands-on</span><span>team upskilling</span></div>
+        <p class="eng__d">Hands-on sessions on the real AWS attack surface, IAM, STS and the data services, taught through live emulations instead of slides. Your engineers learn how attackers actually move, by watching it happen.</p>
       </div>
     </div>
 
-    <div class="chain-step">
-      <div class="spine"><span class="num">02</span><span class="dot"></span></div>
-      <div class="body">
-        <h2>Incident response training</h2>
-        <div class="tag-row"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
-        <p>Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work the real CloudTrail evidence a MayaTrail run produces, so the practice looks exactly like the day it matters.</p>
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>02</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">Incident response training</h2>
+        <div class="eng__tags"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
+        <p class="eng__d">Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work the real CloudTrail evidence a MayaTrail run produces, so the practice looks exactly like the day it matters.</p>
       </div>
     </div>
 
-    <div class="chain-step">
-      <div class="spine"><span class="num">03</span><span class="dot"></span></div>
-      <div class="body">
-        <h2>AWS security assessment / review</h2>
-        <div class="tag-row"><span>posture</span><span>identity</span><span>logging</span></div>
-        <p>A structured review of your AWS posture, identity, logging coverage and blast radius, benchmarked against how named adversaries actually operate rather than a generic checklist.</p>
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>03</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">AWS security assessment and review</h2>
+        <div class="eng__tags"><span>posture</span><span>identity</span><span>logging</span></div>
+        <p class="eng__d">A structured review of your AWS posture, identity, logging coverage and blast radius, benchmarked against how named adversaries actually operate rather than a generic checklist.</p>
       </div>
     </div>
 
-    <div class="chain-step">
-      <div class="spine"><span class="num">04</span><span class="dot hot"></span></div>
-      <div class="body">
-        <h2>Red teaming</h2>
-        <div class="tag-row"><span>adversary emulation</span><span>full chain</span><span>findings report</span></div>
-        <p>Full adversary emulation against your environment. The named APT chains, run for real, end to end, with a findings report that maps every step to what your detections did and didn't catch.</p>
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>04</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">Red teaming</h2>
+        <div class="eng__tags"><span>adversary emulation</span><span>full chain</span><span>findings report</span></div>
+        <p class="eng__d">Full adversary emulation against your environment. The named APT chains, run for real, end to end, with a findings report that maps every step to what your detections did and did not catch.</p>
       </div>
     </div>
 
-    <div class="chain-step">
-      <div class="spine"><span class="num">05</span><span class="dot"></span></div>
-      <div class="body">
-        <h2>CI/CD security</h2>
-        <div class="tag-row"><span>pipeline</span><span>supply chain</span><span>secrets</span></div>
-        <p>Secure the path from commit to deploy, pipeline identity, build-time secrets, supply-chain integrity and artifact signing, so the way you ship code isn't the way you get breached.</p>
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>05</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">CI/CD security</h2>
+        <div class="eng__tags"><span>pipeline</span><span>supply chain</span><span>secrets</span></div>
+        <p class="eng__d">Secure the path from commit to deploy: pipeline identity, build-time secrets, supply-chain integrity and artifact signing, so the way you ship code is not the way you get breached.</p>
       </div>
     </div>
 
-    <div class="chain-step">
-      <div class="spine"><span class="num">06</span><span class="dot"></span></div>
-      <div class="body">
-        <h2>Infrastructure security</h2>
-        <div class="tag-row"><span>network</span><span>IaC</span><span>guardrails</span></div>
-        <p>Harden the cloud foundation, network design, infrastructure-as-code and account guardrails, so the gaps the emulations surface stay closed and don't quietly reopen on the next deploy.</p>
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>06</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">Infrastructure security</h2>
+        <div class="eng__tags"><span>network</span><span>IaC</span><span>guardrails</span></div>
+        <p class="eng__d">Harden the cloud foundation: network design, infrastructure-as-code and account guardrails, so the gaps the emulations surface stay closed and do not quietly reopen on the next deploy.</p>
       </div>
     </div>
 
-  </div>
-</div>
+  </section>
 
-<!-- ============== CTA ============== -->
-<div class="svc-cta">
-  <div class="inner">
-    <h2>From a single workshop to <span class="em">an end-to-end program.</span></h2>
-    <p>Tell us where you are and what you're worried about. We'll scope an engagement that fits, and everything we find feeds straight back into the platform.</p>
-    <div class="row">
-      <a class="btn" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Talk to the team <span class="arrow">&rarr;</span></a>
-      <a class="btn outline" href="index.html">See the platform first</a>
+  <!-- ============== CLOSE ============== -->
+  <section class="svc-cta">
+    <div class="svc-cta__inner">
+      <h2 class="h-2">From a single workshop to <span class="em">an end-to-end program.</span></h2>
+      <p>Tell us where you are and what you are worried about. We will scope an engagement that fits, and everything we find feeds straight back into the platform.</p>
+      <div class="svc-cta__row">
+        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Talk to the team</a>
+        <a class="pill line" href="index.html">See the platform first</a>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
 
-<footer>
-  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1 <span class="note">use only in isolated test accounts</span></span>
-  <div class="links">
-    <a href="index.html">Platform</a>
-    <a href="services.html">Services</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="blog/">Blog</a>
-    <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
-  </div>
-</footer>
+  <footer>
+    <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b> &middot; v0.1 <span class="note">use only in isolated test accounts</span></span>
+    <div class="links">
+      <a href="index.html">Platform</a>
+      <a href="services.html">Services</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="blog/">Blog</a>
+      <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
+    </div>
+  </footer>
 
 </main>
 </body>
