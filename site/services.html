@@ -5,226 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MayaTrail - Services</title>
 <meta name="description" content="MayaTrail engagements: AWS security training, incident response training, security assessment, red teaming, CI/CD security and infrastructure security." />
+<link rel="canonical" href="https://mayatrail.tech/#services">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<!-- The site is one scrolling document now. This URL is kept alive because it
+     has been shared, and it lands on the matching surface. -->
+<meta http-equiv="refresh" content="0; url=index.html#services">
+<script>location.replace('index.html#services');</script>
 <link rel="stylesheet" href="mayatrail-base.css">
-
 <style>
-  /* ====================================================================
-     SERVICES - page-specific styles
-     Same world as the platform page: square and transparent surfaces,
-     one blue ramp for sequence, actions are the only round things.
-     ==================================================================== */
-
-  /* ============== HERO ============== */
-  .svc-hero {
-    max-width: 1320px; margin: 0 auto;
-    padding: clamp(64px, 9vh, 104px) 28px clamp(40px, 5vh, 68px);
-  }
-  .svc-hero h1 {
-    font-family: var(--sans); font-weight: 700;
-    font-size: clamp(36px, 5.2vw, 62px);
-    line-height: 1.06; letter-spacing: -0.035em;
-    color: var(--ink); margin: 0 0 22px; max-width: 18ch;
-  }
-  .svc-hero h1 .rest { color: var(--ink-3); }
-  .svc-hero p {
-    font-family: var(--sans); font-size: clamp(16px, 2vw, 18px);
-    line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 62ch;
-  }
-
-  /* ============== ENGAGEMENT RAIL ==============
-     The same numbered ramp as the four steps of a run on the platform page,
-     turned on its side. Rules, not boxes. */
-  .eng {
-    max-width: 1320px; margin: 0 auto;
-    padding: 0 28px clamp(56px, 6vw, 88px);
-  }
-  .eng__row {
-    display: grid; grid-template-columns: 62px minmax(0, 1fr);
-    gap: 0 28px; padding: 32px 0;
-    border-top: 1px solid var(--rule);
-  }
-  .eng__row:last-child { border-bottom: 1px solid var(--rule); }
-  .eng__rail { display: flex; flex-direction: column; align-items: center; }
-  .eng__n {
-    flex: none; width: 30px; height: 30px; border-radius: 50%;
-    border: 1px solid currentColor;
-    font-family: var(--mono); font-size: 12px;
-    display: inline-flex; align-items: center; justify-content: center;
-  }
-  .eng__line { flex: 1 1 auto; width: 1px; margin-top: 14px; }
-  .eng__row:last-child .eng__line { display: none; }
-
-  .eng__row:nth-child(1) .eng__n { color: rgba(106,168,255,0.35); }
-  .eng__row:nth-child(2) .eng__n { color: rgba(106,168,255,0.48); }
-  .eng__row:nth-child(3) .eng__n { color: rgba(106,168,255,0.61); }
-  .eng__row:nth-child(4) .eng__n { color: rgba(106,168,255,0.74); }
-  .eng__row:nth-child(5) .eng__n { color: rgba(106,168,255,0.87); }
-  .eng__row:nth-child(6) .eng__n { color: var(--cool); }
-  .eng__row:nth-child(1) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.35), rgba(106,168,255,0.48)); }
-  .eng__row:nth-child(2) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.48), rgba(106,168,255,0.61)); }
-  .eng__row:nth-child(3) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.61), rgba(106,168,255,0.74)); }
-  .eng__row:nth-child(4) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.74), rgba(106,168,255,0.87)); }
-  .eng__row:nth-child(5) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.87), var(--cool)); }
-  .eng__n b { color: var(--ink-3); font-weight: 400; }
-  .eng__row:nth-child(6) .eng__n b { color: var(--cool); }
-
-  .eng__t {
-    font-family: var(--sans); font-size: clamp(19px, 2.2vw, 23px);
-    font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
-    margin: 2px 0 12px;
-  }
-  .eng__tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
-  .eng__tags span {
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.12em;
-    color: var(--ink-3); border: 1px solid var(--rule-2);
-    padding: 3px 9px;
-  }
-  .eng__d {
-    font-family: var(--sans); font-size: 15px; line-height: 1.6;
-    color: var(--ink-2); margin: 0; max-width: 72ch;
-  }
-
-  /* ============== CLOSE ============== */
-  .svc-cta {
-    max-width: 1320px; margin: 0 auto;
-    padding: 0 28px;
-  }
-  .svc-cta__inner {
-    border: 1px solid var(--rule-2); background: transparent;
-    padding: clamp(32px, 4vw, 56px); text-align: center;
-  }
-  .svc-cta__inner p {
-    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
-    color: var(--ink-2); max-width: 600px; margin: 16px auto 0;
-  }
-  .svc-cta__row {
-    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    margin-top: 28px;
-  }
-
-  /* ============== RESPONSIVE ============== */
-  @media (max-width: 720px) {
-    .svc-hero, .eng, .svc-cta { padding-left: 18px; padding-right: 18px; }
-    .eng__row { grid-template-columns: 42px minmax(0, 1fr); gap: 0 18px; }
-  }
+  .stub { max-width: 1320px; margin: 0 auto; padding: 96px 28px; }
+  .stub h1 { font-family: var(--sans); font-weight: 600; font-size: 28px; letter-spacing: -0.02em; margin: 0 0 14px; }
+  .stub p { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--ink-2); margin: 0 0 26px; max-width: 56ch; }
 </style>
 </head>
 <body>
-
-<!-- ============== NAV ============== -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="brand" style="margin-right:auto;" href="index.html"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
-    <div class="nav-links">
-      <a href="index.html">Platform</a>
-      <a href="services.html" class="active">Services</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="blog/">Blog</a>
-    </div>
-    <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
-    <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Request access</a>
-  </div>
-</nav>
-
-<main>
-
-  <!-- ============== HERO ============== -->
-  <section class="svc-hero">
-    <h1>The platform finds the gaps. <span class="rest">Our team closes them.</span></h1>
-    <p>
-      MayaTrail the product runs the attacks. When you want people on the problem, we run the whole
-      arc, from training your team to red-teaming your cloud and hardening the pipeline that builds it.
-      Each engagement chains into the next, so a workshop can grow into a full program.
-    </p>
-  </section>
-
-  <!-- ============== ENGAGEMENT RAIL ============== -->
-  <section class="eng">
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>01</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">AWS Security training</h2>
-        <div class="eng__tags"><span>workshop</span><span>hands-on</span><span>team upskilling</span></div>
-        <p class="eng__d">Hands-on sessions on the real AWS attack surface, IAM, STS and the data services, taught through live emulations instead of slides. Your engineers learn how attackers actually move, by watching it happen.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>02</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">Incident response training</h2>
-        <div class="eng__tags"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
-        <p class="eng__d">Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work the real CloudTrail evidence a MayaTrail run produces, so the practice looks exactly like the day it matters.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>03</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">AWS security assessment and review</h2>
-        <div class="eng__tags"><span>posture</span><span>identity</span><span>logging</span></div>
-        <p class="eng__d">A structured review of your AWS posture, identity, logging coverage and blast radius, benchmarked against how named adversaries actually operate rather than a generic checklist.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>04</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">Red teaming</h2>
-        <div class="eng__tags"><span>adversary emulation</span><span>full chain</span><span>findings report</span></div>
-        <p class="eng__d">Full adversary emulation against your environment. The named APT chains, run for real, end to end, with a findings report that maps every step to what your detections did and did not catch.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>05</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">CI/CD security</h2>
-        <div class="eng__tags"><span>pipeline</span><span>supply chain</span><span>secrets</span></div>
-        <p class="eng__d">Secure the path from commit to deploy: pipeline identity, build-time secrets, supply-chain integrity and artifact signing, so the way you ship code is not the way you get breached.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>06</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">Infrastructure security</h2>
-        <div class="eng__tags"><span>network</span><span>IaC</span><span>guardrails</span></div>
-        <p class="eng__d">Harden the cloud foundation: network design, infrastructure-as-code and account guardrails, so the gaps the emulations surface stay closed and do not quietly reopen on the next deploy.</p>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ============== CLOSE ============== -->
-  <section class="svc-cta">
-    <div class="svc-cta__inner">
-      <h2 class="h-2">From a single workshop to <span class="em">an end-to-end program.</span></h2>
-      <p>Tell us where you are and what you are worried about. We will scope an engagement that fits, and everything we find feeds straight back into the platform.</p>
-      <div class="svc-cta__row">
-        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Talk to the team</a>
-        <a class="pill line" href="index.html">See the platform first</a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b> &middot; v0.1 <span class="note">use only in isolated test accounts</span></span>
-    <div class="links">
-      <a href="index.html">Platform</a>
-      <a href="services.html">Services</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="blog/">Blog</a>
-      <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
-    </div>
-  </footer>
-
+<main class="stub">
+  <h1>Services</h1>
+  <p>Services now lives on the main page. If you are not moved there automatically, follow the link.</p>
+  <a class="pill" href="index.html#services">Go to services</a>
 </main>
 </body>
 </html>

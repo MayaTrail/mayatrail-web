@@ -10,14 +10,16 @@ This repository contains the source code for the MayaTrail website: a static
 site of plain HTML and CSS, served by nginx in Docker and deployed on AWS. The
 site code lives in [`site/`](site/).
 
-Four surfaces, and no more:
+Two documents, and no more:
 
 | Page | What it is for |
 |---|---|
-| `site/index.html` | The platform. Hero, the four steps of a run, and what a run can conclude. |
-| `site/services.html` | The engagements, from a workshop to a full red team. |
-| `site/pricing.html` | The assessment, the annual plans, and how billing works. |
+| `site/index.html` | One scroll, three surfaces: `#platform`, `#services`, `#pricing`. Scrolling carries you from one into the next and the nav marks itself as each passes under it. |
 | `site/blog/` | Field notes, generated from `blog/*.md`. |
+
+`site/services.html` and `site/pricing.html` are redirect stubs. Those URLs were
+shared before the rework, so they stay alive and land on the matching surface.
+Do not add content to them.
 
 Everything deeper than that lives in the product repository at
 [github.com/MayaTrail/step1](https://github.com/MayaTrail/step1): campaign

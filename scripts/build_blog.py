@@ -180,8 +180,8 @@ def _nav(depth: int) -> str:
     up = "../" * depth
     links = [
         ("index.html", "Platform"),
-        ("services.html", "Services"),
-        ("pricing.html", "Pricing"),
+        ("index.html#services", "Services"),
+        ("index.html#pricing", "Pricing"),
     ]
     items = "".join(f'\n      <a href="{up}{href}">{label}</a>' for href, label in links)
     return f"""<nav class="nav">
@@ -202,8 +202,8 @@ def _nav(depth: int) -> str:
 def _footer(depth: int) -> str:
     up = "../" * depth
     links = [
-        ("index.html", "Platform"), ("services.html", "Services"),
-        ("pricing.html", "Pricing"),
+        ("index.html", "Platform"), ("index.html#services", "Services"),
+        ("index.html#pricing", "Pricing"),
     ]
     items = "".join(f'\n    <a href="{up}{href}">{label}</a>' for href, label in links)
     return f"""<footer>

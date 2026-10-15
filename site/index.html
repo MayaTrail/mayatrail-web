@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="mayatrail-base.css">
 
 <style>
+  /* ===== PLATFORM ===== */
   /* ====================================================================
      LANDING - page-specific styles
      Surfaces are square and transparent, so the rule is what you see.
@@ -160,6 +161,347 @@
     .track { gap: 24px; }
     .track__step { flex: 1 1 100%; }
   }
+
+  /* ===== SERVICES ===== */
+  /* ====================================================================
+     SERVICES - page-specific styles
+     Same world as the platform page: square and transparent surfaces,
+     one blue ramp for sequence, actions are the only round things.
+     ==================================================================== */
+
+  /* ============== HERO ============== */
+  .svc-hero {
+    max-width: 1320px; margin: 0 auto;
+    padding: clamp(64px, 9vh, 104px) 28px clamp(40px, 5vh, 68px);
+  }
+  .svc-hero .svc-h {
+    font-family: var(--sans); font-weight: 700;
+    font-size: clamp(36px, 5.2vw, 62px);
+    line-height: 1.06; letter-spacing: -0.035em;
+    color: var(--ink); margin: 0 0 22px; max-width: 18ch;
+  }
+  .svc-hero .svc-h .rest { color: var(--ink-3); }
+  .svc-hero p {
+    font-family: var(--sans); font-size: clamp(16px, 2vw, 18px);
+    line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 62ch;
+  }
+
+  /* ============== ENGAGEMENT RAIL ==============
+     The same numbered ramp as the four steps of a run on the platform page,
+     turned on its side. Rules, not boxes. */
+  .eng {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px clamp(56px, 6vw, 88px);
+  }
+  .eng__row {
+    display: grid; grid-template-columns: 62px minmax(0, 1fr);
+    gap: 0 28px; padding: 32px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .eng__row:last-child { border-bottom: 1px solid var(--rule); }
+  .eng__rail { display: flex; flex-direction: column; align-items: center; }
+  .eng__n {
+    flex: none; width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid currentColor;
+    font-family: var(--mono); font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .eng__line { flex: 1 1 auto; width: 1px; margin-top: 14px; }
+  .eng__row:last-child .eng__line { display: none; }
+
+  .eng__row:nth-child(1) .eng__n { color: rgba(106,168,255,0.35); }
+  .eng__row:nth-child(2) .eng__n { color: rgba(106,168,255,0.48); }
+  .eng__row:nth-child(3) .eng__n { color: rgba(106,168,255,0.61); }
+  .eng__row:nth-child(4) .eng__n { color: rgba(106,168,255,0.74); }
+  .eng__row:nth-child(5) .eng__n { color: rgba(106,168,255,0.87); }
+  .eng__row:nth-child(6) .eng__n { color: var(--cool); }
+  .eng__row:nth-child(1) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.35), rgba(106,168,255,0.48)); }
+  .eng__row:nth-child(2) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.48), rgba(106,168,255,0.61)); }
+  .eng__row:nth-child(3) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.61), rgba(106,168,255,0.74)); }
+  .eng__row:nth-child(4) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.74), rgba(106,168,255,0.87)); }
+  .eng__row:nth-child(5) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.87), var(--cool)); }
+  .eng__n b { color: var(--ink-3); font-weight: 400; }
+  .eng__row:nth-child(6) .eng__n b { color: var(--cool); }
+
+  .eng__t {
+    font-family: var(--sans); font-size: clamp(19px, 2.2vw, 23px);
+    font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
+    margin: 2px 0 12px;
+  }
+  .eng__tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; }
+  .eng__tags span {
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--ink-3); border: 1px solid var(--rule-2);
+    padding: 3px 9px;
+  }
+  .eng__d {
+    font-family: var(--sans); font-size: 15px; line-height: 1.6;
+    color: var(--ink-2); margin: 0; max-width: 72ch;
+  }
+
+  /* ============== CLOSE ============== */
+  .svc-cta {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px;
+  }
+  .svc-cta__inner {
+    border: 1px solid var(--rule-2); background: transparent;
+    padding: clamp(32px, 4vw, 56px); text-align: center;
+  }
+  .svc-cta__inner p {
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
+    color: var(--ink-2); max-width: 600px; margin: 16px auto 0;
+  }
+  .svc-cta__row {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 720px) {
+    .svc-hero, .eng, .svc-cta { padding-left: 18px; padding-right: 18px; }
+    .eng__row { grid-template-columns: 42px minmax(0, 1fr); gap: 0 18px; }
+  }
+
+  /* ===== PRICING ===== */
+  /* ====================================================================
+     PRICING - page-specific styles
+     Same world as the platform page: square and transparent surfaces, one
+     rule weight, actions are the only round things. No filled cards.
+     ==================================================================== */
+  /* ============== HERO ============== */
+  .p-head {
+    max-width: 1320px; margin: 0 auto;
+    padding: clamp(64px, 9vh, 104px) 28px clamp(32px, 4vh, 52px);
+  }
+  .p-head .p-h {
+    font-family: var(--sans); font-weight: 700;
+    font-size: clamp(36px, 5.2vw, 62px);
+    line-height: 1.06; letter-spacing: -0.035em;
+    color: var(--ink); margin: 0 0 22px; max-width: 20ch;
+  }
+  .p-head .p-h .rest { color: var(--ink-3); }
+  .p-head p {
+    font-family: var(--sans); font-size: clamp(16px, 2vw, 18px);
+    line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 62ch;
+  }
+
+  /* ============== LEAD OFFER ============== */
+  .lead { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(56px, 6vw, 88px); }
+  .lead-inner {
+    border: 1px solid var(--rule-2); background: transparent;
+    display: grid; grid-template-columns: 1.15fr 1fr;
+  }
+  .lead-body { padding: clamp(28px, 3.4vw, 44px); border-right: 1px solid var(--rule); }
+  .lead-side { padding: clamp(28px, 3.4vw, 44px); display: flex; flex-direction: column; }
+  .from {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 12px;
+  }
+  .price {
+    font-family: var(--sans); font-weight: 600;
+    font-size: clamp(32px, 4.2vw, 48px); line-height: 1;
+    letter-spacing: -0.035em; color: var(--ink);
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  }
+  .price .unit {
+    font-family: var(--mono); font-size: 12px; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .spec { list-style: none; margin: 24px 0 0; padding: 0; }
+  .spec li {
+    font-family: var(--sans); font-size: 14.5px; line-height: 1.55;
+    color: var(--ink-2);
+    padding: 11px 0 11px 26px; border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .spec li:last-child { border-bottom: 0; }
+  .spec li::before {
+    content: ''; position: absolute; left: 4px; top: 19px;
+    width: 10px; height: 1px; background: var(--cool);
+  }
+  .spec li b { color: var(--ink); font-weight: 600; }
+  .deliver {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px;
+  }
+  .deliver-list { list-style: none; margin: 0; padding: 0; flex: 1; }
+  .deliver-list li {
+    font-family: var(--sans); font-size: 14px; line-height: 1.55;
+    color: var(--ink-2); padding: 10px 0; border-bottom: 1px solid var(--rule);
+  }
+  .deliver-list li:last-child { border-bottom: 0; }
+  .lead-note {
+    font-family: var(--sans); font-size: 13.5px; line-height: 1.6;
+    color: var(--ink-3); margin: 22px 0 0;
+  }
+  .lead-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+
+  /* ============== PLANS ============== */
+  .plans {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--rule-2); background: transparent;
+  }
+  .plan {
+    padding: clamp(24px, 2.6vw, 34px); border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; background: transparent;
+  }
+  .plan:last-child { border-right: 0; }
+  .plan-name {
+    font-family: var(--sans); font-weight: 600; font-size: 18px;
+    letter-spacing: -0.015em; color: var(--ink); margin: 0;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .plan-for {
+    font-family: var(--sans); font-size: 13.5px; line-height: 1.5;
+    color: var(--ink-3); margin: 10px 0 24px; min-height: 42px;
+  }
+  .plan-price {
+    font-family: var(--sans); font-weight: 600; font-size: 32px;
+    letter-spacing: -0.03em; color: var(--ink); line-height: 1;
+  }
+  .plan-price .per {
+    font-family: var(--mono); font-size: 11px; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+    display: block; margin-top: 10px;
+  }
+  .plan .spec { margin-top: 22px; flex: 1; }
+  .plan .pill { margin-top: 26px; min-width: 0; width: 100%; height: 46px; font-size: 14px; }
+  .plan-flag {
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--cool); border: 1px solid var(--cool); padding: 3px 9px;
+  }
+
+  .fineprint {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.02em;
+    text-transform: none; color: var(--ink-3);
+    margin-top: 26px; line-height: 1.9;
+  }
+
+  /* ============== BILLING FACTS ============== */
+  .facts {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: 1px solid var(--rule-2);
+  }
+  .fact {
+    background: transparent; padding: clamp(24px, 2.4vw, 30px);
+    border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  }
+  .fact:nth-child(2n) { border-right: 0; }
+  .fact:nth-last-child(-n+1) { border-bottom: 0; }
+  .fact.wide { grid-column: 1 / -1; border-right: 0; }
+  .fact h3 {
+    font-family: var(--sans); font-weight: 600; font-size: 15.5px;
+    margin: 0 0 8px; color: var(--ink); letter-spacing: -0.01em;
+  }
+  .fact.wide h3 { color: var(--cool); }
+  .fact p { font-family: var(--sans); font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+
+  /* ============== FAQ ============== */
+  .faq { border-top: 1px solid var(--rule); }
+  .faq details { border-bottom: 1px solid var(--rule); }
+  .faq summary {
+    font-family: var(--sans); font-weight: 600; font-size: 15.5px; color: var(--ink);
+    padding: 20px 40px 20px 0; cursor: pointer; list-style: none; position: relative;
+    letter-spacing: -0.01em;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: '+'; position: absolute; right: 6px; top: 17px;
+    font-family: var(--mono); font-size: 18px; color: var(--ink-3);
+    transition: transform 0.18s;
+  }
+  .faq details[open] summary::after { content: '\2212'; }
+  .faq summary:hover { color: var(--cool); }
+  .faq p {
+    font-family: var(--sans); font-size: 14.5px; line-height: 1.65;
+    color: var(--ink-2); margin: 0 0 22px; max-width: 80ch; padding-right: 40px;
+  }
+
+  /* ============== CLOSE ============== */
+  .close-inner {
+    border: 1px solid var(--rule-2); background: transparent;
+    padding: clamp(32px, 4vw, 56px); text-align: center;
+  }
+  .close-inner p {
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
+    color: var(--ink-2); max-width: 600px; margin: 16px auto 0;
+  }
+  .close-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 980px) {
+    .lead-inner { grid-template-columns: minmax(0, 1fr); }
+    .lead-body { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .plans { grid-template-columns: minmax(0, 1fr); }
+    .plan { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .plan:last-child { border-bottom: 0; }
+    .facts { grid-template-columns: minmax(0, 1fr); }
+    .fact { border-right: 0; }
+  }
+  @media (max-width: 720px) {
+    .p-head, .lead { padding-left: 18px; padding-right: 18px; }
+  }
+
+  /* ============== ONE SCROLL, FOUR SURFACES ==============
+     The site is one document. Scrolling carries you from the platform into
+     the services and on into pricing without the page ever ending, and the
+     nav switches itself as each surface passes under it. The separate URLs
+     still resolve; they land on the matching section. */
+  .surface { scroll-margin-top: 76px; }
+  .surface + .surface { border-top: 1px solid var(--rule); }
+  .surface__lbl {
+    max-width: 1320px; margin: 0 auto;
+    padding: clamp(40px, 5vw, 72px) 28px 0;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .surface__lbl::after { content: ''; flex: 1 1 auto; height: 1px; background: var(--rule); }
+
+  /* Each surface fades up as it comes into view, so the boundary between two
+     of them reads as a transition rather than a seam. Scroll-driven, so it
+     tracks the scrollbar exactly and never runs on its own. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .surface__lbl, .surface > section {
+        animation: surface-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 42%;
+      }
+      @keyframes surface-in {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: none; }
+      }
+    }
+  }
+
+  /* The scroll cue at the foot of each surface, naming what comes next. */
+  .onward {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px clamp(56px, 6vw, 88px);
+  }
+  .onward a {
+    display: inline-flex; align-items: baseline; gap: 12px;
+    font-family: var(--sans); font-size: 15px; color: var(--ink-3);
+    text-decoration: none;
+  }
+  .onward a:hover { color: var(--cool); }
+  .onward .k {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-4);
+  }
+  .onward a:hover .k { color: var(--cool); }
+  .onward .arrow { display: inline-block; transition: transform 0.18s; }
+  .onward a:hover .arrow { transform: translateY(3px); }
+
+  /* The hero owns the first screen; the surfaces after it start from a rule. */
+  .surface .svc-hero,
+  .surface .p-head { padding-top: clamp(26px, 3vw, 40px); }
+
 </style>
 </head>
 <body>
@@ -167,11 +509,11 @@
 <!-- ============== NAV ============== -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="brand" style="margin-right:auto;"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
-    <div class="nav-links">
-      <a href="index.html" class="active">Platform</a>
-      <a href="services.html">Services</a>
-      <a href="pricing.html">Pricing</a>
+    <a href="#platform" class="brand" style="margin-right:auto;"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
+    <div class="nav-links" id="nav-links">
+      <a href="#platform" class="active" data-surface="platform">Platform</a>
+      <a href="#services" data-surface="services">Services</a>
+      <a href="#pricing" data-surface="pricing">Pricing</a>
       <a href="blog/">Blog</a>
     </div>
     <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
@@ -180,6 +522,8 @@
 </nav>
 
 <main>
+
+  <section class="surface" id="platform">
 
   <!-- ============== HERO ============== -->
   <section class="hero">
@@ -297,12 +641,12 @@ dangerdev / T1098.003
     <div class="way">
       <h3>Run it with us</h3>
       <p>A scoped assessment against your account, written up, with the gaps handed back as rules you can deploy.</p>
-      <a href="services.html">See what the assessment covers &rarr;</a>
+      <a href="#services">See what the assessment covers &rarr;</a>
     </div>
     <div class="way">
       <h3>Run it yourself</h3>
       <p>The platform, the campaign library and the detection content, on your own schedule.</p>
-      <a href="pricing.html">See what a licence costs &rarr;</a>
+      <a href="#pricing">See what a licence costs &rarr;</a>
     </div>
   </section>
 
@@ -315,11 +659,337 @@ dangerdev / T1098.003
     <a class="pill gh" href="https://github.com/MayaTrail/step1">github.com/MayaTrail</a>
   </section>
 
+
+  <div class="onward">
+    <a href="#services"><span class="k">Next</span><span>When you want people on the problem</span><span class="arrow">&darr;</span></a>
+  </div>
+  </section>
+
+  <section class="surface" id="services">
+    <p class="surface__lbl">Services</p>
+
+  <!-- ============== HERO ============== -->
+  <section class="svc-hero">
+    <h2 class="svc-h">The platform finds the gaps. <span class="rest">Our team closes them.</span></h2>
+    <p>
+      MayaTrail the product runs the attacks. When you want people on the problem, we run the whole
+      arc, from training your team to red-teaming your cloud and hardening the pipeline that builds it.
+      Each engagement chains into the next, so a workshop can grow into a full program.
+    </p>
+  </section>
+
+  <!-- ============== ENGAGEMENT RAIL ============== -->
+  <section class="eng">
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>01</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">AWS Security training</h2>
+        <div class="eng__tags"><span>workshop</span><span>hands-on</span><span>team upskilling</span></div>
+        <p class="eng__d">Hands-on sessions on the real AWS attack surface, IAM, STS and the data services, taught through live emulations instead of slides. Your engineers learn how attackers actually move, by watching it happen.</p>
+      </div>
+    </div>
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>02</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">Incident response training</h2>
+        <div class="eng__tags"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
+        <p class="eng__d">Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work the real CloudTrail evidence a MayaTrail run produces, so the practice looks exactly like the day it matters.</p>
+      </div>
+    </div>
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>03</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">AWS security assessment and review</h2>
+        <div class="eng__tags"><span>posture</span><span>identity</span><span>logging</span></div>
+        <p class="eng__d">A structured review of your AWS posture, identity, logging coverage and blast radius, benchmarked against how named adversaries actually operate rather than a generic checklist.</p>
+      </div>
+    </div>
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>04</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">Red teaming</h2>
+        <div class="eng__tags"><span>adversary emulation</span><span>full chain</span><span>findings report</span></div>
+        <p class="eng__d">Full adversary emulation against your environment. The named APT chains, run for real, end to end, with a findings report that maps every step to what your detections did and did not catch.</p>
+      </div>
+    </div>
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>05</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">CI/CD security</h2>
+        <div class="eng__tags"><span>pipeline</span><span>supply chain</span><span>secrets</span></div>
+        <p class="eng__d">Secure the path from commit to deploy: pipeline identity, build-time secrets, supply-chain integrity and artifact signing, so the way you ship code is not the way you get breached.</p>
+      </div>
+    </div>
+
+    <div class="eng__row">
+      <div class="eng__rail"><span class="eng__n"><b>06</b></span><span class="eng__line"></span></div>
+      <div>
+        <h2 class="eng__t">Infrastructure security</h2>
+        <div class="eng__tags"><span>network</span><span>IaC</span><span>guardrails</span></div>
+        <p class="eng__d">Harden the cloud foundation: network design, infrastructure-as-code and account guardrails, so the gaps the emulations surface stay closed and do not quietly reopen on the next deploy.</p>
+      </div>
+    </div>
+
+  </section>
+
+
+
+  <div class="onward">
+    <a href="#pricing"><span class="k">Next</span><span>What it costs</span><span class="arrow">&darr;</span></a>
+  </div>
+  </section>
+
+  <section class="surface" id="pricing">
+    <p class="surface__lbl">Pricing</p>
+
+  <!-- ============== HERO ============== -->
+  <section class="p-head">
+    <h2 class="p-h">Start with an assessment. <span class="rest">Keep it running if it earns its place.</span></h2>
+    <p>
+      Most teams buy the two-week assessment first, because it answers the question on its own:
+      which of these attacks does your stack actually catch? If the answer is uncomfortable, the
+      subscription is how you keep checking.
+    </p>
+  </section>
+
+  <!-- ============== LEAD OFFER ============== -->
+  <section class="lead">
+    <div class="lead-inner">
+      <div class="lead-body">
+        <span class="from">Cloud detection assessment</span>
+        <div class="price">
+          $20,000&ndash;30,000
+          <span class="unit">one-off &middot; 2&ndash;3 weeks</span>
+        </div>
+        <ul class="spec">
+          <li>We connect to <b>one AWS account</b> of yours through a scoped, read-and-emulate role. No long-lived keys, ever.</li>
+          <li>We run <b>real adversary campaigns</b> (SCARLETEEL&nbsp;2.0, AMBERSQUID, Codefinger, DangerDev, ECScape) against a disposable environment provisioned <b>inside that account of yours</b>, well away from production, and destroyed on a TTL.</li>
+          <li>Because the attack happens <b>in your account</b>, it lands in <b>your CloudTrail</b> and reaches <b>your SIEM</b> like any other activity. Your detections get a real chance to fire.</li>
+          <li>We read that CloudTrail back and grade every step: fired, silent, or no logs at all.</li>
+          <li>You get the <b>detection rules</b> that close the gaps, compiled for your SIEM.</li>
+          <li>Buyable on a services line. Most teams do not need a new vendor process for it.</li>
+        </ul>
+        <div class="lead-actions">
+          <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment">Book an assessment</a>
+          <a class="pill line" href="#services">What we do in the two weeks</a>
+        </div>
+      </div>
+      <div class="lead-side">
+        <div class="deliver">What you walk away with</div>
+        <ul class="deliver-list">
+          <li>A coverage report per campaign: every technique, and what your stack did about it</li>
+          <li>Sigma rules for the gaps, converted to Splunk SPL or OpenSearch</li>
+          <li>An incident-response playbook per campaign</li>
+          <li>The CloudTrail evidence behind every verdict, so you can check our working</li>
+          <li>A list of the techniques we <i>cannot</i> yet test for, stated plainly</li>
+        </ul>
+        <p class="lead-note">The assessment credits against your first year if you go on to subscribe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== PLANS ============== -->
+  <section class="s">
+    <div class="section-head">
+      <h2 class="h-2">Then keep it <span class="em">running</span></h2>
+      <p>
+        Detections rot. A rule that fired last quarter goes quiet after a log source moves or a
+        filter gets edited, and nothing tells you. An annual plan re-runs the campaigns on a
+        schedule and flags the ones that stopped firing.
+      </p>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <h3 class="plan-name">Open source</h3>
+        <p class="plan-for">Run the emulation core yourself, on your own infrastructure.</p>
+        <div class="plan-price">Free<span class="per">self-hosted</span></div>
+        <ul class="spec">
+          <li>The emulation packages, Pulumi recipes and CLI</li>
+          <li>Runs as a documented Docker Compose stack</li>
+          <li>Community support</li>
+          <li>You operate it, you keep it running</li>
+        </ul>
+        <a class="pill gh" href="https://github.com/MayaTrail/step1">View on GitHub</a>
+      </div>
+
+      <div class="plan">
+        <h3 class="plan-name">Team <span class="plan-flag">Most teams</span></h3>
+        <p class="plan-for">A detection engineering team that wants the loop running without operating it.</p>
+        <div class="plan-price">$25,000<span class="per">per year &middot; 1 AWS account</span></div>
+        <ul class="spec">
+          <li>Hosted, with the full campaign and single-technique library</li>
+          <li><b>Scheduled re-runs</b>, daily, weekly or monthly</li>
+          <li><b>Regression detection</b>: rules that used to fire and stopped</li>
+          <li>Evidence reports, exportable</li>
+          <li>SIEM rule export for every detection</li>
+          <li><b>Unlimited re-runs.</b> We never charge you for testing again</li>
+        </ul>
+        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20Team%20plan">Talk to us</a>
+      </div>
+
+      <div class="plan">
+        <h3 class="plan-name">Enterprise</h3>
+        <p class="plan-for">Several accounts, several teams, and someone who has to sign off on the evidence.</p>
+        <div class="plan-price">$75,000<span class="per">per year &middot; from 5 AWS accounts</span></div>
+        <ul class="spec">
+          <li>Everything in Team</li>
+          <li>Multiple connected accounts</li>
+          <li>Custom campaigns built for your environment</li>
+          <li>Named engineer, quarterly review</li>
+          <li>Security review and procurement support</li>
+        </ul>
+        <a class="pill line" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20Enterprise">Talk to us</a>
+      </div>
+    </div>
+
+    <p class="fineprint">
+      Prices in USD, excluding tax &middot; billed annually &middot; the unit is the connected AWS account
+      &middot; additional accounts $2,000&ndash;3,000 each
+    </p>
+  </section>
+
+  <!-- ============== HOW BILLING WORKS ============== -->
+  <section class="s" style="padding-top:0;">
+    <div class="section-head">
+      <h2 class="h-2">How the billing <span class="em">actually works</span></h2>
+      <p>No seats, no per-run metering, no surprises on the invoice. Here is the whole model.</p>
+    </div>
+
+    <div class="facts">
+      <div class="fact wide">
+        <h3>Everything runs in your account, not ours</h3>
+        <p>
+          We provision the disposable environment inside your AWS account and attack it from there,
+          well away from production. That is not a deployment detail. It is the only way the
+          activity reaches your CloudTrail and therefore your SIEM. An emulation run in our cloud
+          would prove nothing about your detections.
+        </p>
+      </div>
+      <div class="fact">
+        <h3>You are billed per connected AWS account</h3>
+        <p>
+          Not per seat and not per user. Detection teams are small and we would rather three more
+          of your engineers used it than not. Add an account and it is $2,000&ndash;3,000 more.
+        </p>
+      </div>
+      <div class="fact">
+        <h3>Re-running is free and always will be</h3>
+        <p>
+          Re-running is the behaviour that proves the product works, so charging for it would be
+          charging you for the thing we want you to do. Run a campaign fifty times in a week if
+          that is what closing the gap takes.
+        </p>
+      </div>
+      <div class="fact">
+        <h3>The AWS spend is yours, and it is small</h3>
+        <p>
+          Emulations run in your own account, so the infrastructure appears on your bill rather
+          than ours. Our own estimates put a campaign in the order of cents per hour, and every
+          environment carries a TTL and destroys itself.
+        </p>
+      </div>
+      <div class="fact">
+        <h3>We never hold long-lived keys</h3>
+        <p>
+          Access is a scoped cross-account IAM role, assumed through STS at run time. You can
+          revoke it in one action, and nothing we store can be used to get back in.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FAQ ============== -->
+  <section class="s" style="padding-top:0;">
+    <div class="section-head">
+      <h2 class="h-2">Fair <span class="em">questions</span></h2>
+      <p>Including the ones that are awkward for us.</p>
+    </div>
+
+    <div class="faq">
+      <details>
+        <summary>Why pay, when the core is open source and so is everything else in this space?</summary>
+        <p>
+          Because running the attack is the easy half. Stratus, CloudGoat, Pacu and Atomic Red Team
+          will all execute technique against your cloud for free, and so will our own core. None of
+          them tell you whether your detections noticed. What you are paying for is the verdict
+          (fired, silent, or no logs at all, measured against your real CloudTrail) and
+          the loop that closes the gap and then checks it stayed closed.
+        </p>
+      </details>
+      <details>
+        <summary>Is there a free hosted tier?</summary>
+        <p>
+          No. A hosted run assumes a role in your AWS account and provisions real infrastructure;
+          that is not something we are willing to hand out unattended to people we have never
+          spoken to. Self-host the open source core for free, or talk to us.
+        </p>
+      </details>
+      <details>
+        <summary>Which clouds do you support?</summary>
+        <p>
+          AWS. That is the honest answer today. The campaigns, the detections and the
+          coverage model are all built on CloudTrail. We would rather be genuinely good at one
+          cloud than shallow across three.
+        </p>
+      </details>
+      <details>
+        <summary>Do you do anything destructive to our environment?</summary>
+        <p>
+          No. Campaigns run against a disposable environment we provision from code inside your
+          account, not against your production estate, and every environment carries a TTL and is
+          destroyed on schedule. The point is to generate the telemetry your detections should
+          catch, not to compromise you.
+        </p>
+      </details>
+      <details>
+        <summary>What if the assessment shows our coverage is fine?</summary>
+        <p>
+          Then you have evidence you did not have before, and you should not buy the subscription
+          yet. We would rather you came back when a re-test matters than pay for a year of
+          confirming something you already know.
+        </p>
+      </details>
+      <details>
+        <summary>What can you not test for?</summary>
+        <p>
+          Every campaign declares the techniques it executes, and the product reports any of them
+          that no detection rule covers, separately from rules that ran and stayed quiet,
+          because those are our gap and not yours. You see that list in the product and in the
+          assessment report. We would rather show you the hole than round the number up.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============== CLOSE ============== -->
+  <section class="s" style="padding-top:0;">
+    <div class="close-inner">
+      <h2 class="h-2">Find out what your stack <span class="em">misses</span></h2>
+      <p>
+        Tell us which AWS account you would point this at and what you are already running for
+        detection. We will tell you honestly whether we can find anything worth your money.
+      </p>
+      <div class="close-row">
+        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment">Book an assessment</a>
+        <a class="pill line" href="#platform">See what a run concludes</a>
+      </div>
+    </div>
+  </section>
+
+  </section>
+
   <footer>
     <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b> &middot; v0.1 <span class="note">use only in isolated test accounts</span></span>
     <div class="links">
-      <a href="services.html">Services</a>
-      <a href="pricing.html">Pricing</a>
+      <a href="#platform">Platform</a>
+      <a href="#services">Services</a>
+      <a href="#pricing">Pricing</a>
       <a href="blog/">Blog</a>
       <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
     </div>
@@ -386,6 +1056,41 @@ dangerdev / T1098.003
 
   show(0);
   if (!reduced) setInterval(step, TICK);
+})();
+
+/* The nav switches itself as you scroll.
+   Each surface reports when it crosses the band just under the sticky nav; the
+   last one to cross owns the tab. The URL is kept in step with replaceState so
+   the address bar matches what you are looking at without stacking history
+   entries, and so a link to /#pricing still lands where it says. */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('#nav-links a[data-surface]'));
+  var surfaces = links
+    .map(function (a) { return document.getElementById(a.dataset.surface); })
+    .filter(Boolean);
+  if (surfaces.length !== links.length) return;
+
+  var current = null;
+
+  function mark(id) {
+    if (id === current) return;
+    current = id;
+    links.forEach(function (a) { a.classList.toggle('active', a.dataset.surface === id); });
+    if (history.replaceState) {
+      history.replaceState(null, '', id === 'platform' ? location.pathname : '#' + id);
+    }
+  }
+
+  if ('IntersectionObserver' in window) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
+      for (var n = surfaces.length - 1; n >= 0; n--) {
+        if (seen[surfaces[n].id]) { mark(surfaces[n].id); return; }
+      }
+    }, { rootMargin: '-78px 0px -62% 0px' });
+    surfaces.forEach(function (s) { io.observe(s); });
+  }
 })();
 </script>
 
