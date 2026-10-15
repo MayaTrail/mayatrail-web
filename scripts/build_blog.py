@@ -261,7 +261,7 @@ def render_index(posts: list[Post]) -> str:
     else:
         listing = """    <div class="empty">
       <p>No posts yet. Field notes on cloud detection engineering will land here.</p>
-      <a class="btn outline" href="../index.html">Back to the platform</a>
+      <a class="pill line" href="../index.html">Back to the platform</a>
     </div>"""
 
     return f"""{_head(
@@ -294,7 +294,7 @@ def render_post(post: Post, newer: Post | None, older: Post | None) -> str:
     """One post at /blog/<slug>/."""
     tags = ""
     if post.tags:
-        pills = "".join(f'<span class="pill">{html.escape(tag)}</span>' for tag in post.tags)
+        pills = "".join(f'<span class="tagchip">{html.escape(tag)}</span>' for tag in post.tags)
         tags = f'\n      <div class="post__tags">{pills}</div>'
 
     around = []
@@ -355,7 +355,7 @@ def render_post(post: Post, newer: Post | None, older: Post | None) -> str:
     <div class="post__cta">
       <h2 class="h-2">See this in your own AWS.</h2>
       <p>MayaTrail runs a documented cloud campaign inside your account and shows which of your detections fired.</p>
-      <a class="btn" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access <span class="arrow">→</span></a>
+      <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
     </div>
   </article>{around_html}
 

@@ -30,7 +30,6 @@
   --serif: 'Instrument Serif', Georgia, serif;
 }
 
-
 /* ============== PAGE TRANSITIONS ==============
    Cross-document view transitions. The nav, the brand and the footer are named,
    so they hold still while the body of the page crossfades: moving between the
@@ -123,16 +122,6 @@ main { position: relative; z-index: 1; }
   color: var(--ink);
   text-decoration: none;
 }
-.brand .mark {
-  width: 18px; height: 18px;
-  border: 1.5px solid var(--cool);
-  transform: rotate(45deg);
-  position: relative;
-}
-.brand .mark::after {
-  content: ''; position: absolute; inset: 3px;
-  background: var(--cool);
-}
 /* node-mark brand lockup */
 .brand-mark { display: block; flex: 0 0 auto; }
 .brand-wm { display: inline-flex; align-items: center; font-family: var(--sans); font-weight: 600; font-size: 17px; letter-spacing: -0.02em; line-height: 1; }
@@ -151,17 +140,6 @@ main { position: relative; z-index: 1; }
 }
 .nav-links a:hover { color: var(--ink); }
 .nav-links a.active { color: var(--cool); }
-.nav-readout {
-  display: flex; align-items: center; gap: 14px;
-  font-family: var(--mono); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.12em;
-  color: var(--ink-3);
-}
-.nav-readout .stat { display: inline-flex; align-items: center; gap: 6px; }
-.nav-readout .stat::before {
-  content:''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--ok);
-}
 .nav-cta {
   font-family: var(--sans); font-size: 13px; font-weight: 600;
   background: var(--ink); color: var(--bg);
@@ -185,41 +163,6 @@ main { position: relative; z-index: 1; }
 }
 .nav-gh:hover { color: #9cc6ff; border-color: var(--rule-3); }
 
-/* ============== CONSOLE BAR (page chrome) ============== */
-.console {
-  max-width: 1320px; margin: 0 auto;
-  padding: 0 28px;
-}
-.console-bar {
-  display: flex; align-items: center; gap: 14px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--rule);
-  font-family: var(--mono); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.14em;
-  color: var(--ink-3);
-}
-.console-bar .lbl { color: var(--ink-2); }
-.console-bar .sep { opacity: 0.4; }
-.console-bar .right { margin-left: auto; display: flex; gap: 14px; align-items: center; }
-.console-bar .pulse {
-  width: 8px; height: 8px; background: var(--cool); border-radius: 50%;
-}
-@keyframes pulse-dot { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
-/* ============== PAGE HEAD ============== */
-.page-head {
-  padding: 70px 0 50px;
-  max-width: 1320px; margin: 0 auto;
-}
-.eyebrow {
-  font-family: var(--mono); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.18em;
-  color: var(--cool);
-  display: inline-flex; align-items: center; gap: 10px;
-  margin-bottom: 14px;
-}
-.eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--cool); }
-
 .h-1 {
   font-family: var(--sans); font-weight: 600;
   font-size: clamp(38px, 4.4vw, 56px);
@@ -242,10 +185,6 @@ main { position: relative; z-index: 1; }
   color: var(--ink); margin: 0;
 }
 .h-2 .em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cool); letter-spacing: -0.005em; }
-.h-3 {
-  font-family: var(--sans); font-weight: 600;
-  font-size: 17px; margin: 0; letter-spacing: -0.01em;
-}
 
 .lede {
   font-family: var(--sans); font-size: 17px;
@@ -254,24 +193,6 @@ main { position: relative; z-index: 1; }
   max-width: 620px;
   margin: 0;
 }
-
-/* ============== BUTTONS ============== */
-.btn {
-  font-family: var(--sans); font-size: 13px; font-weight: 500;
-  background: var(--ink); color: var(--bg);
-  border: 1px solid var(--ink);
-  padding: 11px 18px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: all 0.15s;
-}
-.btn:hover { background: var(--cool); border-color: var(--cool); color: var(--bg); }
-.btn.outline { background: transparent; color: var(--ink); border-color: var(--rule-2); }
-.btn.outline:hover { background: transparent; color: var(--cool); border-color: var(--cool); }
-.btn.sm { padding: 7px 12px; font-size: 12px; }
-.btn .arrow { transition: transform 0.18s; }
-.btn:hover .arrow { transform: translateX(3px); }
 
 /* ============== PILL BUTTONS ==============
    Surfaces are square, actions are round. The pair is sized rather than
@@ -297,32 +218,6 @@ main { position: relative; z-index: 1; }
 @media (max-width: 480px) {
   .pill { min-width: 0; width: 100%; }
 }
-
-/* ============== TAGS ============== */
-.tag {
-  font-family: var(--mono); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.12em;
-  padding: 3px 8px;
-  border: 1px solid var(--rule-2);
-  color: var(--ink-2);
-  display: inline-block;
-}
-.tag.cool { border-color: var(--cool); color: var(--cool); background: rgba(106,168,255,0.06); }
-.tag.warm { border-color: var(--warm); color: var(--warm); background: rgba(245,180,84,0.06); }
-.tag.hot  { border-color: var(--hot);  color: var(--hot);  background: rgba(255,75,110,0.06); }
-.tag.ok   { border-color: var(--ok);   color: var(--ok);   background: rgba(111,179,95,0.06); }
-
-.sev {
-  font-family: var(--mono); font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.12em;
-  padding: 2px 7px;
-  border: 1px solid currentColor;
-  display: inline-block;
-}
-.sev.crit { color: var(--hot); }
-.sev.high { color: var(--warm); }
-.sev.med  { color: var(--ink-2); }
-.sev.low  { color: var(--ink-3); }
 
 /* ============== FOOTER ============== */
 footer {
@@ -361,7 +256,6 @@ section.s {
 /* ============== RESPONSIVE ============== */
 @media (max-width: 1080px) {
   .section-head { grid-template-columns: 1fr; gap: 16px; }
-  .nav-readout { display: none; }
 }
 
 /* tablet / small laptop */

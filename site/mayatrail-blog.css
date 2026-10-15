@@ -82,7 +82,7 @@
   color: var(--ink-3);
 }
 .post__tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 18px; }
-.post__tags .pill {
+.post__tags .tagchip {
   font-family: var(--mono); font-size: 11px;
   letter-spacing: 0.12em; text-transform: uppercase;
   border: 1px solid var(--rule-2); padding: 3px 8px;
