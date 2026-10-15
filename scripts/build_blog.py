@@ -207,7 +207,7 @@ def _footer(depth: int) -> str:
     ]
     items = "".join(f'\n    <a href="{up}{href}">{label}</a>' for href, label in links)
     return f"""<footer>
-  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1 <span class="note">use only in isolated test accounts</span></span>
+  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b></span>
   <div class="links">{items}
     <a href="{up}blog/">Blog</a>
     <a class="gh" href="https://github.com/MayaTrail/step1">GitHub ↗</a>
@@ -373,6 +373,55 @@ def _json(value: str) -> str:
     return json.dumps(value or "")
 
 
+# The home page carries the latest notes on its own scroll, so a visitor never
+# has to leave the page to find out that the blog exists. The rows are written
+# between these markers in site/index.html; whole posts stay their own
+# documents, because a post should be linkable and indexable on its own.
+_HOME_PAGE = _REPO_ROOT / "site" / "index.html"
+_HOME_OPEN = "<!-- BLOG:ENTRIES -->"
+_HOME_CLOSE = "<!-- /BLOG:ENTRIES -->"
+_HOME_LIMIT = 4
+
+
+def render_home_entries(posts: list[Post]) -> str:
+    """The rows that go on the home page, newest first."""
+    if not posts:
+        return '      <p class="nempty">Notes land here as we publish them.</p>'
+    return "\n".join(
+        f"""      <a class="nrow" href="blog/{post.slug}/">
+        <span class="nrow__d"><time datetime="{post.iso_date}">{post.display_date}</time></span>
+        <span class="nrow__c">
+          <span class="nrow__t">{html.escape(post.title)}</span>
+          {f'<span class="nrow__s">{html.escape(post.description)}</span>' if post.description else ''}
+        </span>
+        <span class="nrow__go">Read &rarr;</span>
+      </a>"""
+        for post in posts[:_HOME_LIMIT]
+    )
+
+
+def patch_home(posts: list[Post]) -> bool:
+    """Write the note rows into the home page. Idempotent."""
+    if not _HOME_PAGE.exists():
+        print("warn  site/index.html missing; home page not updated", file=sys.stderr)
+        return False
+    page = _HOME_PAGE.read_text(encoding="utf-8")
+    start, end = page.find(_HOME_OPEN), page.find(_HOME_CLOSE)
+    if start < 0 or end < start:
+        print("warn  home page has no BLOG:ENTRIES markers", file=sys.stderr)
+        return False
+    rebuilt = (
+        page[: start + len(_HOME_OPEN)]
+        + "\n"
+        + render_home_entries(posts)
+        + "\n"
+        + page[end:]
+    )
+    if rebuilt != page:
+        _HOME_PAGE.write_text(rebuilt, encoding="utf-8")
+    return True
+
+
 def render_feed(posts: list[Post]) -> str:
     """RSS 2.0. A technical audience still reads feeds."""
     items = "\n".join(
@@ -431,6 +480,8 @@ def main() -> int:
 
     # Newest first everywhere: the index, the feed and the prev/next links.
     posts.sort(key=lambda post: (post.published, post.slug), reverse=True)
+
+    patch_home(posts)
 
     _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (_OUTPUT_DIR / "index.html").write_text(render_index(posts), encoding="utf-8")

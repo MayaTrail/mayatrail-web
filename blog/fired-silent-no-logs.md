@@ -51,7 +51,7 @@ Sort by state, not by count.
 
 Start with `no_logs`. It is the cheapest fix and the widest blast radius: turning on a log source can move a dozen rules from useless to working in one change, and until you do, you cannot say anything at all about the techniques that depend on it.
 
-Then `silent`. Now you're doing real detection engineering: comparing what the rule expected against the events the run actually produced, and adjusting one or the other.
+Then `silent`. Now you're doing real detection engineering: comparing what the rule expected against the events the emulation actually produced, and adjusting one or the other.
 
 And treat a coverage percentage with suspicion, including ours. A single number can only be honest if every rule underneath it was actually given a chance to run.
 

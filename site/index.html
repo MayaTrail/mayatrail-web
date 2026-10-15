@@ -542,6 +542,39 @@
   .surface .svc-hero,
   .surface .p-head { padding-top: clamp(26px, 3vw, 40px); }
 
+  /* ============== FIELD NOTES ==============
+     The blog reads on the same scroll as everything else. The surface carries
+     the latest notes; a whole post is still its own document, because a post
+     should be linkable and indexable on its own. The rows are written by
+     scripts/build_blog.py between the markers in the markup below. */
+  .notes { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(64px, 7vw, 104px); }
+  .nlist { border-top: 1px solid var(--rule-2); }
+  .nrow {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 28px;
+    padding: 26px 0; border-bottom: 1px solid var(--rule);
+    text-decoration: none; background: transparent;
+  }
+  .nrow__d {
+    flex: 0 0 150px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .nrow__c { flex: 1 1 420px; min-width: 0; }
+  .nrow__t {
+    display: block; font-family: var(--sans); font-size: 19px; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.35; color: var(--ink); margin-bottom: 7px;
+  }
+  .nrow__s { display: block; font-family: var(--sans); font-size: 14.5px; line-height: 1.6; color: var(--ink-2); max-width: 74ch; }
+  .nrow__go { flex: 0 0 auto; font-family: var(--sans); font-size: 14px; color: var(--cool); }
+  .nrow:hover .nrow__t { color: var(--cool); }
+  .nrow:hover .nrow__go { color: #9cc6ff; }
+  .nempty { font-family: var(--sans); font-size: 15px; line-height: 1.6; color: var(--ink-3); padding: 26px 0; border-bottom: 1px solid var(--rule); margin: 0; }
+  .notes__after { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; margin-top: 30px; }
+  @media (max-width: 720px) {
+    .notes { padding-left: 18px; padding-right: 18px; }
+    .nrow__d { flex: 1 1 100%; }
+  }
+
 </style>
 </head>
 <body>
@@ -554,7 +587,7 @@
       <a href="#platform" class="active" data-surface="platform">Platform</a>
       <a href="#services" data-surface="services">Services</a>
       <a href="#pricing" data-surface="pricing">Pricing</a>
-      <a href="blog/">Blog</a>
+      <a href="#blog" data-surface="blog">Blog</a>
     </div>
     <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
     <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
@@ -578,7 +611,7 @@
       </li>
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>2</b></span><span class="track__line"></span></div>
-        <div class="track__t">Run the attack</div>
+        <div class="track__t">Run the emulation</div>
         <p class="track__d">Replay a real adversary technique, step by step.</p>
       </li>
       <li class="track__step">
@@ -589,7 +622,7 @@
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>4</b></span><span class="track__line"></span></div>
         <div class="track__t">Close the gap</div>
-        <p class="track__d">Take the rule, the guardrail and the playbook. The lab destroys itself.</p>
+        <p class="track__d">Take the rule, the guardrail and the playbook, then tear the lab down in one command.</p>
       </li>
     </ol>
 
@@ -601,11 +634,11 @@
 
   <!-- ============== THE SWITCHER ============== -->
   <section class="vd">
-    <h2 class="h-2">A run ends in one of <span class="em">three</span> places.</h2>
+    <h2 class="h-2">Every detection ends in one of <span class="em">three</span> places.</h2>
     <p class="vd__sub">Per technique, per source. No score, no percentage, no maturity band.</p>
 
     <div class="sw" id="sw">
-      <div class="sw__tabs" role="tablist" aria-label="What a run can conclude">
+      <div class="sw__tabs" role="tablist" aria-label="What a detection can conclude">
         <button type="button" class="sw__tab is-ok"   role="tab" id="tab-fired"  aria-controls="panel-fired"  aria-selected="true"><span class="lbl">Fired</span><span class="sw__bar"></span></button>
         <button type="button" class="sw__tab is-warm" role="tab" id="tab-nologs" aria-controls="panel-nologs" aria-selected="false" tabindex="-1"><span class="lbl">No logs</span><span class="sw__bar"></span></button>
         <button type="button" class="sw__tab is-hot"  role="tab" id="tab-silent" aria-controls="panel-silent" aria-selected="false" tabindex="-1"><span class="lbl">Silent</span><span class="sw__bar"></span></button>
@@ -615,20 +648,20 @@
         <div class="sw__panel is-ok" role="tabpanel" id="panel-fired" aria-labelledby="tab-fired">
           <div class="sw__copy">
             <div class="sw__verdict">Fired</div>
-            <p class="sw__body">A rule caught the technique and raised it. The control you believed in did the thing you believed it did.</p>
+            <p class="sw__body">Your rule saw the technique and raised the alert. The control did its job, and now you have the evidence that it did.</p>
             <dl class="sw__do">
               <dt>What you do about it</dt>
-              <dd>Nothing. This is the only outcome that needs no work, which is exactly why it should be the smallest column.</dd>
+              <dd>Keep the rule, and check it again later. Detections rot quietly, so this is the column you want to stay full.</dd>
             </dl>
           </div>
           <div class="sw__sample">
             <p class="sw__lbl">Example, not a measured result</p>
             <pre>scarleteel / T1552.005
-  cloudtrail   FIRED
+  splunk       FIRED
   guardduty    FIRED
 
 codefinger / T1486
-  cloudtrail   FIRED</pre>
+  opensearch   FIRED</pre>
           </div>
         </div>
 
@@ -655,7 +688,7 @@ ecscape / T1552.007
         <div class="sw__panel is-hot" role="tabpanel" id="panel-silent" aria-labelledby="tab-silent" hidden>
           <div class="sw__copy">
             <div class="sw__verdict">Silent</div>
-            <p class="sw__body">The logs were there. The technique ran. Nothing fired. This is the gap you did not know you had, and the reason the run exists.</p>
+            <p class="sw__body">The logs were there. The technique ran. Nothing fired. This is the gap you did not know you had, and the reason the emulation exists.</p>
             <dl class="sw__do">
               <dt>What you do about it</dt>
               <dd>We hand back the rule that closes it, compiled for the SIEM you actually run.</dd>
@@ -664,8 +697,8 @@ ecscape / T1552.007
           <div class="sw__sample">
             <p class="sw__lbl">Example, not a measured result</p>
             <pre>ambersquid / T1496
-  cloudtrail   SILENT
   splunk       SILENT
+  guardduty    SILENT
 
 dangerdev / T1098.003
   opensearch   SILENT</pre>
@@ -679,8 +712,7 @@ dangerdev / T1098.003
 
   <!-- ============== WHAT IS IN IT ============== -->
   <section class="kit">
-    <h2 class="h-2">The run is the headline. <span class="em">This is the rest of it.</span></h2>
-    <p class="vd__sub">Counted from the repository, not rounded up.</p>
+    <h2 class="h-2">The emulation is the headline. <span class="em">This is the rest of it.</span></h2>
 
     <div class="kit__grid">
       <div class="kit__item">
@@ -704,9 +736,9 @@ dangerdev / T1098.003
         <p class="kit__d">Your SIEM posts its alerts back and they are matched on a ladder: exact when the alert names a rule we ship, by technique when you wrote your own, weak when it only landed in the window. A weak match is shown and never counted as a pass.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">Run over run</span>
+        <span class="kit__n">Emulation over emulation</span>
         <h3 class="kit__t">Coverage history</h3>
-        <p class="kit__d">Reliability per rule across every run, with the alert behind each change. A rule that stopped firing is not the same as one that never fired, and a rule no run reached is reported as unmeasured rather than as a failure.</p>
+        <p class="kit__d">Reliability per rule across every emulation, with the alert behind each change. A rule that stopped firing is not the same as one that never fired, and a rule no emulation reached is reported as unmeasured rather than as a failure.</p>
       </div>
       <div class="kit__item">
         <span class="kit__n">Read only</span>
@@ -716,7 +748,7 @@ dangerdev / T1098.003
       <div class="kit__item">
         <span class="kit__n">97 policies</span>
         <h3 class="kit__t">Guardrails</h3>
-        <p class="kit__d">Service control policies for the gaps a run exposes, from denying KMS key deletion to blocking unapproved regions, so what you close stays closed.</p>
+        <p class="kit__d">Service control policies for the gaps an emulation exposes, from denying KMS key deletion to blocking unapproved regions, so what you close stays closed.</p>
       </div>
       <div class="kit__item">
         <span class="kit__n">115 playbooks</span>
@@ -734,9 +766,9 @@ dangerdev / T1098.003
   <!-- ============== TWO WAYS TO RUN IT ============== -->
   <section class="ways">
     <div class="way">
-      <h3>Run it with us</h3>
-      <p>A scoped assessment against your account, written up, with the gaps handed back as rules you can deploy.</p>
-      <a href="#services">See what the assessment covers &rarr;</a>
+      <h3>Bring in the team</h3>
+      <p>Assessments, red teaming, response drills and training, delivered by our engineers as work in its own right.</p>
+      <a href="#services">See what the team does &rarr;</a>
     </div>
     <div class="way">
       <h3>Run it yourself</h3>
@@ -765,11 +797,12 @@ dangerdev / T1098.003
 
   <!-- ============== HERO ============== -->
   <section class="svc-hero">
-    <h2 class="svc-h">The platform finds the gaps. <span class="rest">Our team closes them.</span></h2>
+    <h2 class="svc-h">Hands-on security work. <span class="rest">Separate from the platform.</span></h2>
     <p>
-      MayaTrail the product runs the attacks. When you want people on the problem, we run the whole
-      arc, from training your team to red-teaming your cloud and hardening the pipeline that builds it.
-      Each engagement chains into the next, so a workshop can grow into a full program.
+      These engagements stand on their own. Our engineers do the assessments, the red teaming, the
+      response drills and the hardening whether or not you ever licence the platform. Where our own
+      tooling makes the work faster we use it, but none of it is a prerequisite. Each engagement
+      chains into the next, so a workshop can grow into a full program.
     </p>
   </section>
 
@@ -790,7 +823,7 @@ dangerdev / T1098.003
       <div>
         <h2 class="eng__t">Incident response training</h2>
         <div class="eng__tags"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
-        <p class="eng__d">Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work the real CloudTrail evidence a MayaTrail run produces, so the practice looks exactly like the day it matters.</p>
+        <p class="eng__d">Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work real CloudTrail evidence from a cloud breach as it unfolds, so the practice looks exactly like the day it matters.</p>
       </div>
     </div>
 
@@ -826,7 +859,7 @@ dangerdev / T1098.003
       <div>
         <h2 class="eng__t">Infrastructure security</h2>
         <div class="eng__tags"><span>network</span><span>IaC</span><span>guardrails</span></div>
-        <p class="eng__d">Harden the cloud foundation: network design, infrastructure-as-code and account guardrails, so the gaps the emulations surface stay closed and do not quietly reopen on the next deploy.</p>
+        <p class="eng__d">Harden the cloud foundation: network design, infrastructure-as-code and account guardrails, so the gaps we find stay closed and do not quietly reopen on the next deploy.</p>
       </div>
     </div>
 
@@ -846,7 +879,7 @@ dangerdev / T1098.003
   <section class="p-head">
     <h2 class="p-h">Start with an assessment. <span class="rest">Keep it running if it earns its place.</span></h2>
     <p>
-      Most teams buy the two-week assessment first, because it answers the question on its own:
+      Most teams buy the assessment first, because it answers the question on its own:
       which of these attacks does your stack actually catch? If the answer is uncomfortable, the
       subscription is how you keep checking.
     </p>
@@ -858,12 +891,12 @@ dangerdev / T1098.003
       <div class="lead-body">
         <span class="from">Cloud detection assessment</span>
         <div class="price">
-          $20,000&ndash;30,000
+          $20,000 &ndash; 30,000
           <span class="unit">one-off &middot; 2&ndash;3 weeks</span>
         </div>
         <ul class="spec">
-          <li>We connect to <b>one AWS account</b> of yours through a scoped, read-and-emulate role. No long-lived keys, ever.</li>
-          <li>We run <b>real adversary campaigns</b> (SCARLETEEL&nbsp;2.0, AMBERSQUID, Codefinger, DangerDev, ECScape) against a disposable environment provisioned <b>inside that account of yours</b>, well away from production, and destroyed on a TTL.</li>
+          <li>Our engineers run the engagement. It is consulting work, scoped to <b>one AWS account</b> of yours and reached through a scoped, read-and-emulate role. No long-lived keys, ever.</li>
+          <li>We review your <b>posture, identity and logging coverage</b>, then put it under attack: <b>real adversary campaigns</b> (SCARLETEEL&nbsp;2.0, AMBERSQUID, Codefinger, DangerDev, ECScape) against a disposable environment provisioned <b>inside that account of yours</b>, well away from production, and destroyed on a TTL.</li>
           <li>Because the attack happens <b>in your account</b>, it lands in <b>your CloudTrail</b> and reaches <b>your SIEM</b> like any other activity. Your detections get a real chance to fire.</li>
           <li>We read that CloudTrail back and grade every step: fired, silent, or no logs at all.</li>
           <li>You get the <b>detection rules</b> that close the gaps, compiled for your SIEM.</li>
@@ -871,7 +904,6 @@ dangerdev / T1098.003
         </ul>
         <div class="lead-actions">
           <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment">Book an assessment</a>
-          <a class="pill line" href="#services">What we do in the two weeks</a>
         </div>
       </div>
       <div class="lead-side">
@@ -915,7 +947,7 @@ dangerdev / T1098.003
 
       <div class="plan">
         <h3 class="plan-name">Team <span class="plan-flag">Most teams</span></h3>
-        <p class="plan-for">A detection engineering team that wants the loop running without operating it.</p>
+        <p class="plan-for">An engineering team that wants the loop running without operating it.</p>
         <div class="plan-price">$25,000<span class="per">per year &middot; 1 AWS account</span></div>
         <ul class="spec">
           <li>Hosted, with the full campaign and single-technique library</li>
@@ -945,7 +977,7 @@ dangerdev / T1098.003
 
     <p class="fineprint">
       Prices in USD, excluding tax &middot; billed annually &middot; the unit is the connected AWS account
-      &middot; additional accounts $2,000&ndash;3,000 each
+      &middot; additional accounts $2,000 &ndash; 3,000 each
     </p>
   </section>
 
@@ -953,7 +985,7 @@ dangerdev / T1098.003
   <section class="s" style="padding-top:0;">
     <div class="section-head">
       <h2 class="h-2">How the billing <span class="em">actually works</span></h2>
-      <p>No seats, no per-run metering, no surprises on the invoice. Here is the whole model.</p>
+      <p>No seats, no per-emulation metering, no surprises on the invoice. Here is the whole model.</p>
     </div>
 
     <div class="facts">
@@ -962,7 +994,7 @@ dangerdev / T1098.003
         <p>
           We provision the disposable environment inside your AWS account and attack it from there,
           well away from production. That is not a deployment detail. It is the only way the
-          activity reaches your CloudTrail and therefore your SIEM. An emulation run in our cloud
+          activity reaches your CloudTrail and therefore your SIEM. An emulation in our cloud
           would prove nothing about your detections.
         </p>
       </div>
@@ -970,7 +1002,7 @@ dangerdev / T1098.003
         <h3>You are billed per connected AWS account</h3>
         <p>
           Not per seat and not per user. Detection teams are small and we would rather three more
-          of your engineers used it than not. Add an account and it is $2,000&ndash;3,000 more.
+          of your engineers used it than not. Add an account and it is $2,000 &ndash; 3,000 more.
         </p>
       </div>
       <div class="fact">
@@ -1020,7 +1052,7 @@ dangerdev / T1098.003
       <details>
         <summary>Is there a free hosted tier?</summary>
         <p>
-          No. A hosted run assumes a role in your AWS account and provisions real infrastructure;
+          No. A hosted emulation assumes a role in your AWS account and provisions real infrastructure;
           that is not something we are willing to hand out unattended to people we have never
           spoken to. Self-host the open source core for free, or talk to us.
         </p>
@@ -1075,20 +1107,43 @@ dangerdev / T1098.003
       </p>
       <div class="close-row">
         <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment">Book an assessment</a>
-        <a class="pill line" href="#platform">See what a run concludes</a>
+        <a class="pill line" href="#platform">See what an emulation concludes</a>
       </div>
     </div>
   </section>
 
+  <div class="onward">
+    <a href="#blog"><span class="k">Next</span><span>What we are learning while we build it</span><span class="arrow">&darr;</span></a>
+  </div>
+  </section>
+
+  <section class="surface" id="blog">
+    <p class="surface__lbl">Field notes</p>
+
+  <section class="notes">
+    <h2 class="h-2">Field notes. <span class="em">Written while running these.</span></h2>
+    <p class="vd__sub">What the emulations teach us about cloud detection, published as we learn it.</p>
+
+    <div class="nlist">
+<!-- BLOG:ENTRIES -->
+      <p class="nempty">Notes land here as we publish them.</p>
+<!-- /BLOG:ENTRIES -->
+    </div>
+
+    <div class="notes__after">
+      <a class="pill line" href="blog/">All field notes</a>
+      <a class="pill gh" href="blog/feed.xml">Subscribe by RSS</a>
+    </div>
+  </section>
   </section>
 
   <footer>
-    <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b> &middot; v0.1 <span class="note">use only in isolated test accounts</span></span>
+    <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b></span>
     <div class="links">
       <a href="#platform">Platform</a>
       <a href="#services">Services</a>
       <a href="#pricing">Pricing</a>
-      <a href="blog/">Blog</a>
+      <a href="#blog">Blog</a>
       <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
     </div>
   </footer>
