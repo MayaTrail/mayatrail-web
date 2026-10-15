@@ -14,8 +14,8 @@ Two documents, and no more:
 
 | Page | What it is for |
 |---|---|
-| `site/index.html` | One scroll, three surfaces: `#platform`, `#services`, `#pricing`. Scrolling carries you from one into the next and the nav marks itself as each passes under it. |
-| `site/blog/` | Field notes, generated from `blog/*.md`. |
+| `site/index.html` | One scroll, four surfaces: `#platform`, `#services`, `#pricing`, `#blog`. Scrolling carries you from one into the next and the nav marks itself as each passes under it. |
+| `site/blog/` | Field notes, generated from `blog/*.md`. The home page carries the latest few; a whole post is its own document, so it can be linked and indexed on its own. |
 
 `site/services.html` and `site/pricing.html` are redirect stubs. Those URLs were
 shared before the rework, so they stay alive and land on the matching surface.
@@ -64,6 +64,31 @@ python -m http.server 8000 --directory site
 of truth, and the builder stage in the Dockerfile regenerates it on every
 deploy.
 
+`build_blog.py` also writes the home page's field-notes rows, between the
+`<!-- BLOG:ENTRIES -->` markers in `site/index.html`. That part is not
+git-ignored, so building with `--drafts` leaves `site/index.html` modified.
+The committed state is the published one: whatever a build without `--drafts`
+produces.
+
+## Before you share it or merge it
+
+```bash
+python scripts/check_site.py                      # static checks over site/
+python scripts/package_preview.py ../out          # the two share artefacts
+```
+
+`check_site.py` is the gate: em dashes, retired copy, one `h1` per page, no
+duplicate ids, every relative link and anchor resolving, no third-party
+scripts, no grey fills or shadows, and no class in the markup that no
+stylesheet declares. It exits non-zero on the first problem, so it works in a
+hook or a CI step. Exemptions are listed at the top of the file, not hidden.
+
+`package_preview.py` writes the zip of the whole site and a single-file copy of
+the home page with the stylesheet inlined and the favicon embedded, for when
+someone wants one attachment rather than an archive. The read-me that goes in
+the zip is [`share/READ-ME-FIRST.txt`](share/READ-ME-FIRST.txt); it names what
+is deliberately unfinished, so nobody reviews a gap as a bug.
+
 ## House style
 
 Two rules worth stating because they are easy to break by habit:
@@ -71,7 +96,11 @@ Two rules worth stating because they are easy to break by habit:
 - **No em dashes.** Use a comma, a colon, or a second sentence.
 - **No unsourced figures.** Every number on the site has to trace to something
   in the product repository. A verdict matrix that is an example says so on the
-  page.
+  page. The same goes for product behaviour: the Team plan once promised
+  scheduled re-runs "daily, weekly or monthly" when the backend only had a
+  one-shot `scheduled_for`, and that is the kind of claim a reader can check.
+- **Emulation, not run.** "Emulation" is the product's own noun and one of the
+  things that distinguishes it. Run is fine as a verb.
 
 ## What was removed
 
