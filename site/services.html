@@ -64,7 +64,7 @@
   .chain-step:last-child .spine::after { display: none; }
 
   .chain-step .body { padding: 22px 26px; }
-  .chain-step .body h3 {
+  .chain-step .body h2 {
     font-family: var(--sans); font-size: 19px; font-weight: 600;
     letter-spacing: -0.015em; margin: 0; color: var(--ink);
   }
@@ -72,7 +72,7 @@
     display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 0;
   }
   .chain-step .body .tag-row span {
-    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
     letter-spacing: 0.12em; color: var(--ink-3);
     border: 1px solid var(--rule-2); padding: 3px 8px;
   }
@@ -124,20 +124,14 @@
 <!-- ============== NAV ============== -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="brand" href="index.html"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
+    <a class="brand" style="margin-right:auto;" href="index.html"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
     <div class="nav-links">
       <a href="index.html">Platform</a>
-      <a href="scenarios.html">Scenarios</a>
-      <a href="run.html">Run</a>
-      <a href="coverage.html">Coverage</a>
       <a href="services.html" class="active">Services</a>
       <a href="pricing.html">Pricing</a>
-      <a href="research.html">Research</a>
       <a href="blog/">Blog</a>
     </div>
-    <div class="nav-readout">
-      <span class="stat">v0.1 · private beta</span>
-    </div>
+    <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
     <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Request access</a>
   </div>
 </nav>
@@ -159,7 +153,7 @@
     <div class="chain-step">
       <div class="spine"><span class="num">01</span><span class="dot"></span></div>
       <div class="body">
-        <h3>AWS Security training</h3>
+        <h2>AWS Security training</h2>
         <div class="tag-row"><span>workshop</span><span>hands-on</span><span>team upskilling</span></div>
         <p>Hands-on sessions on the real AWS attack surface, IAM, STS and the data services, taught through live emulations instead of slides. Your engineers learn how attackers actually move, by watching it happen.</p>
       </div>
@@ -168,7 +162,7 @@
     <div class="chain-step">
       <div class="spine"><span class="num">02</span><span class="dot"></span></div>
       <div class="body">
-        <h3>Incident response training</h3>
+        <h2>Incident response training</h2>
         <div class="tag-row"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
         <p>Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work the real CloudTrail evidence a MayaTrail run produces, so the practice looks exactly like the day it matters.</p>
       </div>
@@ -177,7 +171,7 @@
     <div class="chain-step">
       <div class="spine"><span class="num">03</span><span class="dot"></span></div>
       <div class="body">
-        <h3>AWS security assessment / review</h3>
+        <h2>AWS security assessment / review</h2>
         <div class="tag-row"><span>posture</span><span>identity</span><span>logging</span></div>
         <p>A structured review of your AWS posture, identity, logging coverage and blast radius, benchmarked against how named adversaries actually operate rather than a generic checklist.</p>
       </div>
@@ -186,7 +180,7 @@
     <div class="chain-step">
       <div class="spine"><span class="num">04</span><span class="dot hot"></span></div>
       <div class="body">
-        <h3>Red teaming</h3>
+        <h2>Red teaming</h2>
         <div class="tag-row"><span>adversary emulation</span><span>full chain</span><span>findings report</span></div>
         <p>Full adversary emulation against your environment. The named APT chains, run for real, end to end, with a findings report that maps every step to what your detections did and didn't catch.</p>
       </div>
@@ -195,7 +189,7 @@
     <div class="chain-step">
       <div class="spine"><span class="num">05</span><span class="dot"></span></div>
       <div class="body">
-        <h3>CI/CD security</h3>
+        <h2>CI/CD security</h2>
         <div class="tag-row"><span>pipeline</span><span>supply chain</span><span>secrets</span></div>
         <p>Secure the path from commit to deploy, pipeline identity, build-time secrets, supply-chain integrity and artifact signing, so the way you ship code isn't the way you get breached.</p>
       </div>
@@ -204,7 +198,7 @@
     <div class="chain-step">
       <div class="spine"><span class="num">06</span><span class="dot"></span></div>
       <div class="body">
-        <h3>Infrastructure security</h3>
+        <h2>Infrastructure security</h2>
         <div class="tag-row"><span>network</span><span>IaC</span><span>guardrails</span></div>
         <p>Harden the cloud foundation, network design, infrastructure-as-code and account guardrails, so the gaps the emulations surface stay closed and don't quietly reopen on the next deploy.</p>
       </div>
@@ -219,24 +213,20 @@
     <h2>From a single workshop to <span class="em">an end-to-end program.</span></h2>
     <p>Tell us where you are and what you're worried about. We'll scope an engagement that fits, and everything we find feeds straight back into the platform.</p>
     <div class="row">
-      <a class="btn" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Talk to the team <span class="arrow">→</span></a>
-      <a class="btn outline" href="run.html">See the platform first</a>
+      <a class="btn" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20services%20enquiry">Talk to the team <span class="arrow">&rarr;</span></a>
+      <a class="btn outline" href="index.html">See the platform first</a>
     </div>
   </div>
 </div>
 
 <footer>
-  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1</span>
+  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1 <span class="note">use only in isolated test accounts</span></span>
   <div class="links">
     <a href="index.html">Platform</a>
-    <a href="scenarios.html">Scenarios</a>
-    <a href="run.html">Run</a>
-    <a href="coverage.html">Coverage</a>
     <a href="services.html">Services</a>
     <a href="pricing.html">Pricing</a>
-    <a href="research.html">Research</a>
     <a href="blog/">Blog</a>
-    <a href="https://github.com/MayaTrail">GitHub ↗</a>
+    <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
   </div>
 </footer>
 

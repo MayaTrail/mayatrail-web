@@ -180,26 +180,20 @@ def _nav(depth: int) -> str:
     up = "../" * depth
     links = [
         ("index.html", "Platform"),
-        ("scenarios.html", "Scenarios"),
-        ("run.html", "Run"),
-        ("coverage.html", "Coverage"),
         ("services.html", "Services"),
         ("pricing.html", "Pricing"),
-        ("research.html", "Research"),
     ]
     items = "".join(f'\n      <a href="{up}{href}">{label}</a>' for href, label in links)
     return f"""<nav class="nav">
   <div class="nav-inner">
-    <a href="{up}index.html" class="brand">
+    <a href="{up}index.html" class="brand" style="margin-right:auto;">
       <svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg>
       <span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span>
     </a>
     <div class="nav-links">{items}
       <a href="{up}blog/" class="active">Blog</a>
     </div>
-    <div class="nav-readout">
-      <span class="stat">v0.1 · private beta</span>
-    </div>
+    <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
     <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
   </div>
 </nav>"""
@@ -208,16 +202,15 @@ def _nav(depth: int) -> str:
 def _footer(depth: int) -> str:
     up = "../" * depth
     links = [
-        ("index.html", "Platform"), ("scenarios.html", "Scenarios"), ("run.html", "Run"),
-        ("coverage.html", "Coverage"), ("services.html", "Services"),
-        ("pricing.html", "Pricing"), ("research.html", "Research"),
+        ("index.html", "Platform"), ("services.html", "Services"),
+        ("pricing.html", "Pricing"),
     ]
     items = "".join(f'\n    <a href="{up}{href}">{label}</a>' for href, label in links)
     return f"""<footer>
-  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1</span>
+  <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1 <span class="note">use only in isolated test accounts</span></span>
   <div class="links">{items}
     <a href="{up}blog/">Blog</a>
-    <a href="https://github.com/MayaTrail">GitHub ↗</a>
+    <a class="gh" href="https://github.com/MayaTrail/step1">GitHub ↗</a>
   </div>
 </footer>"""
 
@@ -272,7 +265,7 @@ def render_index(posts: list[Post]) -> str:
     </div>"""
 
     return f"""{_head(
-        "Field notes — MayaTrail",
+        "Field notes - MayaTrail",
         "Notes on cloud attack emulation and detection engineering from the MayaTrail team.",
         depth=1,
         canonical=f"{_SITE_URL}/blog/",
@@ -335,7 +328,7 @@ def render_post(post: Post, newer: Post | None, older: Post | None) -> str:
 """
 
     return f"""{_head(
-        f"{post.title} — MayaTrail",
+        f"{post.title} - MayaTrail",
         post.description or post.title,
         depth=2,
         canonical=f"{_SITE_URL}{post.url}",
@@ -395,7 +388,7 @@ def render_feed(posts: list[Post]) -> str:
     return f"""<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
   <channel>
-    <title>MayaTrail — Field notes</title>
+    <title>MayaTrail - Field notes</title>
     <link>{_SITE_URL}/blog/</link>
     <description>Notes on cloud attack emulation and detection engineering.</description>
     <language>en</language>

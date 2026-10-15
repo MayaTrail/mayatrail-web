@@ -58,7 +58,7 @@
 
 /* ============== POST ==============
    base.css scopes the section primitive as `section.s`, an element-qualified
-   selector, and a post is an <article> — the right tag for the content, but it
+   selector, and a post is an <article>, the right tag for the content, but it
    matches none of that layout. So .post carries its own measure and gutters
    rather than the markup being downgraded to a <section> to borrow them. */
 .post {

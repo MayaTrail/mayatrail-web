@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MayaTrail - Cloud attack emulation</title>
-<meta name="description" content="MayaTrail runs documented cloud attack campaigns inside your own AWS account and shows which of your detections fired, which fired late, and which never fired at all." />
+<meta name="description" content="MayaTrail provisions an intentionally vulnerable AWS environment inside your own account, runs a real adversary emulation against it, and reads your own detection sources back to you." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,368 +14,151 @@
 <style>
   /* ====================================================================
      LANDING - page-specific styles
+     Surfaces are square and transparent, so the rule is what you see.
+     Actions are the only round things on the page.
      ==================================================================== */
 
   /* ============== HERO ============== */
   .hero {
     max-width: 1320px; margin: 0 auto;
-    padding: clamp(64px, 10vh, 116px) 28px clamp(64px, 9vh, 104px);
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(40px, 5.5vw, 84px); align-items: center;
+    padding: clamp(64px, 9vh, 104px) 28px clamp(56px, 8vh, 92px);
   }
-  .hero__copy { max-width: 620px; min-width: 0; }
-  .hero__tape { min-width: 0; }
-  .hero__actions {
-    display: flex; gap: 10px; flex-wrap: wrap;
-    margin-top: 32px;
+  .hero h1 {
+    font-family: var(--sans); font-weight: 700;
+    font-size: clamp(36px, 5.2vw, 62px);
+    line-height: 1.06; letter-spacing: -0.035em;
+    color: var(--ink); margin: 0 0 22px; max-width: 18ch;
   }
-  .hero__trust {
-    margin: 22px 0 0;
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.14em;
-    color: var(--ink-3);
-  }
-  .hero .lede { margin-top: 20px; }
+  .hero h1 .rest { color: var(--ink-3); }
+  .hero .lede { font-size: clamp(16px, 2vw, 18px); max-width: 50ch; }
+  .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
-  /* live CloudTrail tape */
-  .tape__lbl {
-    display: flex; align-items: center; gap: 10px;
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.16em;
-    color: var(--ink-3); margin-bottom: 12px;
+  /* ============== STEP TRACK ==============
+     The run, in the order it happens. One colour family, climbing: the
+     verdict palette below has to keep its meaning. */
+  .track {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    margin: 52px 0; padding: 0; list-style: none;
   }
-  .tape__lbl b { color: var(--ink-2); font-weight: 500; }
-  .tape__pulse {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--cool);
-  }
-  .term {
-    font-family: var(--mono); font-size: 12px; line-height: 1.75;
-    color: var(--ink-2);
-    border: 1px solid var(--rule);
-    background: var(--bg-1);
-    padding: 16px 18px;
-    height: 263px; overflow: hidden;
-    position: relative;
-  }
-  .term::after {
-    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 46px;
-    background: linear-gradient(180deg, var(--bg-1) 30%, transparent);
-    pointer-events: none;
-  }
-  .term .line { display: flex; gap: 12px; }
-  .term .t { color: var(--ink-4); width: 52px; flex-shrink: 0; }
-  .term .l { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-  .term .api  { color: var(--cool); }
-  .term .ok   { color: var(--ok); }
-  .term .warn { color: var(--warm); }
-  .term .err  { color: var(--hot); }
-  .term .mut  { color: var(--ink-4); }
-
-  /* ============== CHAIN LIST ============== */
-  .chains { border: 1px solid var(--rule); background: var(--bg-1); }
-  .chain {
-    display: grid;
-    grid-template-columns: minmax(0, 250px) minmax(0, 1fr) minmax(0, 240px) 96px;
-    gap: 28px; align-items: center;
-    padding: 26px 26px;
-    border-bottom: 1px solid var(--rule);
-    text-decoration: none; color: var(--ink);
-    transition: background 0.15s;
-  }
-  .chain:last-child { border-bottom: 0; }
-  .chain:hover { background: rgba(106,168,255,0.03); }
-  .chain__name {
-    display: block;
-    font-family: var(--sans); font-size: 16px; font-weight: 600;
-    letter-spacing: -0.015em; color: var(--ink);
-    transition: color 0.15s;
-  }
-  .chain:hover .chain__name { color: var(--cool); }
-  .chain__attr {
-    display: block; margin-top: 5px;
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.13em;
-    color: var(--ink-3);
-  }
-  .chain__what {
-    margin: 0;
-    font-family: var(--sans); font-size: 13.5px; line-height: 1.55;
-    color: var(--ink-2);
-  }
-  .chain__what code {
-    font-family: var(--mono); font-size: 12px; color: var(--ink);
-  }
-  .chain__map { display: flex; gap: 6px; flex-wrap: wrap; }
-  .chain__map .pill {
-    font-family: var(--mono); font-size: 11px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    border: 1px solid var(--rule-2); padding: 2px 6px;
-    color: var(--ink-3);
-  }
-  .chain__map .pill.scen {
-    border-color: var(--rule-3); color: var(--ink-2);
-  }
-  .chain:hover .chain__map .pill.scen {
-    border-color: var(--cool); color: var(--cool);
-  }
-  .chain__t {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--ink-3); text-align: right;
-  }
-
-  .more {
-    display: inline-flex; align-items: center; gap: 8px;
-    margin-top: 26px;
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.14em;
-    color: var(--cool); text-decoration: none;
-  }
-  .more .arrow { transition: transform 0.18s; }
-  .more:hover .arrow { transform: translateX(3px); }
-
-  /* ============== DETECTION MATRIX ============== */
-  .matrix-wrap { border: 1px solid var(--rule); background: var(--bg-1); }
-  .matrix {
-    display: grid;
-    grid-template-columns: 300px repeat(4, 1fr);
-  }
-  .matrix > div { padding: 20px; border-right: 1px solid var(--rule); }
-  .matrix > div:last-child { border-right: 0; }
-  .matrix.head > div {
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.14em;
-    color: var(--ink-3); padding: 14px 20px;
-    background: var(--bg-2); border-bottom: 1px solid var(--rule);
-  }
-  .matrix.head > div b { color: var(--ink); }
-  .matrix.row { border-top: 1px solid var(--rule); transition: background 0.15s; }
-  .matrix.row:first-of-type { border-top: 0; }
-  .matrix.row:hover { background: rgba(106,168,255,0.025); }
-  .matrix.row .scenario-cell {
-    font-family: var(--sans); font-size: 14.5px;
-    color: var(--ink);
-    display: flex; flex-direction: column; gap: 5px;
-  }
-  .matrix.row .scenario-cell .tid {
-    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
-    letter-spacing: 0.12em; text-transform: uppercase;
-  }
-  .matrix .cell {
-    display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
-    font-family: var(--mono); font-size: 11px;
-    color: var(--ink-2);
-    letter-spacing: 0.06em;
-  }
-  .matrix .cell .sig {
-    display: inline-flex; align-items: center; gap: 7px;
-    font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em;
-    font-size: 11px;
-  }
-  .matrix .cell .sig .mark {
+  .track__step { flex: 1 1 190px; min-width: 0; }
+  .track__rail { display: flex; align-items: center; margin-bottom: 18px; }
+  .track__n {
+    flex: none; width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid currentColor;
+    font-family: var(--mono); font-size: 12px;
     display: inline-flex; align-items: center; justify-content: center;
-    width: 18px; height: 18px;
-    border: 1px solid currentColor; font-size: 11px; line-height: 1;
   }
-  .matrix .cell.fired  .sig { color: var(--ok); }
-  .matrix .cell.late   .sig { color: var(--warm); }
-  .matrix .cell.missed .sig { color: var(--hot); }
-  .matrix .cell .lat { color: var(--ink-3); font-size: 11px; letter-spacing: 0.12em; }
+  .track__line { flex: 1 1 auto; height: 1px; }
+  .track__step:nth-child(1) .track__n { color: rgba(106,168,255,0.40); }
+  .track__step:nth-child(2) .track__n { color: rgba(106,168,255,0.60); }
+  .track__step:nth-child(3) .track__n { color: rgba(106,168,255,0.80); }
+  .track__step:nth-child(4) .track__n { color: var(--cool); }
+  .track__step:nth-child(1) .track__line { background: linear-gradient(90deg, rgba(106,168,255,0.40), rgba(106,168,255,0.60)); }
+  .track__step:nth-child(2) .track__line { background: linear-gradient(90deg, rgba(106,168,255,0.60), rgba(106,168,255,0.80)); }
+  .track__step:nth-child(3) .track__line { background: linear-gradient(90deg, rgba(106,168,255,0.80), var(--cool)); }
+  .track__step:nth-child(4) .track__line { background: linear-gradient(90deg, var(--cool), rgba(106,168,255,0)); }
+  .track__n b { color: var(--ink-3); font-weight: 400; }
+  .track__step:nth-child(4) .track__n b { color: var(--cool); }
+  .track__t { font-family: var(--sans); font-size: 15.5px; font-weight: 600; margin: 0 0 7px; letter-spacing: -0.01em; }
+  .track__d { font-size: 13.5px; line-height: 1.55; color: var(--ink-3); margin: 0; max-width: 26ch; }
 
-  .matrix-foot {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 20px; flex-wrap: wrap;
-    padding: 18px 20px;
-    border-top: 1px solid var(--rule);
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.14em;
+  /* ============== THE SWITCHER ==============
+     Boxed, so a transition reads as contained rather than the page moving.
+     The tab rail is the boundary and the progress bar is the clock. */
+  .vd { max-width: 1320px; margin: 0 auto; padding: clamp(28px, 3vw, 44px) 28px clamp(64px, 7vw, 104px); }
+  .vd .h-2 { max-width: 20ch; }
+  .vd__sub { font-family: var(--sans); font-size: 16px; color: var(--ink-3); margin: 10px 0 28px; }
+
+  .sw { border: 1px solid var(--rule-2); background: transparent; }
+  .sw__tabs { display: flex; border-bottom: 1px solid var(--rule); }
+  .sw__tab {
+    flex: 1 1 0; min-width: 0;
+    padding: 18px 20px 0;
+    background: transparent; border: 0; border-right: 1px solid var(--rule);
+    font-family: inherit; text-align: left; cursor: pointer;
     color: var(--ink-3);
-    background: var(--bg-2);
+    transition: color 0.2s cubic-bezier(.16,1,.3,1);
   }
-  .matrix-foot b { color: var(--ink-2); font-weight: 500; }
-  .matrix-foot .legend { display: flex; gap: 18px; flex-wrap: wrap; }
-  .matrix-foot .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .matrix-foot .legend i { width: 8px; height: 8px; display: inline-block; }
-  .matrix-foot .legend .ok { background: var(--ok); }
-  .matrix-foot .legend .lt { background: var(--warm); }
-  .matrix-foot .legend .ms { background: var(--hot); }
+  .sw__tab:last-child { border-right: 0; }
+  .sw__tab .lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .sw__bar { display: block; height: 2px; margin-top: 13px; width: 0; background: transparent; }
+  .sw__tab[aria-selected="true"].is-ok   { color: var(--ok); }
+  .sw__tab[aria-selected="true"].is-warm { color: var(--warm); }
+  .sw__tab[aria-selected="true"].is-hot  { color: var(--hot); }
+  .sw__tab[aria-selected="true"].is-ok   .sw__bar { background: var(--ok); }
+  .sw__tab[aria-selected="true"].is-warm .sw__bar { background: var(--warm); }
+  .sw__tab[aria-selected="true"].is-hot  .sw__bar { background: var(--hot); }
 
-  /* ============== STEPS ============== */
-  .steps { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--rule); }
-  .step {
-    padding: 34px 28px; border-right: 1px solid var(--rule);
-    background: var(--bg-1);
-    position: relative; overflow: hidden;
+  .sw__panel { display: flex; flex-wrap: wrap; }
+  .sw__panel[hidden] { display: none; }
+  .sw__copy {
+    flex: 1 1 420px; min-width: 0; padding: clamp(24px, 2.6vw, 36px);
+    display: flex; flex-direction: column; gap: 16px;
   }
-  .step:last-child { border-right: 0; }
-  .step::before {
-    content: ''; position: absolute; left: 0; top: 0; height: 1px; width: 0;
-    background: var(--cool); transition: width 0.4s;
+  .sw__verdict { font-family: var(--sans); font-size: clamp(26px, 3vw, 32px); letter-spacing: -0.03em; font-weight: 600; }
+  .sw__panel.is-ok   .sw__verdict { color: var(--ok); }
+  .sw__panel.is-warm .sw__verdict { color: var(--warm); }
+  .sw__panel.is-hot  .sw__verdict { color: var(--hot); }
+  .sw__body { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+  .sw__do { margin: 8px 0 0; padding: 16px 18px; background: transparent; border: 1px solid var(--rule); }
+  .sw__do dt {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
   }
-  .step:hover::before { width: 100%; }
-  .step .n {
-    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
-    margin-bottom: 16px; display: block;
-    letter-spacing: 0.14em; text-transform: uppercase;
+  .sw__do dd { font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
+  .sw__sample {
+    flex: 1 1 380px; min-width: 0; padding: clamp(24px, 2.6vw, 36px);
+    background: transparent; border-left: 1px solid var(--rule);
   }
-  .step h3 { font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 0 0 8px; letter-spacing: -0.01em; }
-  .step p { font-family: var(--sans); font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+  .sw__lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px;
+  }
+  .sw__sample pre {
+    font-family: var(--mono); font-size: 13px; line-height: 2.05;
+    color: var(--ink-2); margin: 0; white-space: pre-wrap;
+  }
+  .sw__hint { margin: 14px 2px 0; font-size: 12.5px; color: var(--ink-3); }
 
-  /* ============== ARTIFACTS ============== */
-  .artifacts { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--rule); }
-  .artifact {
-    padding: 32px 28px 30px;
-    border-right: 1px solid var(--rule);
-    background: var(--bg-1);
+  /* ============== TWO WAYS TO RUN IT ============== */
+  .ways {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px clamp(64px, 7vw, 104px);
+    display: flex; flex-wrap: wrap; gap: 56px;
   }
-  .artifact:last-child { border-right: 0; }
-  .artifact__file {
-    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-    font-family: var(--mono); font-size: 12.5px;
-    color: var(--ink); margin-bottom: 18px;
+  .way {
+    flex: 1 1 380px; min-width: 0;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
   }
-  .artifact__file .sz {
-    color: var(--ink-3); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.14em;
-  }
-  .artifact h3 { font-family: var(--sans); font-weight: 600; font-size: 16px; margin: 0 0 8px; letter-spacing: -0.015em; }
-  .artifact p { font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 0; }
-  .artifact .more { margin-top: 14px; }
+  .way h3 { font-family: var(--sans); font-size: 24px; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 10px; }
+  .way p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0 0 24px; max-width: 46ch; }
+  .way a { margin-top: auto; font-size: 14px; color: var(--cool); text-decoration: none; }
+  .way a:hover { color: #9cc6ff; }
 
-  /* ============== FAQ ============== */
-  .faq { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--rule); }
-  .faq > details {
-    padding: 27px 28px;
-    border-right: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    background: var(--bg-1);
-    transition: background 0.15s;
+  /* ============== DOCS POINTER ============== */
+  .docs {
+    max-width: 1320px; margin: 0 auto;
+    padding: 0 28px;
+    display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
   }
-  .faq > details:hover { background: var(--bg-2); }
-  .faq > details:nth-child(2n) { border-right: 0; }
-  .faq > details:nth-last-child(-n+2) { border-bottom: 0; }
-  .faq > details:last-child:nth-child(odd) { border-right: 0; }
-  .faq summary {
-    list-style: none; cursor: pointer;
-    font-family: var(--sans); font-size: 15.5px; font-weight: 600;
-    color: var(--ink); letter-spacing: -0.01em;
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
-  }
-  .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after {
-    content: '+';
-    font-family: var(--mono); color: var(--cool);
-    font-size: 20px; line-height: 0.7;
-  }
-  .faq details[open] summary::after { content: '\2212'; }
-  .faq .a {
-    margin-top: 14px;
-    font-family: var(--sans); font-size: 14px; line-height: 1.65;
-    color: var(--ink-2);
-    max-width: 62ch;
-  }
-  .faq .a b { color: var(--ink); font-weight: 600; }
-  .faq .a em { font-style: italic; }
-  .faq .a code {
-    font-family: var(--mono); font-size: 12.5px;
-    background: var(--bg-3); padding: 1px 6px;
-    color: var(--cool);
-  }
-  .faq .a p { margin: 0 0 10px; }
-  .faq .a p:last-child { margin-bottom: 0; }
-
-  /* ============== CTA ============== */
-  .final {
-    border: 1px solid var(--rule-2);
-    padding: clamp(44px, 6vw, 68px) 40px;
-    text-align: center;
-    background: var(--bg-1);
-  }
-  .final .h-2 { max-width: 16ch; margin: 0 auto 18px; }
-  .final p { font-family: var(--sans); font-size: 16px; line-height: 1.6; color: var(--ink-2); max-width: 52ch; margin: 0 auto 30px; }
-  .final .cta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-
-  /* ============== WIDE TABLES ON NARROW VIEWPORTS ============== */
-  .h-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--rule);
-    background: var(--bg-1);
-    position: relative;
-  }
-  .scroll-hint {
-    display: none;
-    margin-top: 14px;
-    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
-    text-transform: uppercase; letter-spacing: 0.16em;
-  }
-  .h-scroll.scrollable + .scroll-hint { display: block; }
-  .h-scroll .matrix-wrap { border: 0; min-width: 960px; }
-  /* ============== WHERE IT SITS ============== */
-  .vs-wrap { border: 1px solid var(--rule); background: var(--bg-1); }
-  .vs { display: grid; grid-template-columns: 230px repeat(5, 1fr); }
-  .vs > div { padding: 19px 20px; border-right: 1px solid var(--rule); }
-  .vs > div:last-child { border-right: 0; }
-  .vs.head > div {
-    font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.14em;
-    color: var(--ink-3); padding: 14px 20px;
-    background: var(--bg-2); border-bottom: 1px solid var(--rule);
-  }
-  .vs.head > div b { color: var(--ink); }
-  .vs.row { border-top: 1px solid var(--rule); }
-  .vs.row:first-of-type { border-top: 0; }
-  .vs.row.us > div { background: rgba(106,168,255,0.03); }
-  .vs .tool {
-    font-family: var(--sans); font-size: 14.5px; font-weight: 600;
-    color: var(--ink); display: flex; flex-direction: column; gap: 5px;
-  }
-  .vs.row.us .tool { color: var(--cool); }
-  .vs .tool .by {
-    font-family: var(--mono); font-size: 11px; font-weight: 400;
-    text-transform: uppercase; letter-spacing: 0.13em; color: var(--ink-3);
-  }
-  .vs .c {
-    font-family: var(--mono); font-size: 12px; line-height: 1.5;
-    color: var(--ink-2); letter-spacing: 0.04em;
-    display: flex; gap: 8px; align-items: baseline;
-  }
-  .vs .c .m { flex: 0 0 auto; font-weight: 600; }
-  .vs .c.y .m { color: var(--ok); }
-  .vs .c.p .m { color: var(--warm); }
-  .vs .c.n { color: var(--ink-3); }
-  .vs .c.n .m { color: var(--ink-3); }
-  .vs-note {
-    margin: 22px 0 0;
-    font-family: var(--sans); font-size: 13px; line-height: 1.65;
-    color: var(--ink-3); max-width: 88ch;
-  }
-  .vs-note a { color: var(--ink-2); }
-  .h-scroll .vs-wrap { border: 0; min-width: 1020px; }
+  .docs__copy { flex: 999 1 420px; min-width: 0; }
+  .docs__copy h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 0 0 6px; }
+  .docs__copy p { font-size: 14px; line-height: 1.6; color: var(--ink-3); margin: 0; }
+  .docs .pill { min-width: 0; height: 46px; font-size: 13.5px; padding: 0 24px; }
 
   /* ============== RESPONSIVE ============== */
-  @media (max-width: 1080px) {
-    .hero { grid-template-columns: minmax(0, 1fr); padding-top: 48px; }
-    .hero__copy { max-width: 640px; }
-    .chain { grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 8px 24px; }
-    .chain__map { grid-column: 1 / -1; margin-top: 4px; }
-    .chain__t { grid-column: 1 / -1; text-align: left; }
-    .steps, .artifacts { grid-template-columns: 1fr 1fr; }
-    .step:nth-child(2), .artifact:last-child { border-right: 0; }
-    .step:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
-    .faq { grid-template-columns: 1fr; }
-    .faq > details { border-right: 0; }
-    .faq > details:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
-    .faq > details:last-child { border-bottom: 0; }
+  @media (max-width: 820px) {
+    .sw__tabs { flex-wrap: wrap; }
+    .sw__tab { flex: 1 1 33%; }
+    .sw__sample { border-left: 0; border-top: 1px solid var(--rule); }
   }
   @media (max-width: 720px) {
-    .hero { padding-left: 18px; padding-right: 18px; }
-    .term { height: 268px; }
-    .chain { grid-template-columns: minmax(0, 1fr); padding: 20px 18px; }
-    .steps, .artifacts { grid-template-columns: 1fr; }
-    .step, .artifact { border-right: 0; border-bottom: 1px solid var(--rule); }
-    .step:last-child, .artifact:last-child { border-bottom: 0; }
-    .final { padding-left: 22px; padding-right: 22px; }
+    .hero, .vd, .ways, .docs { padding-left: 18px; padding-right: 18px; }
+    .track { gap: 24px; }
+    .track__step { flex: 1 1 100%; }
   }
 </style>
 </head>
@@ -384,20 +167,14 @@
 <!-- ============== NAV ============== -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="brand"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
+    <a href="index.html" class="brand" style="margin-right:auto;"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
     <div class="nav-links">
       <a href="index.html" class="active">Platform</a>
-      <a href="scenarios.html">Scenarios</a>
-      <a href="run.html">Run</a>
-      <a href="coverage.html">Coverage</a>
       <a href="services.html">Services</a>
       <a href="pricing.html">Pricing</a>
-      <a href="research.html">Research</a>
       <a href="blog/">Blog</a>
     </div>
-    <div class="nav-readout">
-      <span class="stat">v0.1 · private beta</span>
-    </div>
+    <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
     <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
   </div>
 </nav>
@@ -406,501 +183,209 @@
 
   <!-- ============== HERO ============== -->
   <section class="hero">
-    <div class="hero__copy">
-      <h1 class="h-1">Run the attack.<br>See <span class="em">which detections</span> fire.</h1>
-      <p class="lede">MayaTrail runs a documented cloud campaign inside your own AWS account, then shows you which of your detections fired, which fired late, and which never fired at all.</p>
-      <div class="hero__actions">
-        <a class="btn" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access <span class="arrow">→</span></a>
-        <a class="btn outline" href="run.html">Watch a live run</a>
-      </div>
-      <p class="hero__trust">STS-assumed role · no long-lived keys · torn down on one command</p>
-    </div>
+    <h1>Attack your cloud <span class="rest">before someone else does.</span></h1>
+    <p class="lede">Provision intentionally vulnerable AWS environments, run real adversary emulations, and prove your detections actually fire.</p>
 
-    <div class="hero__tape">
-      <div class="tape__lbl"><span class="tape__pulse" aria-hidden="true"></span><b>cloudtrail</b> · live tail · scarleteel · sandbox/dev-user</div>
-      <div class="term" id="term" role="img" aria-label="A CloudTrail tail from a sample SCARLETEEL run: a container is compromised, instance credentials are stolen via IMDSv1, GuardDuty fires, 128 objects are exfiltrated, and the exfiltration goes unlogged because CloudTrail data events are not enabled.">
-        <!-- lines injected by JS -->
-      </div>
+    <ol class="track">
+      <li class="track__step">
+        <div class="track__rail"><span class="track__n"><b>1</b></span><span class="track__line"></span></div>
+        <div class="track__t">Deploy a lab</div>
+        <p class="track__d">Spin up a vulnerable stack in your test account.</p>
+      </li>
+      <li class="track__step">
+        <div class="track__rail"><span class="track__n"><b>2</b></span><span class="track__line"></span></div>
+        <div class="track__t">Run the attack</div>
+        <p class="track__d">Replay a real adversary technique, step by step.</p>
+      </li>
+      <li class="track__step">
+        <div class="track__rail"><span class="track__n"><b>3</b></span><span class="track__line"></span></div>
+        <div class="track__t">Check detections</div>
+        <p class="track__d">See which Sigma and KQL rules fired, and which did not.</p>
+      </li>
+      <li class="track__step">
+        <div class="track__rail"><span class="track__n"><b>4</b></span><span class="track__line"></span></div>
+        <div class="track__t">Close the gap</div>
+        <p class="track__d">Apply the guardrail and the playbook, then tear it down.</p>
+      </li>
+    </ol>
+
+    <div class="hero__actions">
+      <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
+      <a class="pill gh" href="https://github.com/MayaTrail/step1">View the repo</a>
     </div>
   </section>
 
-  <!-- ============== DETECTION MATRIX ============== -->
-  <section class="s">
-    <div class="section-head">
-      <div>
-        <h2 class="h-2">Our chains, your detection sources, <span class="em">cells of truth.</span></h2>
+  <!-- ============== THE SWITCHER ============== -->
+  <section class="vd">
+    <h2 class="h-2">A run ends in one of <span class="em">three</span> places.</h2>
+    <p class="vd__sub">Per technique, per source. No score, no percentage, no maturity band.</p>
+
+    <div class="sw" id="sw">
+      <div class="sw__tabs" role="tablist" aria-label="What a run can conclude">
+        <button type="button" class="sw__tab is-ok"   role="tab" id="tab-fired"  aria-controls="panel-fired"  aria-selected="true"><span class="lbl">Fired</span><span class="sw__bar"></span></button>
+        <button type="button" class="sw__tab is-warm" role="tab" id="tab-nologs" aria-controls="panel-nologs" aria-selected="false" tabindex="-1"><span class="lbl">No logs</span><span class="sw__bar"></span></button>
+        <button type="button" class="sw__tab is-hot"  role="tab" id="tab-silent" aria-controls="panel-silent" aria-selected="false" tabindex="-1"><span class="lbl">Silent</span><span class="sw__bar"></span></button>
       </div>
-      <p>What each source typically produces for these techniques — <b style="color:var(--ok)">fired</b>, <b style="color:var(--warm)">late</b> (&gt;30s), or <b style="color:var(--hot)">missed</b>. Figures are median latency.</p>
-    </div>
 
-    <div class="h-scroll">
-      <div class="matrix-wrap">
-        <div class="matrix head">
-          <div><b>CHAIN</b></div>
-          <div>GUARDDUTY</div>
-          <div>CLOUDTRAIL</div>
-          <div>SIGMA RULES</div>
-          <div>SPLUNK ESCU</div>
-        </div>
-
-        <div class="matrix row">
-          <div class="scenario-cell">
-            <span>SCARLETEEL 2.0</span>
-            <span class="tid">T1552.005 · T1530</span>
+      <div class="sw__panels">
+        <div class="sw__panel is-ok" role="tabpanel" id="panel-fired" aria-labelledby="tab-fired">
+          <div class="sw__copy">
+            <div class="sw__verdict">Fired</div>
+            <p class="sw__body">A rule caught the technique and raised it. The control you believed in did the thing you believed it did.</p>
+            <dl class="sw__do">
+              <dt>What you do about it</dt>
+              <dd>Nothing. This is the only outcome that needs no work, which is exactly why it should be the smallest column.</dd>
+            </dl>
           </div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+6.0s</span></div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+1.4s</span></div>
-          <div class="cell late"><span class="sig"><span class="mark">!</span>LATE</span><span class="lat">+45s</span></div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no rule</span></div>
-        </div>
+          <div class="sw__sample">
+            <p class="sw__lbl">Example, not a measured result</p>
+            <pre>scarleteel / T1552.005
+  cloudtrail   FIRED
+  guardduty    FIRED
 
-        <div class="matrix row">
-          <div class="scenario-cell">
-            <span>AMBERSQUID</span>
-            <span class="tid">T1496 · T1578.002</span>
-          </div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no coverage</span></div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+0.9s</span></div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+2.1s</span></div>
-          <div class="cell late"><span class="sig"><span class="mark">!</span>LATE</span><span class="lat">+38s</span></div>
-        </div>
-
-        <div class="matrix row">
-          <div class="scenario-cell">
-            <span>Codefinger</span>
-            <span class="tid">T1486 · T1490</span>
-          </div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no rule</span></div>
-          <div class="cell late"><span class="sig"><span class="mark">!</span>LATE</span><span class="lat">+58s</span></div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no rule</span></div>
-          <div class="cell late"><span class="sig"><span class="mark">!</span>LATE</span><span class="lat">+42s</span></div>
-        </div>
-
-        <div class="matrix row">
-          <div class="scenario-cell">
-            <span>DangerDev</span>
-            <span class="tid">T1078.004 · T1098.003</span>
-          </div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+3.1s</span></div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+0.8s</span></div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+2.0s</span></div>
-          <div class="cell fired"><span class="sig"><span class="mark">✓</span>FIRED</span><span class="lat">+4.4s</span></div>
-        </div>
-
-        <div class="matrix row">
-          <div class="scenario-cell">
-            <span>ECScape</span>
-            <span class="tid">T1134 · T1552.007</span>
-          </div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">by design</span></div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no API call</span></div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no rule</span></div>
-          <div class="cell missed"><span class="sig"><span class="mark">✗</span>MISSED</span><span class="lat">no rule</span></div>
-        </div>
-
-        <div class="matrix-foot">
-          <span>20 cells · illustrative example · <b>your run produces the real grid</b></span>
-          <div class="legend">
-            <span><i class="ok"></i> Fired &lt;30s</span>
-            <span><i class="lt"></i> Late &gt;30s</span>
-            <span><i class="ms"></i> Missed</span>
+codefinger / T1486
+  cloudtrail   FIRED</pre>
           </div>
         </div>
-      </div>
-    </div>
-    <p class="scroll-hint">Scroll the grid sideways for every source →</p>
 
-    <a class="more" href="coverage.html">Coverage, tracked in the open <span class="arrow">→</span></a>
-  </section>
+        <div class="sw__panel is-warm" role="tabpanel" id="panel-nologs" aria-labelledby="tab-nologs" hidden>
+          <div class="sw__copy">
+            <div class="sw__verdict">No logs</div>
+            <p class="sw__body">The telemetry never arrived. No rule could have caught this, however good the rule was, because there was nothing to match against.</p>
+            <dl class="sw__do">
+              <dt>What you do about it</dt>
+              <dd>A logging and budget problem, not a detection problem. Turn the source on, then run it again.</dd>
+            </dl>
+          </div>
+          <div class="sw__sample">
+            <p class="sw__lbl">Example, not a measured result</p>
+            <pre>dangerdev / T1078.004
+  cloudtrail   NO LOGS
+  guardduty    NO LOGS
 
-  <!-- ============== CHAIN CATALOGUE ============== -->
-  <section class="s">
-    <div class="section-head">
-      <div>
-        <h2 class="h-2">Real campaigns. <span class="em">Each one runs as code.</span></h2>
-      </div>
-      <p>Every chain traces back to a published cloud attack — an observed campaign or public research — reproducible, mapped to MITRE ATT&amp;CK, and packaged with the detection content that should have caught it.</p>
-    </div>
-
-    <div class="chains">
-      <a class="chain" href="scenarios.html">
-        <span>
-          <span class="chain__name">SCARLETEEL 2.0</span>
-          <span class="chain__attr">Sysdig TRT · Feb & Jul 2023</span>
-        </span>
-        <p class="chain__what">Container RCE, then IMDSv1 credential theft, lateral movement into AWS, Terraform state exfiltration and a Lambda backdoor for persistence.</p>
-        <span class="chain__map">
-          <span class="pill scen">scarleteel</span>
-          <span class="pill">T1190</span><span class="pill">T1552.005</span><span class="pill">T1562.008</span>
-        </span>
-        <span class="chain__t">6 phases</span>
-      </a>
-
-      <a class="chain" href="run.html">
-        <span>
-          <span class="chain__name">AMBERSQUID</span>
-          <span class="chain__attr">Sysdig TRT · 2023</span>
-        </span>
-        <p class="chain__what">Credentials injected by a malicious container, IAM role persistence, then miners across Amplify, ECS Fargate, SageMaker and CodeBuild &mdash; ending in CloudTrail StopLogging.</p>
-        <span class="chain__map">
-          <span class="pill scen">ambersquid</span>
-          <span class="pill">T1496</span><span class="pill">T1578.002</span><span class="pill">T1070</span>
-        </span>
-        <span class="chain__t">13 techniques</span>
-      </a>
-
-      <a class="chain" href="scenarios.html">
-        <span>
-          <span class="chain__name">Codefinger</span>
-          <span class="chain__attr">Halcyon RISE Team · Jan 2025</span>
-        </span>
-        <p class="chain__what">Credentials harvested from a public Terraform state bucket, then S3 re-encrypted with an attacker-held SSE-C key and version history purged to remove rollback.</p>
-        <span class="chain__map">
-          <span class="pill scen">codefinger</span>
-          <span class="pill">T1486</span><span class="pill">T1490</span><span class="pill">T1530</span>
-        </span>
-        <span class="chain__t">5 phases</span>
-      </a>
-
-      <a class="chain" href="scenarios.html">
-        <span>
-          <span class="chain__name">DangerDev</span>
-          <span class="chain__attr">Invictus IR · Jan 2024</span>
-        </span>
-        <p class="chain__what">Bootstraps from a leaked long-term admin key and calls GetUser rather than GetCallerIdentity, dodging the identity-check fingerprint most rules watch for.</p>
-        <span class="chain__map">
-          <span class="pill scen">dangerdev</span>
-          <span class="pill">T1078.004</span><span class="pill">T1098.003</span><span class="pill">T1136.003</span>
-        </span>
-        <span class="chain__t">17 techniques</span>
-      </a>
-
-      <a class="chain" href="scenarios.html">
-        <span>
-          <span class="chain__name">ECScape</span>
-          <span class="chain__attr">Sweet Security research · 2025</span>
-        </span>
-        <p class="chain__what">Crosses the IAM privilege boundary inside Amazon ECS on EC2: a low-privilege task lifts the credentials of its neighbours and of the instance role itself.</p>
-        <span class="chain__map">
-          <span class="pill scen">ecscape</span>
-          <span class="pill">T1134</span><span class="pill">T1552.005</span><span class="pill">T1552.007</span>
-        </span>
-        <span class="chain__t">3 techniques</span>
-      </a>
-    </div>
-
-    <a class="more" href="scenarios.html">Every chain, with its published steps <span class="arrow">→</span></a>
-  </section>
-
-  <!-- ============== WHERE IT SITS ============== -->
-  <section class="s">
-    <div class="section-head">
-      <div>
-        <h2 class="h-2">There are other tools. <span class="em">None of them answer this.</span></h2>
-      </div>
-      <p>MayaTrail isn't a vulnerable lab or a single-call test. The column that matters is the last one — whether the tool tells you your detections missed.</p>
-    </div>
-
-    <div class="h-scroll">
-      <div class="vs-wrap">
-        <div class="vs head">
-          <div><b>TOOL</b></div>
-          <div>REAL AWS</div>
-          <div>MULTI-STEP CHAIN</div>
-          <div>MITRE-MAPPED</div>
-          <div>ONE-COMMAND TEARDOWN</div>
-          <div>DETECTION VERDICT</div>
+ecscape / T1552.007
+  splunk       NO LOGS</pre>
+          </div>
         </div>
 
-  <div class="vs row us">
-    <div class="tool">MayaTrail<span class="by">v0.1 · private beta</span></div>
-    <div class="c y"><span class="m">✓</span>STS-scoped sandbox</div>
-    <div class="c y"><span class="m">✓</span>full campaign</div>
-    <div class="c y"><span class="m">✓</span>44 technique IDs</div>
-    <div class="c y"><span class="m">✓</span>pulumi destroy</div>
-    <div class="c y"><span class="m">✓</span>fired / silent / no_logs</div>
-  </div>
+        <div class="sw__panel is-hot" role="tabpanel" id="panel-silent" aria-labelledby="tab-silent" hidden>
+          <div class="sw__copy">
+            <div class="sw__verdict">Silent</div>
+            <p class="sw__body">The logs were there. The technique ran. Nothing fired. This is the gap you did not know you had, and the reason the run exists.</p>
+            <dl class="sw__do">
+              <dt>What you do about it</dt>
+              <dd>We hand back the rule that closes it, compiled for the SIEM you actually run.</dd>
+            </dl>
+          </div>
+          <div class="sw__sample">
+            <p class="sw__lbl">Example, not a measured result</p>
+            <pre>ambersquid / T1496
+  cloudtrail   SILENT
+  splunk       SILENT
 
-  <div class="vs row">
-    <div class="tool">Stratus Red Team<span class="by">Datadog</span></div>
-    <div class="c y"><span class="m">✓</span>live</div>
-    <div class="c p"><span class="m">~</span>one technique</div>
-    <div class="c y"><span class="m">✓</span>47 AWS techniques</div>
-    <div class="c y"><span class="m">✓</span>stratus cleanup</div>
-    <div class="c n"><span class="m">✗</span>you correlate it</div>
-  </div>
-
-  <div class="vs row">
-    <div class="tool">CloudGoat<span class="by">Rhino Security Labs</span></div>
-    <div class="c p"><span class="m">~</span>target only</div>
-    <div class="c n"><span class="m">✗</span>you attack it by hand</div>
-    <div class="c n"><span class="m">✗</span>no native map</div>
-    <div class="c y"><span class="m">✓</span>cloudgoat destroy</div>
-    <div class="c n"><span class="m">✗</span>none</div>
-  </div>
-
-  <div class="vs row">
-    <div class="tool">Pacu<span class="by">Rhino Security Labs</span></div>
-    <div class="c y"><span class="m">✓</span>any credentials</div>
-    <div class="c p"><span class="m">~</span>operator-driven</div>
-    <div class="c n"><span class="m">✗</span>no native map</div>
-    <div class="c n"><span class="m">✗</span>provisions nothing</div>
-    <div class="c n"><span class="m">✗</span>session log only</div>
-  </div>
-
-  <div class="vs row">
-    <div class="tool">Atomic Red Team<span class="by">Red Canary</span></div>
-    <div class="c p"><span class="m">~</span>mostly on-host</div>
-    <div class="c p"><span class="m">~</span>atomic tests</div>
-    <div class="c y"><span class="m">✓</span>technique-aligned</div>
-    <div class="c p"><span class="m">~</span>per-test cleanup</div>
-    <div class="c n"><span class="m">✗</span>logs only</div>
-  </div>
+dangerdev / T1098.003
+  opensearch   SILENT</pre>
+          </div>
+        </div>
       </div>
     </div>
-    <p class="scroll-hint">Scroll the table sideways for every column →</p>
-
-    <p class="vs-note">Every tool here is good at what it was built for, and we use several of them. Competitor capabilities were checked against upstream documentation in September 2026 — <a href="https://stratus-red-team.cloud/attack-techniques/list/">Stratus Red Team's technique list</a>, the <a href="https://github.com/RhinoSecurityLabs/cloudgoat">CloudGoat</a> and <a href="https://github.com/RhinoSecurityLabs/pacu">Pacu</a> repositories, and the <a href="https://www.atomicredteam.io/docs/atomic-red-team">Atomic Red Team docs</a>. If we've got something wrong, tell us and we'll correct it. MayaTrail's figures are counted from our own catalogue: 45 AWS emulation packages carrying 44 distinct MITRE technique IDs.</p>
+    <p class="sw__hint">Panel advances on its own. Hover or tab in to hold it.</p>
   </section>
 
-  <!-- ============== HOW IT RUNS ============== -->
-  <section class="s">
-    <div class="section-head">
-      <div>
-        <h2 class="h-2">Four steps. <span class="em">No agents. No long-lived keys.</span></h2>
-      </div>
-      <p>The platform sits behind an STS-only role you grant in a sandbox account. Every resource is tagged. Every action lands in your own CloudTrail.</p>
+  <!-- ============== TWO WAYS TO RUN IT ============== -->
+  <section class="ways">
+    <div class="way">
+      <h3>Run it with us</h3>
+      <p>A scoped assessment against your account, written up, with the gaps handed back as rules you can deploy.</p>
+      <a href="services.html">See what the assessment covers &rarr;</a>
     </div>
-
-    <div class="steps">
-      <div class="step">
-        <span class="n">01 · Connect</span>
-        <h3>STS role, no keys</h3>
-        <p>Grant MayaTrail an assumable role in your sandbox account. The trust policy is two lines. No long-lived credentials ever leave AWS.</p>
-      </div>
-      <div class="step">
-        <span class="n">02 · Provision</span>
-        <h3>Pulumi sandbox</h3>
-        <p>A tagged stack of intentionally-leaky resources spins up in about 60 seconds. It mirrors a real account in shape, not in data.</p>
-      </div>
-      <div class="step">
-        <span class="n">03 · Run</span>
-        <h3>Execute a chain</h3>
-        <p>Pick a campaign. Watch the chain land in your CloudTrail. Read which detections fired, and which stayed quiet.</p>
-      </div>
-      <div class="step">
-        <span class="n">04 · Tear down</span>
-        <h3>One command</h3>
-        <p>The sandbox is destroyed. What you keep is the detection content, the playbook, and the verdict on every rule that should have caught it.</p>
-      </div>
+    <div class="way">
+      <h3>Run it yourself</h3>
+      <p>The platform, the campaign library and the detection content, on your own schedule.</p>
+      <a href="pricing.html">See what a licence costs &rarr;</a>
     </div>
   </section>
 
-  <!-- ============== ARTIFACTS ============== -->
-  <section class="s">
-    <div class="section-head">
-      <div>
-        <h2 class="h-2">The rules, the runbook, and <span class="em">a straight answer.</span></h2>
-      </div>
-      <p>Every run ends with three things your team uses on Monday — one for the detection repo, one for the runbook wiki, and one plain verdict on what your stack actually saw.</p>
+  <!-- ============== DOCS POINTER ============== -->
+  <section class="docs">
+    <div class="docs__copy">
+      <h3>Everything else is in the repo</h3>
+      <p>Campaign manifests, 115 incident-response playbooks and per-service ground truth live in git, versioned and reviewable. The site stops where the documentation starts.</p>
     </div>
-
-    <div class="artifacts">
-      <div class="artifact">
-        <div class="artifact__file">detections/sigma_t1552.005.yml <span class="sz">79 rules · 79 KQL</span></div>
-        <h3>Sigma and KQL, per technique</h3>
-        <p>Each emulation ships a rule and a query for every technique it runs. Flat files, no export step — drop them into your detection repo and they fire the next time the chain lands.</p>
-      </div>
-
-      <div class="artifact">
-        <div class="artifact__file">PLAYBOOK.md <span class="sz">41 playbooks</span></div>
-        <h3>An IR runbook you can execute</h3>
-        <p>Prepare, identify, contain, eradicate, recover — written around real AWS CLI queries. MayaTrail can run the read-only ones for you inline, so a tabletop isn't just reading.</p>
-        <a class="more" href="playbook.html">Read the AMBERSQUID playbook <span class="arrow">→</span></a>
-      </div>
-
-      <div class="artifact">
-        <div class="artifact__file">fired · silent · no_logs <span class="sz">per rule</span></div>
-        <h3>Three states, not two</h3>
-        <p>A rule that didn't alert means one of two very different things. <b>Silent</b> is a tuning problem. <b>No logs</b> is a pipeline problem, and the rule never ran at all. Collapsing them into one number hides the only finding you can act on.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============== FAQ ============== -->
-  <section class="s">
-    <div class="section-head">
-      <div>
-        <h2 class="h-2">The objections worth <span class="em">answering directly.</span></h2>
-      </div>
-      <p>The questions we hear most. If yours isn't here, ask: <a href="mailto:admin@mayatrail.tech" style="color:var(--cool); text-decoration:none;">admin@mayatrail.tech</a>.</p>
-    </div>
-
-    <div class="faq">
-      <details>
-        <summary>Will this touch my production account?</summary>
-        <div class="a">
-          No. MayaTrail only acts inside a separate <b>sandbox account</b> you nominate. The trust policy enforces a single sandbox <code>aws:PrincipalAccount</code> condition. Cross-account actions are statically blocked at the SDK layer and at the IAM boundary. Nothing executes against production, ever.
-        </div>
-      </details>
-
-      <details>
-        <summary>What does a run cost in AWS spend?</summary>
-        <div class="a">
-          A typical chain — roughly 30 seconds of API calls, a small KMS key and a four-object S3 bucket — costs <b>under $0.10</b>. Worst-case scenarios such as a DynamoDB write storm cap at about <b>$1.40</b>. Every run prints a forecast before it executes.
-        </div>
-      </details>
-
-      <details>
-        <summary>How do I know teardown is real?</summary>
-        <div class="a">
-          Teardown is <code>pulumi destroy</code> with a post-condition: every resource the stack declared must return <code>DescribeX → NotFound</code>. If any survive, the run is flagged <b>incomplete</b> and the teardown log names exactly which resources are still standing. You get logs for both halves.
-        </div>
-      </details>
-
-      <details>
-        <summary>What if my detections aren't on the grid?</summary>
-        <div class="a">
-          The grid shows the four sources we've benchmarked in beta. Every archived detection is stored <b>raw</b> — the full CloudTrail event, untouched — so you can correlate a run against any stack we don't support yet, on your own schedule. Coverage also exports as an ATT&amp;CK Navigator layer you can load straight into the matrix.
-        </div>
-      </details>
-
-      <details>
-        <summary>Is this red-team or detection-engineering?</summary>
-        <div class="a">
-          Detection engineering first, red team second. The product is built around <em>"did your stack notice?"</em>, not <em>"can you compromise this?"</em> Pacu and others already do the latter well. We're complementary, not a replacement.
-        </div>
-      </details>
-
-      <details>
-        <summary>Self-host or SaaS?</summary>
-        <div class="a">
-          Both. The emulation core, Pulumi recipes and CLI are <b>open source</b>, and the platform runs as a documented Docker Compose stack. The hosted control plane adds run history, the evidence signer, the detection adapters and a UI. The same chain runs in either mode, and evidence packets are byte-identical.
-        </div>
-      </details>
-
-      <details>
-        <summary>Which clouds do you support?</summary>
-        <div class="a">
-          <b>AWS.</b> Every chain, every detection bundle and every playbook we ship today targets AWS and nothing else. We would rather cover one cloud thoroughly than claim several thinly.
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- ============== CTA ============== -->
-  <section class="s" style="padding-bottom:80px;">
-    <div class="final">
-      <h2 class="h-2">See your AWS the way <span class="em">attackers</span> see it.</h2>
-      <p>Private beta. Tell us a few sentences about what you want to test and we'll get you set up.</p>
-      <div class="cta-row">
-        <a class="btn" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access <span class="arrow">→</span></a>
-        <a class="btn outline" href="run.html">Watch a live run</a>
-      </div>
-    </div>
+    <a class="pill gh" href="https://github.com/MayaTrail/step1">github.com/MayaTrail</a>
   </section>
 
   <footer>
-    <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b> · v0.1</span>
+    <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b> &middot; v0.1 <span class="note">use only in isolated test accounts</span></span>
     <div class="links">
-      <a href="index.html">Platform</a>
-      <a href="scenarios.html">Scenarios</a>
-      <a href="run.html">Run</a>
-      <a href="coverage.html">Coverage</a>
       <a href="services.html">Services</a>
       <a href="pricing.html">Pricing</a>
-      <a href="research.html">Research</a>
       <a href="blog/">Blog</a>
-    <a href="https://github.com/MayaTrail">GitHub ↗</a>
+      <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
     </div>
   </footer>
 
 </main>
 
 <script>
-// Horizontal-scroll affordance for the coverage grid on narrow viewports.
+/* The verdict switcher.
+   Auto-advances, fills a progress rail, holds on hover or keyboard focus, and
+   does not move at all when the visitor has asked for reduced motion. The tabs
+   are real buttons, so arrow keys work; with JavaScript off the first panel is
+   the only one not hidden and the page still reads. */
 (function () {
-  const els = document.querySelectorAll('.h-scroll');
-  function check() {
-    els.forEach(el => el.classList.toggle('scrollable', el.scrollWidth > el.clientWidth + 4));
-  }
-  check();
-  window.addEventListener('resize', check);
-})();
+  var root = document.getElementById('sw');
+  if (!root) return;
 
-// CloudTrail tape - the page's one authored motion.
-(function () {
-  const term = document.getElementById('term');
-  if (!term) return;
+  var tabs   = Array.prototype.slice.call(root.querySelectorAll('.sw__tab'));
+  var panels = Array.prototype.slice.call(root.querySelectorAll('.sw__panel'));
+  var bars   = tabs.map(function (t) { return t.querySelector('.sw__bar'); });
+  var DWELL  = 4200;
+  var TICK   = 60;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var i = 0, p = 0, held = false;
+  var reduced = false;
+  try {
+    reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) { reduced = false; }
 
-  const lines = [
-    { t: '+00.00', l: 'mayatrail run scarleteel --sandbox dev-user', cls: 'api' },
-    { t: '+00.42', l: '✓ stack up · 9 resources · pulumi/sandbox-2f4a', cls: 'ok' },
-    { t: '+00.84', l: 'sts:AssumeRole → arn:aws:iam::***:role/maya-runner', cls: 'api' },
-    { t: '+01.12', l: 'ec2:DescribeInstances → 3 instances · indexed', cls: 'mut' },
-    { t: '+02.40', l: '⚠ T1190 · container RCE on vuln-web:8080', cls: 'warn' },
-    { t: '+03.05', l: 'imds:GetCredentials → ecsTaskRole · IMDSv1', cls: 'api' },
-    { t: '+03.12', l: '⚠ T1552.005 · detection window opens', cls: 'warn' },
-    { t: '+04.20', l: '✓ guardduty:InstanceCredentialExfiltration · fired +1.1s', cls: 'ok' },
-    { t: '+05.20', l: 's3:ListBuckets → 4 buckets · 4.2GB indexed', cls: 'mut' },
-    { t: '+05.90', l: 's3:GetObject × 128 · terraform-state → attacker-bucket', cls: 'api' },
-    { t: '+06.10', l: '⚠ T1530 · exfil window opens', cls: 'warn' },
-    { t: '+08.40', l: '✗ cloudtrail:DataEvents missing · exfil silent', cls: 'err' },
-    { t: '+10.20', l: 'chain complete · 7 rules checked · 4 fired · 2 silent', cls: 'mut' },
-    { t: '+10.21', l: '✗ 1 rule no_logs · data events never reached the archive', cls: 'err' },
-    { t: '+11.10', l: 'pulumi destroy → 9 resources teardown', cls: 'api' },
-    { t: '+12.40', l: '✓ run-2f4a complete', cls: 'ok' },
-  ];
-
-  const MAX_VISIBLE = 11;
-
-  function render(line) {
-    const el = document.createElement('div');
-    el.className = 'line';
-    const t = document.createElement('span');
-    t.className = 't';
-    t.textContent = line.t;
-    const l = document.createElement('span');
-    l.className = 'l ' + line.cls;
-    l.textContent = line.l;
-    el.append(t, l);
-    term.appendChild(el);
-    while (term.children.length > MAX_VISIBLE) term.removeChild(term.firstChild);
+  function show(n) {
+    i = n; p = 0;
+    tabs.forEach(function (t, k) {
+      t.setAttribute('aria-selected', k === n ? 'true' : 'false');
+      t.tabIndex = k === n ? 0 : -1;
+      bars[k].style.width = (k === n && reduced) ? '100%' : '0%';
+    });
+    panels.forEach(function (el, k) { el.hidden = k !== n; });
   }
 
-  // Reduced motion: show the tail of the run, already settled, with no animation.
-  if (reduced.matches) {
-    lines.slice(-MAX_VISIBLE).forEach(render);
-    return;
+  function step() {
+    if (held) return;
+    p += (TICK / DWELL) * 100;
+    if (p >= 100) show((i + 1) % panels.length);
+    else bars[i].style.width = p + '%';
   }
 
-  let i = 0;
-  let timer = null;
-
-  function emit() {
-    if (i >= lines.length) {
-      timer = setTimeout(() => { term.textContent = ''; i = 0; emit(); }, 4500);
-      return;
-    }
-    render(lines[i++]);
-    timer = setTimeout(emit, 600 + Math.random() * 400);
-  }
-
-  const io = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      emit();
-      io.disconnect();
-    }
+  tabs.forEach(function (t, n) {
+    t.addEventListener('click', function () { show(n); });
+    t.addEventListener('keydown', function (ev) {
+      var next = null;
+      if (ev.key === 'ArrowRight') next = (n + 1) % tabs.length;
+      if (ev.key === 'ArrowLeft')  next = (n - 1 + tabs.length) % tabs.length;
+      if (next === null) return;
+      ev.preventDefault();
+      show(next);
+      tabs[next].focus();
+    });
   });
-  io.observe(term);
 
-  // Stop the tape while the tab is hidden rather than queueing timers against it.
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && timer) { clearTimeout(timer); timer = null; }
-    else if (!document.hidden && timer === null && i > 0) { emit(); }
-  });
+  root.addEventListener('mouseenter', function () { held = true; });
+  root.addEventListener('mouseleave', function () { held = false; });
+  root.addEventListener('focusin',  function () { held = true; });
+  root.addEventListener('focusout', function () { held = false; });
+
+  show(0);
+  if (!reduced) setInterval(step, TICK);
 })();
 </script>
 
