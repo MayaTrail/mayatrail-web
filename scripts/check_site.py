@@ -78,7 +78,7 @@ class Scan(HTMLParser):
             self.scripts.append(attr["src"])
 
 
-def check_links(page: Path, scan: Scan, own_text: str) -> None:
+def check_links(page: Path, scan: Scan, own_text: str, blog_built: bool) -> None:
     """Every relative href resolves, and every #anchor exists in its target."""
     for href in scan.links:
         if href.startswith(("http://", "https://", "mailto:", "data:", "tel:")):
@@ -89,7 +89,16 @@ def check_links(page: Path, scan: Scan, own_text: str) -> None:
             if destination.is_dir():
                 destination = destination / "index.html"
             if not destination.exists():
-                fail(f"{page.name}: broken link {href}")
+                # site/blog/ is generated and git-ignored, so on a fresh clone
+                # these links point at nothing until the blog is built. That is
+                # a missing build step, not a broken page.
+                if not blog_built and href.startswith("blog/"):
+                    fail(
+                        f"{page.name}: {href} is missing because site/blog/ has"
+                        " not been built. Run scripts/build_blog.py first."
+                    )
+                else:
+                    fail(f"{page.name}: broken link {href}")
                 continue
             document = destination.read_text(encoding="utf-8")
         else:
@@ -107,6 +116,7 @@ def main(argv: list[str]) -> int:
         print(f"nothing to check under {root}")
         return 1
 
+    blog_built = (root / "blog" / "index.html").exists()
     used_classes: set[str] = set()
     for page in pages:
         text = page.read_text(encoding="utf-8")
@@ -132,7 +142,7 @@ def main(argv: list[str]) -> int:
             fail(f"{label}: duplicate ids {scan.duplicate_ids}")
         if scan.scripts:
             fail(f"{label}: third-party script {scan.scripts}")
-        check_links(page, scan, text)
+        check_links(page, scan, text, blog_built)
 
     # A class is "declared" if any stylesheet or inline <style> mentions it.
     declared = set(
