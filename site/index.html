@@ -124,6 +124,46 @@
   }
   .sw__hint { margin: 14px 2px 0; font-size: 12.5px; color: var(--ink-3); }
 
+
+  /* ============== WHAT IS IN IT ==============
+     The run is the headline, but it is not the whole product. Rules, not
+     cards: same surface treatment as everything else. Every figure here is
+     counted from the product repository. */
+  .kit { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(64px, 7vw, 104px); }
+  .kit__grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid var(--rule-2);
+  }
+  .kit__item {
+    padding: clamp(22px, 2.4vw, 30px);
+    border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    background: transparent;
+  }
+  .kit__item:nth-child(3n) { border-right: 0; }
+  .kit__item:nth-last-child(-n+3) { border-bottom: 0; }
+  .kit__n {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--cool); display: block; margin-bottom: 12px;
+  }
+  .kit__t {
+    font-family: var(--sans); font-size: 16px; font-weight: 600;
+    letter-spacing: -0.01em; color: var(--ink); margin: 0 0 8px;
+  }
+  .kit__d { font-family: var(--sans); font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+  @media (max-width: 980px) {
+    .kit__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .kit__item:nth-child(3n) { border-right: 1px solid var(--rule); }
+    .kit__item:nth-child(2n) { border-right: 0; }
+    .kit__item:nth-last-child(-n+3) { border-bottom: 1px solid var(--rule); }
+    .kit__item:nth-last-child(-n+1) { border-bottom: 0; }
+  }
+  @media (max-width: 640px) {
+    .kit { padding-left: 18px; padding-right: 18px; }
+    .kit__grid { grid-template-columns: minmax(0, 1fr); }
+    .kit__item { border-right: 0 !important; border-bottom: 1px solid var(--rule) !important; }
+    .kit__item:last-child { border-bottom: 0 !important; }
+  }
+
   /* ============== TWO WAYS TO RUN IT ============== */
   .ways {
     max-width: 1320px; margin: 0 auto;
@@ -544,12 +584,12 @@
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>3</b></span><span class="track__line"></span></div>
         <div class="track__t">Check detections</div>
-        <p class="track__d">See which Sigma and KQL rules fired, and which did not.</p>
+        <p class="track__d">Read your SIEM's alerts back, whether the rules are ours or yours.</p>
       </li>
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>4</b></span><span class="track__line"></span></div>
         <div class="track__t">Close the gap</div>
-        <p class="track__d">Apply the guardrail and the playbook, then tear it down.</p>
+        <p class="track__d">Take the rule, the guardrail and the playbook. The lab destroys itself.</p>
       </li>
     </ol>
 
@@ -634,6 +674,61 @@ dangerdev / T1098.003
       </div>
     </div>
     <p class="sw__hint">Panel advances on its own. Hover or tab in to hold it.</p>
+  </section>
+
+
+  <!-- ============== WHAT IS IN IT ============== -->
+  <section class="kit">
+    <h2 class="h-2">The run is the headline. <span class="em">This is the rest of it.</span></h2>
+    <p class="vd__sub">Counted from the repository, not rounded up.</p>
+
+    <div class="kit__grid">
+      <div class="kit__item">
+        <span class="kit__n">5 campaigns &middot; 40 techniques</span>
+        <h3 class="kit__t">An attack library, as code</h3>
+        <p class="kit__d">SCARLETEEL 2.0, AMBERSQUID, Codefinger, DangerDev and ECScape, modelled on documented incidents, plus forty single-technique AWS emulations you can run on their own. Every phase is mapped to ATT&amp;CK.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">5 emulations</span>
+        <h3 class="kit__t">Kubernetes, not only AWS</h3>
+        <p class="kit__d">RBAC impersonation, PSA bypass through PV abuse, a writable /var/log host escape and two MITM paths including CVE-2020-8554, run against a cluster rather than an account.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">Sigma &middot; KQL &middot; 2 SIEM targets</span>
+        <h3 class="kit__t">Detection content that ships</h3>
+        <p class="kit__d">Every emulation carries Sigma and KQL rules. Write or AI-draft your own, score them against synthetic events, and compile the lot to Splunk SPL or OpenSearch.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">Signed webhook</span>
+        <h3 class="kit__t">It grades your rules, not ours</h3>
+        <p class="kit__d">Your SIEM posts its alerts back and they are matched on a ladder: exact when the alert names a rule we ship, by technique when you wrote your own, weak when it only landed in the window. A weak match is shown and never counted as a pass.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">Run over run</span>
+        <h3 class="kit__t">Coverage history</h3>
+        <p class="kit__d">Reliability per rule across every run, with the alert behind each change. A rule that stopped firing is not the same as one that never fired, and a rule no run reached is reported as unmeasured rather than as a failure.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">Read only</span>
+        <h3 class="kit__t">Attack graph</h3>
+        <p class="kit__d">A scan of the IAM you already have that finds the privilege-escalation paths already in it, and links each one to the emulation that rehearses it.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">97 policies</span>
+        <h3 class="kit__t">Guardrails</h3>
+        <p class="kit__d">Service control policies for the gaps a run exposes, from denying KMS key deletion to blocking unapproved regions, so what you close stays closed.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">115 playbooks</span>
+        <h3 class="kit__t">Incident response, written down</h3>
+        <p class="kit__d">A playbook per detection across CloudTrail, GuardDuty, IAM, S3, RDS, EKS and the rest, shipped as documentation and editable, so the alert arrives with its response attached.</p>
+      </div>
+      <div class="kit__item">
+        <span class="kit__n">TTL &middot; STS &middot; immutable log</span>
+        <h3 class="kit__t">Safe to run on a Tuesday</h3>
+        <p class="kit__d">A scoped cross-account role assumed at run time, no long-lived keys, a cost estimate before you start, a TTL that destroys the lab, and an audit entry for every connect, deploy, attack and destroy.</p>
+      </div>
+    </div>
   </section>
 
   <!-- ============== TWO WAYS TO RUN IT ============== -->
@@ -933,9 +1028,12 @@ dangerdev / T1098.003
       <details>
         <summary>Which clouds do you support?</summary>
         <p>
-          AWS. That is the honest answer today. The campaigns, the detections and the
-          coverage model are all built on CloudTrail. We would rather be genuinely good at one
-          cloud than shallow across three.
+          AWS, and Kubernetes for cluster-level attacks. The five campaigns, the forty
+          single-technique emulations and the whole coverage model are built on CloudTrail,
+          and five Kubernetes emulations cover RBAC impersonation, PSA bypass, a writable
+          /var/log host escape and two MITM paths including CVE-2020-8554. Azure and GCP are
+          not supported. The plugin model is built to reach them and we would rather be
+          genuinely good at one cloud than shallow across three.
         </p>
       </details>
       <details>
