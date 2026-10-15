@@ -164,18 +164,18 @@
     .kit__item:last-child { border-bottom: 0 !important; }
   }
 
-  /* ============== TWO WAYS TO RUN IT ============== */
+  /* ============== THREE WAYS TO RUN IT ============== */
   .ways {
     max-width: 1320px; margin: 0 auto;
     padding: 0 28px clamp(64px, 7vw, 104px);
-    display: flex; flex-wrap: wrap; gap: 56px;
+    display: flex; flex-wrap: wrap; gap: clamp(32px, 3.4vw, 48px);
   }
   .way {
-    flex: 1 1 380px; min-width: 0;
+    flex: 1 1 300px; min-width: 0;
     display: flex; flex-direction: column; align-items: center; text-align: center;
   }
   .way h3 { font-family: var(--sans); font-size: 24px; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 10px; }
-  .way p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0 0 24px; max-width: 46ch; }
+  .way p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0 0 24px; max-width: 42ch; }
   .way a { margin-top: auto; font-size: 14px; color: var(--cool); text-decoration: none; }
   .way a:hover { color: #9cc6ff; }
 
@@ -651,7 +651,7 @@
             <p class="sw__body">Your rule saw the technique and raised the alert. The control did its job, and now you have the evidence that it did.</p>
             <dl class="sw__do">
               <dt>What you do about it</dt>
-              <dd>Keep the rule, and check it again later. Detections rot quietly, so this is the column you want to stay full.</dd>
+              <dd>Keep the rule, and test it again later. A rule that fires today goes quiet when a log source moves or a filter gets edited, and nothing tells you.</dd>
             </dl>
           </div>
           <div class="sw__sample">
@@ -763,17 +763,22 @@ dangerdev / T1098.003
     </div>
   </section>
 
-  <!-- ============== TWO WAYS TO RUN IT ============== -->
+  <!-- ============== THREE WAYS TO RUN IT ============== -->
   <section class="ways">
     <div class="way">
-      <h3>Bring in the team</h3>
-      <p>Assessments, red teaming, response drills and training, delivered by our engineers as work in its own right.</p>
-      <a href="#services">See what the team does &rarr;</a>
+      <h3>Run it with us</h3>
+      <p>Our engineers drive the emulations inside your account, grade every technique against your own detections, and write it up.</p>
+      <a href="#pricing">See what an assessment costs &rarr;</a>
     </div>
     <div class="way">
       <h3>Run it yourself</h3>
       <p>The platform, the campaign library and the detection content, on your own schedule.</p>
       <a href="#pricing">See what a licence costs &rarr;</a>
+    </div>
+    <div class="way">
+      <h3>Bring in the team</h3>
+      <p>Red teaming, response drills, training and hardening, delivered by our engineers as work in its own right.</p>
+      <a href="#services">See what the team does &rarr;</a>
     </div>
   </section>
 
@@ -898,7 +903,7 @@ dangerdev / T1098.003
           <li>Our engineers run the engagement. It is consulting work, scoped to <b>one AWS account</b> of yours and reached through a scoped, read-and-emulate role. No long-lived keys, ever.</li>
           <li>We review your <b>posture, identity and logging coverage</b>, then put it under attack: <b>real adversary campaigns</b> (SCARLETEEL&nbsp;2.0, AMBERSQUID, Codefinger, DangerDev, ECScape) against a disposable environment provisioned <b>inside that account of yours</b>, well away from production, and destroyed on a TTL.</li>
           <li>Because the attack happens <b>in your account</b>, it lands in <b>your CloudTrail</b> and reaches <b>your SIEM</b> like any other activity. Your detections get a real chance to fire.</li>
-          <li>We read that CloudTrail back and grade every step: fired, silent, or no logs at all.</li>
+          <li>We read that CloudTrail back and grade every step: fired, no logs, or silent.</li>
           <li>You get the <b>detection rules</b> that close the gaps, compiled for your SIEM.</li>
           <li>Buyable on a services line. Most teams do not need a new vendor process for it.</li>
         </ul>
@@ -926,8 +931,8 @@ dangerdev / T1098.003
       <h2 class="h-2">Then keep it <span class="em">running</span></h2>
       <p>
         Detections rot. A rule that fired last quarter goes quiet after a log source moves or a
-        filter gets edited, and nothing tells you. An annual plan re-runs the campaigns on a
-        schedule and flags the ones that stopped firing.
+        filter gets edited, and nothing tells you. An annual plan re-runs the campaigns as
+        often as you like and flags the rules that stopped firing.
       </p>
     </div>
 
@@ -951,7 +956,7 @@ dangerdev / T1098.003
         <div class="plan-price">$25,000<span class="per">per year &middot; 1 AWS account</span></div>
         <ul class="spec">
           <li>Hosted, with the full campaign and single-technique library</li>
-          <li><b>Scheduled re-runs</b>, daily, weekly or monthly</li>
+          <li><b>Scheduled emulations</b>, queued for the date and time you choose</li>
           <li><b>Regression detection</b>: rules that used to fire and stopped</li>
           <li>Evidence reports, exportable</li>
           <li>SIEM rule export for every detection</li>
@@ -1045,7 +1050,7 @@ dangerdev / T1098.003
           Because running the attack is the easy half. Stratus, CloudGoat, Pacu and Atomic Red Team
           will all execute technique against your cloud for free, and so will our own core. None of
           them tell you whether your detections noticed. What you are paying for is the verdict
-          (fired, silent, or no logs at all, measured against your real CloudTrail) and
+          (fired, no logs, or silent, measured against your real CloudTrail) and
           the loop that closes the gap and then checks it stayed closed.
         </p>
       </details>
