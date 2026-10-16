@@ -11,45 +11,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run recording carries no identifiers
+      - name: Nothing published carries an identifier
         run: |
-          # The recording is built by allowlist in the app repo and checked
-          # again by scripts/build_run.py. This is the third check, at the
-          # point of no return: once this merges it is on a public website.
-          # Deliberately independent of the Python so a bug in the builder
-          # cannot also disable its own guard.
-          shopt -s nullglob
-          for f in recordings/*.json; do
-            echo "checking $f"
-            # Account ids, access key ids, emails. ARNs and IPs need the
-            # context-aware check in build_run.py (AWS-managed policy ARNs and
-            # private addresses are legitimate), which the build step runs.
-            # -w anchors each match on word boundaries, so a 12-digit run
-            # inside a longer number is not reported as an account id.
-            if grep -owE '[0-9]{12}' "$f"; then
-              echo "FAIL: $f contains what looks like an AWS account id"; exit 1
-            fi
-            if grep -owE '(AKIA|ASIA|AIDA|AROA|AIPA|ANPA|ANVA)[A-Z0-9]{12,}' "$f"; then
-              echo "FAIL: $f contains an AWS key id"; exit 1
-            fi
-            if grep -oE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[.][A-Za-z]{2,}' "$f"; then
-              echo "FAIL: $f contains an email address"; exit 1
-            fi
-            echo "OK: $f"
-          done
+          # Once this merges it is on a public website, so the guard runs at
+          # the point of no return and is deliberately independent of any
+          # builder script. Account ids and AWS key ids only: mailto: links to
+          # our own addresses are legitimate, so emails are not checked here.
+          #
+          # Only paths that exist are passed to grep. A missing directory makes
+          # GNU grep exit 2, which an `if` reads as "no match", and the guard
+          # would then pass silently on a real hit.
+          # -w anchors on word boundaries, so a 12-digit run inside a longer
+          # number is not reported as an account id.
+          if grep -rnowE '[0-9]{12}' site/ blog/; then
+            echo "FAIL: that looks like an AWS account id"; exit 1
+          fi
+          if grep -rnowE '(AKIA|ASIA|AIDA|AROA|AIPA|ANPA|ANVA)[A-Z0-9]{12,}' site/ blog/; then
+            echo "FAIL: that looks like an AWS key id"; exit 1
+          fi
+          echo "OK: no identifiers in anything published"
 
       - name: Build image
         run: docker build -t mayatrail-site:pr .
 
-      - name: Blog sources stay out of the image
+      - name: Only the published site crosses into the image
         run: |
-          leaked=$(docker run --rm mayatrail-site:pr find /usr/share/nginx/html -name '*.md')
-          [ -z "$leaked" ] || { echo "Markdown leaked into the image:"; echo "$leaked"; exit 1; }
-
-      - name: JSX source stays out of the image
-        run: |
-          leaked=$(docker run --rm mayatrail-site:pr find /usr/share/nginx/html -name '*.jsx')
-          [ -z "$leaked" ] || { echo "JSX leaked into the image:"; echo "$leaked"; exit 1; }
+          # The Markdown sources, the toolchain and the archive of superseded
+          # pages all stay behind in the repository. Only site/ is copied out
+          # of the builder stage, and this proves it.
+          leaked=$(docker run --rm mayatrail-site:pr \
+            find /usr/share/nginx/html \
+              \( -name '*.md' -o -name '*.py' -o -name '*.jsx' \
+                 -o -path '*/archive/*' \))
+          [ -z "$leaked" ] || { echo "Sources leaked into the image:"; echo "$leaked"; exit 1; }
+          echo "OK: image holds the site and nothing else"
 
       - name: No internal files in the image
         run: |
@@ -57,9 +52,11 @@ jobs:
             find /usr/share/nginx/html \
               \( -name '*Pitch*' -o -name '*Market*' -o -name '*GTM*' \
                  -o -name '*Battlecards*' -o -name '*Demo Script*' \
-                 -o -name '*deck-stage*' \
+                 -o -name '*deck-stage*' -o -name 'READ-ME-FIRST*' \
+                 -o -path '*/handoff/*' \
                  -o -path '*/internal/*' -o -path '*/logo/README.txt' \))
           [ -z "$leaked" ] || { echo "Internal files leaked into the image:"; echo "$leaked"; exit 1; }
+          echo "OK: nothing internal in the image"
 
       - name: Run container
         run: |
@@ -79,23 +76,23 @@ jobs:
             fi
             echo "OK: $1"
           }
+          # The site is one scrolling document, so the four surfaces are
+          # asserted one by one: a page that loads but lost a section fails.
           check "" "MayaTrail"
-          check "index.html" "MayaTrail"
-          check "run.html" "MayaTrail"
-          check "scenarios.html" "MayaTrail"
-          check "coverage.html" "MayaTrail"
-          check "services.html" "MayaTrail"
-          check "research.html" "MayaTrail"
-          check "pricing.html" "MayaTrail"
-          check "playbook.html" "MayaTrail"
-          check "playbook.html" "id=\"containment\""
+          check "index.html" 'id="platform"'
+          check "index.html" 'id="services"'
+          check "index.html" 'id="pricing"'
+          check "index.html" 'id="blog"'
+          check "index.html" "Every detection ends in one of"
+          # Shared before the rework, so they stay alive and land on the
+          # matching surface. They carry no content of their own.
+          check "services.html" "index.html#services"
+          check "pricing.html" "index.html#pricing"
           check "blog/" "Field notes"
           check "blog/feed.xml" "<rss"
           check "mayatrail-base.css" "--cool"
           check "mayatrail-blog.css" ".prose"
-          check "scripts/run-experience.js" ""
-          check "vendor/react.production.min.js" ""
-          check "vendor/react-dom.production.min.js" ""
+          check "favicon.svg" ""
           check "logo/mark-constellation.svg" ""
           check "logo/mark-triangle.svg" ""
           check "logo/mayatrail-lockup-constellation-dark.svg" ""
@@ -103,15 +100,36 @@ jobs:
           check "logo/mayatrail-lockup-triangle-dark.svg" ""
           check "logo/mayatrail-lockup-triangle-light.svg" ""
 
+      - name: Retired pages stay retired
+        run: |
+          # The coverage and research pages, the scenario catalogue, the run
+          # walkthrough and the playbook page came off the site in the October
+          # 2026 rework. If one reappears it is a bad revert or a copy of the
+          # old site, and either way it should not ship.
+          for page in coverage.html research.html scenarios.html run.html \
+                      playbook.html; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080/$page")
+            [ "$code" = "404" ] || { echo "FAIL: $page is back, and returned $code"; exit 1; }
+            echo "OK (gone): $page"
+          done
+
+      - name: Static checks over the published site
+        run: |
+          # The same gate that runs locally, against what the image actually
+          # serves rather than against the working tree: em dashes, retired
+          # copy, one h1 per page, duplicate ids, every link and anchor, no
+          # third-party scripts, no grey fills, and no class the CSS never
+          # styles.
+          docker cp site-pr:/usr/share/nginx/html ./published
+          python3 scripts/check_site.py published
+
       - name: Pages render without third-party JavaScript
         run: |
-          # playbook.html used to compile its Markdown in the browser with
-          # marked.js from jsdelivr, and run.html pulled React plus
-          # Babel-standalone from unpkg to transpile JSX on every load. Both
-          # are built ahead of time now. Guard against a CDN <script> creeping
-          # back onto any page.
-          for page in index.html coverage.html scenarios.html services.html \
-                      pricing.html research.html playbook.html run.html; do
+          # The run page once pulled React and Babel from unpkg to transpile
+          # JSX on every load, and the playbook page compiled Markdown in the
+          # browser with marked.js. Both are gone, and the site now ships no
+          # third-party JavaScript at all. Guard against one creeping back.
+          for page in index.html services.html pricing.html blog/ ; do
             body=$(curl -sf "http://localhost:8080/$page")
             if echo "$body" | grep -qE '<script[^>]+src="https?://'; then
               echo "FAIL: $page loads a third-party script"
@@ -130,7 +148,7 @@ jobs:
             --no-progress \
             http://localhost:8080/ \
             "http://localhost:8080/index.html" \
-            "http://localhost:8080/run.html"
+            "http://localhost:8080/blog/"
 
       - name: Container logs on failure
         if: failure()
