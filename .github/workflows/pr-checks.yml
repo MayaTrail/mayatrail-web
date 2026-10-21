@@ -11,8 +11,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Nothing published carries an identifier
+        run: |
+          # Once this merges it is on a public website, so the guard runs at
+          # the point of no return and is deliberately independent of any
+          # builder script. Account ids and AWS key ids only: mailto: links to
+          # our own addresses are legitimate, so emails are not checked here.
+          #
+          # Only paths that exist are passed to grep. A missing directory makes
+          # GNU grep exit 2, which an `if` reads as "no match", and the guard
+          # would then pass silently on a real hit.
+          # -w anchors on word boundaries, so a 12-digit run inside a longer
+          # number is not reported as an account id.
+          if grep -rnowE '[0-9]{12}' site/ blog/; then
+            echo "FAIL: that looks like an AWS account id"; exit 1
+          fi
+          if grep -rnowE '(AKIA|ASIA|AIDA|AROA|AIPA|ANPA|ANVA)[A-Z0-9]{12,}' site/ blog/; then
+            echo "FAIL: that looks like an AWS key id"; exit 1
+          fi
+          echo "OK: no identifiers in anything published"
+
       - name: Build image
         run: docker build -t mayatrail-site:pr .
+
+      - name: Only the published site crosses into the image
+        run: |
+          # The Markdown sources, the toolchain and the archive of superseded
+          # pages all stay behind in the repository. Only site/ is copied out
+          # of the builder stage, and this proves it.
+          leaked=$(docker run --rm mayatrail-site:pr \
+            find /usr/share/nginx/html \
+              \( -name '*.md' -o -name '*.py' -o -name '*.jsx' \
+                 -o -path '*/archive/*' \))
+          [ -z "$leaked" ] || { echo "Sources leaked into the image:"; echo "$leaked"; exit 1; }
+          echo "OK: image holds the site and nothing else"
 
       - name: No internal files in the image
         run: |
@@ -20,9 +52,11 @@ jobs:
             find /usr/share/nginx/html \
               \( -name '*Pitch*' -o -name '*Market*' -o -name '*GTM*' \
                  -o -name '*Battlecards*' -o -name '*Demo Script*' \
-                 -o -name '*deck-stage*' \
+                 -o -name '*deck-stage*' -o -name 'READ-ME-FIRST*' \
+                 -o -path '*/handoff/*' \
                  -o -path '*/internal/*' -o -path '*/logo/README.txt' \))
           [ -z "$leaked" ] || { echo "Internal files leaked into the image:"; echo "$leaked"; exit 1; }
+          echo "OK: nothing internal in the image"
 
       - name: Run container
         run: |
@@ -42,19 +76,22 @@ jobs:
             fi
             echo "OK: $1"
           }
+          # Assert the platform, service summary, pricing and illustrative example.
+          # The full service catalog has its own page.
           check "" "MayaTrail"
-          check "index.html" "MayaTrail"
-          check "run.html" "MayaTrail"
-          check "scenarios.html" "MayaTrail"
-          check "coverage.html" "MayaTrail"
-          check "services.html" "MayaTrail"
-          check "research.html" "MayaTrail"
-          check "pricing.html" "MayaTrail"
-          check "playbook.html" "MayaTrail"
+          check "index.html" 'id="platform"'
+          check "index.html" 'id="services"'
+          check "index.html" 'id="pricing"'
+          check "index.html" 'href="https://blog.mayatrail.tech"'
+          check "index.html" "SCENARIO WALKTHROUGH"
+          # Services has its own content; the old pricing URL remains a redirect.
+          check "services.html" "Hands-on security work."
+          check "pricing.html" "index.html#pricing"
+          check "blog/" "Field notes"
+          check "blog/feed.xml" "<rss"
           check "mayatrail-base.css" "--cool"
-          check "scripts/landing-vault.jsx" ""
-          check "scripts/tweaks-panel.jsx" ""
-          check "scripts/run-experience.jsx" ""
+          check "mayatrail-blog.css" ".prose"
+          check "favicon.svg" ""
           check "logo/mark-constellation.svg" ""
           check "logo/mark-triangle.svg" ""
           check "logo/mayatrail-lockup-constellation-dark.svg" ""
@@ -62,16 +99,57 @@ jobs:
           check "logo/mayatrail-lockup-triangle-dark.svg" ""
           check "logo/mayatrail-lockup-triangle-light.svg" ""
 
+      - name: Retired pages stay retired
+        run: |
+          # The coverage and research pages, the scenario catalogue, the run
+          # walkthrough and the playbook page came off the site in the October
+          # 2026 rework. If one reappears it is a bad revert or a copy of the
+          # old site, and either way it should not ship.
+          for page in coverage.html research.html scenarios.html run.html \
+                      playbook.html; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080/$page")
+            [ "$code" = "404" ] || { echo "FAIL: $page is back, and returned $code"; exit 1; }
+            echo "OK (gone): $page"
+          done
+
+      - name: Static checks over the published site
+        run: |
+          # The same gate that runs locally, against what the image actually
+          # serves rather than against the working tree: em dashes, retired
+          # copy, one h1 per page, duplicate ids, every link and anchor, no
+          # third-party scripts, no grey fills, and no class the CSS never
+          # styles.
+          docker cp site-pr:/usr/share/nginx/html ./published
+          python3 scripts/check_site.py published
+
+      - name: Pages render without third-party JavaScript
+        run: |
+          # The run page once pulled React and Babel from unpkg to transpile
+          # JSX on every load, and the playbook page compiled Markdown in the
+          # browser with marked.js. Both are gone, and the site now ships no
+          # third-party JavaScript at all. Guard against one creeping back.
+          for page in index.html services.html pricing.html blog/ ; do
+            body=$(curl -sf "http://localhost:8080/$page")
+            if echo "$body" | grep -qE '<script[^>]+src="https?://'; then
+              echo "FAIL: $page loads a third-party script"
+              echo "$body" | grep -oE '<script[^>]+src="https?://[^"]*"'
+              exit 1
+            fi
+            echo "OK (no external JS): $page"
+          done
+
       - name: Link check
         run: |
+          # blog.mayatrail.tech is excluded until the blog subdomain is set
+          # up. Remove it from the pattern below once it resolves.
           docker run --rm --network host lycheeverse/lychee:latest \
             --offline=false \
-            --exclude 'github\.com|fonts\.|unpkg\.com|cdn-cgi|mailto:' \
+            --exclude 'github\.com|fonts\.|unpkg\.com|cdn-cgi|mailto:|blog\.mayatrail\.tech' \
             --accept 200,204,301,302 \
             --no-progress \
             http://localhost:8080/ \
             "http://localhost:8080/index.html" \
-            "http://localhost:8080/run.html"
+            "http://localhost:8080/blog/"
 
       - name: Container logs on failure
         if: failure()

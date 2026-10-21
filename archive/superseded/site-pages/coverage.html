@@ -4,7 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MayaTrail - Coverage map</title>
+<meta name="description" content="Which AWS detection sources see which MayaTrail techniques, cell by cell. Illustrative coverage for CloudTrail, GuardDuty, Security Hub and Config." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="mayatrail-base.css" />
 <style>
   /* ============== STAT STRIP ============== */
@@ -75,7 +79,7 @@
     background: var(--bg-1);
   }
   .matrix-head {
-    display: grid; grid-template-columns: 150px repeat(6, 1fr);
+    display: grid; grid-template-columns: 150px repeat(5, 1fr);
     border-bottom: 1px solid var(--rule);
     background: var(--bg-2);
   }
@@ -96,7 +100,7 @@
   }
   .matrix-head .col:last-child { border-right: 0; }
   .matrix-row {
-    display: grid; grid-template-columns: 150px repeat(6, 1fr);
+    display: grid; grid-template-columns: 150px repeat(5, 1fr);
     border-bottom: 1px solid var(--rule);
   }
   .matrix-row:last-child { border-bottom: 0; }
@@ -199,6 +203,10 @@
   .atomics-new .an-lbl {
     font-family: var(--mono); font-size: 10px; text-transform: uppercase;
     letter-spacing: 0.16em; color: var(--ink-3); margin-bottom: 12px;
+  }
+  .atomics-lede {
+    font-family: var(--sans); font-size: 14.5px; line-height: 1.55;
+    color: var(--ink-2); margin: 12px 0 0; max-width: 640px;
   }
   .atomics-new .an-grid {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
@@ -337,7 +345,7 @@
     .stat-strip { grid-template-columns: 1fr 1fr; }
     .stat-strip .col { border-right: 0; border-bottom: 1px solid var(--rule); }
     .breakdown { grid-template-columns: 1fr; }
-    .matrix-head, .matrix-row { grid-template-columns: 110px repeat(6, 1fr); font-size: 9px; }
+    .matrix-head, .matrix-row { grid-template-columns: 110px repeat(5, 1fr); font-size: 9px; }
     .cell { height: 60px; padding: 8px 8px; }
   }
   @media (max-width: 720px) {
@@ -362,6 +370,7 @@
       <a href="services.html">Services</a>
       <a href="pricing.html">Pricing</a>
       <a href="research.html">Research</a>
+      <a href="blog/">Blog</a>
     </div>
     <div class="nav-readout">
       <span class="stat">v0.1 · private beta</span>
@@ -383,29 +392,28 @@
   </div>
 
   <section class="page-head">
-    <div class="eyebrow">MITRE ATT&amp;CK · cloud matrix</div>
     <h1 class="h-1">Coverage isn't a number on a slide. <span class="em">It's a grid, tracked in the open.</span></h1>
     <p class="lede">
-      Six full adversary emulations plus 43 atomic tests, mapped to the AWS ATT&amp;CK surface. Every technique below is
-      something our <a href="https://github.com/MayaTrail" style="color:var(--cool); text-decoration:none;">open-source repo</a>
-      can emulate today - nothing on this page you can't verify in the source. Each run ships the
-      CloudTrail signature and the detection content that should catch it.
+      Five campaign emulations and 40 atomic tests, mapped to the AWS ATT&amp;CK surface.
+      Every figure on this page is counted from the package manifests in our
+      <a href="https://github.com/MayaTrail">open-source repo</a> &mdash; there is nothing here
+      you cannot check against the source.
     </p>
 
     <div class="stat-strip">
       <div class="col">
         <div class="lbl">Campaign emulations</div>
-        <div class="v cool">6</div>
-        <div class="sub">+ 43 atomic tests</div>
+        <div class="v cool">5</div>
+        <div class="sub">+ 40 atomic tests</div>
       </div>
       <div class="col">
         <div class="lbl">MITRE techniques</div>
-        <div class="v">49</div>
+        <div class="v">44</div>
         <div class="sub">unique IDs, 12 tactics</div>
       </div>
       <div class="col">
         <div class="lbl">AWS services</div>
-        <div class="v">27</div>
+        <div class="v">29</div>
         <div class="sub">exercised end-to-end</div>
       </div>
       <div class="col">
@@ -426,144 +434,101 @@
   <div class="matrix">
     <div class="matrix-head">
       <div class="corner">TACTIC / EMULATION</div>
+      <div class="col">SCARLETEEL 2.0</div>
+      <div class="col">AMBERSQUID</div>
+      <div class="col">Codefinger</div>
       <div class="col">DangerDev</div>
-      <div class="col">AmberSquid</div>
-      <div class="col">SCARLETEEL</div>
-      <div class="col">SCARLETEEL2</div>
-      <div class="col">CodeFinger</div>
-      <div class="col">LUCR-3</div>
+      <div class="col">ECScape</div>
     </div>
 
-    <!-- Resource Development -->
     <div class="matrix-row">
       <div class="label">Resource Dev</div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
       <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
 
-    <!-- Initial Access -->
     <div class="matrix-row">
       <div class="label">Initial Access</div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
       <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
       <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
 
-    <!-- Execution -->
     <div class="matrix-row">
       <div class="label">Execution</div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
       <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
 
-    <!-- Persistence -->
     <div class="matrix-row">
       <div class="label">Persistence</div>
-      <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
       <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
+      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+    </div>
+
+    <div class="matrix-row">
+      <div class="label">Priv Esc</div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
+    </div>
+
+    <div class="matrix-row">
+      <div class="label">Defense Evasion</div>
+      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
       <div class="cell s4"><span class="id">4</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
 
-    <!-- Privilege Escalation -->
     <div class="matrix-row">
-      <div class="label">Priv-Esc</div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-    </div>
-
-    <!-- Defense Evasion -->
-    <div class="matrix-row">
-      <div class="label">Defense Evas.</div>
+      <div class="label">Credential Access</div>
       <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">5</span><span class="ct">tech</span><div class="heat"></div></div>
-    </div>
-
-    <!-- Credential Access -->
-    <div class="matrix-row">
-      <div class="label">Credential Acc.</div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
       <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
     </div>
 
-    <!-- Discovery -->
     <div class="matrix-row">
       <div class="label">Discovery</div>
-      <div class="cell s4"><span class="id">4</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
-    </div>
-
-    <!-- Lateral Movement -->
-    <div class="matrix-row">
-      <div class="label">Lateral Mov.</div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
       <div class="cell s3"><span class="id">2</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
 
-    <!-- Collection -->
     <div class="matrix-row">
       <div class="label">Collection</div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
       <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
 
-    <!-- Exfiltration -->
-    <div class="matrix-row">
-      <div class="label">Exfiltration</div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
-    </div>
-
-    <!-- Impact -->
     <div class="matrix-row">
       <div class="label">Impact</div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
       <div class="cell s2"><span class="id">1</span><span class="ct">tech</span><div class="heat"></div></div>
       <div class="cell s4"><span class="id">3</span><span class="ct">tech</span><div class="heat"></div></div>
-      <div class="cell s0"><span class="id">·</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
+      <div class="cell s0"><span class="id">&middot;</span><div class="heat"></div></div>
     </div>
   </div>
 
@@ -574,7 +539,7 @@
     <span class="swatch s3">2</span>
     <span class="swatch s2">1</span>
     <span class="swatch s0">none in this emulation</span>
-    <span style="margin-left:auto;">number = techniques this emulation runs in that tactic</span>
+    <span style="margin-left:auto;">number = techniques this campaign runs in that tactic</span>
   </div>
 
   <!-- ============== PER-EMULATION BREAKDOWN ============== -->
@@ -582,96 +547,80 @@
 
     <div class="service">
       <div class="head">
-        <h3>DangerDev</h3>
-        <span class="sub">Phishing → broad cloud compromise</span>
-        <span class="pct">16 tech</span>
+        <h3>SCARLETEEL 2.0</h3>
+        <span class="sub">Container RCE &rarr; cloud data theft</span>
+        <span class="pct">8 tech</span>
       </div>
       <div class="techs">
-        <div class="tech shipped"><span class="tid">T1566.002</span><span class="tname">Spearphishing Link</span><span class="tstat">INIT</span></div>
-        <div class="tech shipped"><span class="tid">T1199</span><span class="tname">Trusted Relationship</span><span class="tstat">INIT</span></div>
-        <div class="tech shipped"><span class="tid">T1098.003</span><span class="tname">Additional Cloud Roles</span><span class="tstat">PRIVESC</span></div>
-        <div class="tech shipped"><span class="tid">T1526</span><span class="tname">Cloud Service Discovery</span><span class="tstat">DISC</span></div>
-        <div class="tech shipped"><span class="tid">T1021.001</span><span class="tname">Remote Services: RDP</span><span class="tstat">LATERAL</span></div>
-        <div class="tech shipped"><span class="tid">T1496</span><span class="tname">Resource Hijacking</span><span class="tstat">IMPACT</span></div>
+        <div class="tech shipped"><span class="tid">T1190</span><span class="tname">Exploit Public-Facing Application</span><span class="tstat">INIT</span></div>
+        <div class="tech shipped"><span class="tid">T1098</span><span class="tname">Account Manipulation</span><span class="tstat">PERSIST</span></div>
+        <div class="tech shipped"><span class="tid">T1562.008</span><span class="tname">Disable Cloud Logs</span><span class="tstat">EVASION</span></div>
+        <div class="tech shipped"><span class="tid">T1552.001</span><span class="tname">Credentials In Files</span><span class="tstat">CRED</span></div>
+        <div class="tech shipped"><span class="tid">T1552.005</span><span class="tname">Cloud Instance Metadata API</span><span class="tstat">CRED</span></div>
+        <div class="tech shipped"><span class="tid">T1555.006</span><span class="tname">Cloud Secrets Management Stores</span><span class="tstat">CRED</span></div>
+        <div class="tech shipped"><span class="tid">T1087.004</span><span class="tname">Cloud Account Discovery</span><span class="tstat">DISC</span></div>
+        <div class="tech shipped"><span class="tid">T1580</span><span class="tname">Cloud Infrastructure Discovery</span><span class="tstat">DISC</span></div>
       </div>
     </div>
 
     <div class="service">
       <div class="head">
-        <h3>AmberSquid</h3>
+        <h3>AMBERSQUID</h3>
         <span class="sub">Multi-service cryptomining</span>
         <span class="pct">13 tech</span>
       </div>
       <div class="techs">
-        <div class="tech shipped"><span class="tid">T1059.009</span><span class="tname">Cloud API execution</span><span class="tstat">EXEC</span></div>
-        <div class="tech shipped"><span class="tid">T1136.003</span><span class="tname">Create Cloud Account</span><span class="tstat">PERSIST</span></div>
-        <div class="tech shipped"><span class="tid">T1610</span><span class="tname">Deploy Container</span><span class="tstat">EVASION</span></div>
+        <div class="tech shipped"><span class="tid">T1583.001</span><span class="tname">Acquire Infrastructure: Domains</span><span class="tstat">RESDEV</span></div>
+        <div class="tech shipped"><span class="tid">T1608.001</span><span class="tname">Stage Capabilities: Upload Malware</span><span class="tstat">RESDEV</span></div>
+        <div class="tech shipped"><span class="tid">T1059.009</span><span class="tname">Command and Scripting Interpreter: Cloud API</span><span class="tstat">EXEC</span></div>
+        <div class="tech shipped"><span class="tid">T1204.003</span><span class="tname">User Execution: Malicious Image</span><span class="tstat">EXEC</span></div>
+        <div class="tech shipped"><span class="tid">T1098.001</span><span class="tname">Account Manipulation: Additional Cloud Credentials</span><span class="tstat">PERSIST</span></div>
+        <div class="tech shipped"><span class="tid">T1136.003</span><span class="tname">Create Account: Cloud Account</span><span class="tstat">PERSIST</span></div>
         <div class="tech shipped"><span class="tid">T1525</span><span class="tname">Implant Internal Image</span><span class="tstat">PERSIST</span></div>
         <div class="tech shipped"><span class="tid">T1070</span><span class="tname">Indicator Removal</span><span class="tstat">EVASION</span></div>
+        <div class="tech shipped"><span class="tid">T1078.004</span><span class="tname">Valid Accounts: Cloud Accounts</span><span class="tstat">EVASION</span></div>
+        <div class="tech shipped"><span class="tid">T1578.002</span><span class="tname">Modify Cloud Compute Infrastructure: Create Cloud Instance</span><span class="tstat">EVASION</span></div>
+        <div class="tech shipped"><span class="tid">T1610</span><span class="tname">Deploy Container</span><span class="tstat">EVASION</span></div>
+        <div class="tech shipped"><span class="tid">T1580</span><span class="tname">Cloud Infrastructure Discovery</span><span class="tstat">DISC</span></div>
         <div class="tech shipped"><span class="tid">T1496</span><span class="tname">Resource Hijacking</span><span class="tstat">IMPACT</span></div>
       </div>
     </div>
 
     <div class="service">
       <div class="head">
-        <h3>SCARLETEEL</h3>
-        <span class="sub">Compute exploit → cloud theft</span>
-        <span class="pct">7 tech</span>
-      </div>
-      <div class="techs">
-        <div class="tech shipped"><span class="tid">T1190</span><span class="tname">Exploit Public-Facing App</span><span class="tstat">INIT</span></div>
-        <div class="tech shipped"><span class="tid">T1552.005</span><span class="tname">Cloud Instance Metadata API</span><span class="tstat">CRED</span></div>
-        <div class="tech shipped"><span class="tid">T1552.001</span><span class="tname">Credentials in Files</span><span class="tstat">CRED</span></div>
-        <div class="tech shipped"><span class="tid">T1562.008</span><span class="tname">Disable Cloud Logs</span><span class="tstat">EVASION</span></div>
-        <div class="tech shipped"><span class="tid">T1530</span><span class="tname">Data from Cloud Storage</span><span class="tstat">COLLECT</span></div>
-        <div class="tech shipped"><span class="tid">T1496</span><span class="tname">Resource Hijacking</span><span class="tstat">IMPACT</span></div>
-      </div>
-    </div>
-
-    <div class="service">
-      <div class="head">
-        <h3>SCARLETEEL2</h3>
-        <span class="sub">Evolved exploit + token theft</span>
-        <span class="pct">9 tech</span>
-      </div>
-      <div class="techs">
-        <div class="tech shipped"><span class="tid">T1190</span><span class="tname">Exploit Public-Facing App</span><span class="tstat">INIT</span></div>
-        <div class="tech shipped"><span class="tid">T1528</span><span class="tname">Steal App Access Token</span><span class="tstat">CRED</span></div>
-        <div class="tech shipped"><span class="tid">T1098.001</span><span class="tname">Additional Cloud Credentials</span><span class="tstat">PERSIST</span></div>
-        <div class="tech shipped"><span class="tid">T1562.008</span><span class="tname">Disable Cloud Logs</span><span class="tstat">EVASION</span></div>
-        <div class="tech shipped"><span class="tid">T1048</span><span class="tname">Exfil Over Alt Protocol</span><span class="tstat">EXFIL</span></div>
-        <div class="tech shipped"><span class="tid">T1496</span><span class="tname">Resource Hijacking</span><span class="tstat">IMPACT</span></div>
-      </div>
-    </div>
-
-    <div class="service">
-      <div class="head">
-        <h3>CodeFinger</h3>
+        <h3>Codefinger</h3>
         <span class="sub">S3 ransomware (SSE-C)</span>
         <span class="pct">5 tech</span>
       </div>
       <div class="techs">
-        <div class="tech shipped"><span class="tid">T1078.004</span><span class="tname">Valid Cloud Accounts</span><span class="tstat">INIT</span></div>
+        <div class="tech shipped"><span class="tid">T1078.004</span><span class="tname">Valid Accounts: Cloud Accounts</span><span class="tstat">INIT</span></div>
         <div class="tech shipped"><span class="tid">T1530</span><span class="tname">Data from Cloud Storage</span><span class="tstat">COLLECT</span></div>
-        <div class="tech shipped"><span class="tid">T1486</span><span class="tname">Data Encrypted for Impact</span><span class="tstat">IMPACT</span></div>
         <div class="tech shipped"><span class="tid">T1485</span><span class="tname">Data Destruction</span><span class="tstat">IMPACT</span></div>
+        <div class="tech shipped"><span class="tid">T1486</span><span class="tname">Data Encrypted for Impact</span><span class="tstat">IMPACT</span></div>
         <div class="tech shipped"><span class="tid">T1490</span><span class="tname">Inhibit System Recovery</span><span class="tstat">IMPACT</span></div>
       </div>
     </div>
 
     <div class="service">
       <div class="head">
-        <h3>LUCR-3</h3>
-        <span class="sub">Identity-first (Scattered Spider)</span>
-        <span class="pct">19 tech</span>
+        <h3>DangerDev</h3>
+        <span class="sub">Leaked key &rarr; account hijack</span>
+        <span class="pct">17 tech</span>
       </div>
       <div class="techs">
-        <div class="tech shipped"><span class="tid">T1621</span><span class="tname">MFA Request Generation</span><span class="tstat">CRED</span></div>
-        <div class="tech shipped"><span class="tid">T1111</span><span class="tname">MFA Interception</span><span class="tstat">CRED</span></div>
-        <div class="tech shipped"><span class="tid">T1098.005</span><span class="tname">Device Registration</span><span class="tstat">PERSIST</span></div>
-        <div class="tech shipped"><span class="tid">T1555.006</span><span class="tname">Cloud Secrets Mgmt</span><span class="tstat">CRED</span></div>
-        <div class="tech shipped"><span class="tid">T1213.003</span><span class="tname">Data from Code Repos</span><span class="tstat">COLLECT</span></div>
-        <div class="tech shipped"><span class="tid">T1562.008</span><span class="tname">Disable Cloud Logs</span><span class="tstat">EVASION</span></div>
+      </div>
+    </div>
+
+    <div class="service">
+      <div class="head">
+        <h3>ECScape</h3>
+        <span class="sub">Cross-task credential hijack</span>
+        <span class="pct">3 tech</span>
+      </div>
+      <div class="techs">
+        <div class="tech shipped"><span class="tid">T1134</span><span class="tname">Access Token Manipulation</span><span class="tstat">PRIVESC</span></div>
+        <div class="tech shipped"><span class="tid">T1552.005</span><span class="tname">Unsecured Credentials: Cloud Instance Metadata API</span><span class="tstat">CRED</span></div>
+        <div class="tech shipped"><span class="tid">T1552.007</span><span class="tname">Unsecured Credentials: Container API</span><span class="tstat">CRED</span></div>
       </div>
     </div>
 
@@ -681,41 +630,53 @@
   <div class="atomics">
     <div class="atomics-head">
       <div>
-        <div class="eyebrow" style="margin-bottom:8px;">Atomic library</div>
-        <h2 style="font-family:var(--sans); font-weight:600; font-size:26px; letter-spacing:-0.02em; margin:0;">43 atomic tests <span style="font-family:var(--serif); font-style:italic; font-weight:400; color:var(--cool);">for single-technique drills.</span></h2>
-        <p style="font-family:var(--sans); font-size:14.5px; color:var(--ink-2); line-height:1.55; margin:10px 0 0; max-width:640px;">
-          Full campaigns chain techniques end-to-end. Atomics isolate one technique at a time - fire a single
-          API path, confirm one rule. 24 MITRE IDs across the catalogue, including four the campaign chains don't touch.
+        <h2 class="h-2">40 atomic tests <span class="em">for single-technique drills.</span></h2>
+        <p class="atomics-lede">
+          A campaign chains techniques end to end. An atomic isolates one &mdash; fire a single
+          API path, confirm a single rule. 24 of the catalogue&rsquo;s MITRE IDs are covered this
+          way, and 11 of them appear nowhere in the five campaigns.
         </p>
       </div>
       <div class="atomics-stat">
-        <div><span class="n">43</span><span class="l">atomic tests</span></div>
+        <div><span class="n">40</span><span class="l">atomic tests</span></div>
         <div><span class="n">24</span><span class="l">MITRE IDs</span></div>
       </div>
     </div>
 
     <div class="atomics-new">
-      <div class="an-lbl">NEW TECHNIQUES - ATOMICS ONLY</div>
+      <div class="an-lbl">COVERED ONLY BY ATOMICS</div>
       <div class="an-grid">
+        <div class="an-card">
+          <span class="tid">T1021.004</span>
+          <span class="tn">Open SSM Sessions to Multiple EC2 Instances</span>
+        </div>
+        <div class="an-card">
+          <span class="tid">T1059</span>
+          <span class="tn">Execute Malicious Code via EC2 User Data</span>
+        </div>
+        <div class="an-card">
+          <span class="tid">T1087</span>
+          <span class="tn">Enumerate SES for Phishing Capability</span>
+        </div>
+        <div class="an-card">
+          <span class="tid">T1195</span>
+          <span class="tn">Supply Chain Compromise</span>
+        </div>
         <div class="an-card">
           <span class="tid">T1537</span>
           <span class="tn">Transfer Data to Cloud Account</span>
-          <span class="td">Share AMIs, EBS / RDS snapshots and bucket policies to an external account - exfil via native AWS sharing.</span>
         </div>
         <div class="an-card">
-          <span class="tid">T1552.007</span>
-          <span class="tn">Unsecured Credentials: Container API</span>
-          <span class="td">Bulk-retrieve SSM Parameter Store SecureString values.</span>
+          <span class="tid">T1550.001</span>
+          <span class="tn">Create IAM Roles Anywhere Trust Anchor</span>
         </div>
         <div class="an-card">
-          <span class="tid">T1562.007</span>
-          <span class="tn">Disable / Modify Cloud Firewall</span>
-          <span class="td">Open security-group port 22 to 0.0.0.0/0 to bypass network controls.</span>
+          <span class="tid">T1555</span>
+          <span class="tn">Retrieve a High Number of Secrets Manager Secrets via Batch</span>
         </div>
         <div class="an-card">
-          <span class="tid">T1651</span>
-          <span class="tn">Cloud Administration Command</span>
-          <span class="td">SSM SendCommand for agentless remote execution on instances.</span>
+          <span class="tid">T1556</span>
+          <span class="tn">Modify Authentication Process</span>
         </div>
       </div>
     </div>
@@ -725,16 +686,10 @@
   <div class="services-strip">
     <div class="ss-head">
       <span class="ss-lbl">AWS SERVICES EXERCISED</span>
-      <span class="ss-ct">27</span>
+      <span class="ss-ct">29</span>
     </div>
     <div class="ss-chips">
-      <span>IAM</span><span>STS</span><span>S3</span><span>EC2</span><span>VPC</span><span>SES</span>
-      <span>Route 53</span><span>GuardDuty</span><span>CloudTrail</span><span>Lambda</span>
-      <span>Secrets Manager</span><span>Amplify</span><span>CodeCommit</span><span>CodeBuild</span>
-      <span>SageMaker</span><span>ECS / Fargate</span><span>Auto Scaling</span><span>CloudFormation</span>
-      <span>Image Builder</span><span>Service Quotas</span><span>SSM</span><span>Organizations</span>
-      <span class="new">Bedrock</span><span class="new">RDS</span><span class="new">IAM Roles Anywhere</span>
-      <span class="new">Route 53 Resolver</span><span class="new">EC2 Instance Connect</span>
+      <span>IAM</span><span>EC2</span><span>STS</span><span>S3</span><span>Secrets Manager</span><span>CloudTrail</span><span>Lambda</span><span>ECS</span><span>SSM</span><span>CodeBuild</span><span>SageMaker</span><span>Route53</span><span>VPC</span><span>RDS</span><span>SES</span><span>SNS</span><span>SQS</span><span>CloudWatch</span><span>Amplify</span><span>CodeCommit</span><span>ELBv2</span><span>WAF</span><span>CodePipeline</span><span>DynamoDB</span><span>Bedrock</span><span>Cognito</span><span>IAM Roles Anywhere</span><span>GuardDuty</span><span>KMS</span>
     </div>
   </div>
 
@@ -759,6 +714,7 @@
     <a href="services.html">Services</a>
     <a href="pricing.html">Pricing</a>
     <a href="research.html">Research</a>
+    <a href="blog/">Blog</a>
     <a href="https://github.com/MayaTrail">GitHub ↗</a>
   </div>
 </footer>

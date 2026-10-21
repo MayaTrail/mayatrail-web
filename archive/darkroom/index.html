@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MayaTrail — did your stack notice?</title>
+<meta name="description" content="MayaTrail runs documented cloud attack campaigns inside your own AWS account and shows which of your detections fired, which fired late, and which never fired at all." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Azeret+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="mayatrail-darkroom.css">
+</head>
+<body>
+
+<header class="masthead" id="masthead" data-ground="bay">
+  <a class="masthead__logo" href="/">
+    <svg class="masthead__mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <g fill="none">
+        <path class="link" d="M20 88 46 62M46 62 40 28M46 62 82 42M82 42 99 84M46 62 68 98M99 84 68 98"/>
+      </g>
+      <circle class="node"      cx="20" cy="88" r="5.5"/>
+      <circle class="node"      cx="46" cy="62" r="6.5"/>
+      <circle class="node node--hot" cx="40" cy="28" r="5"/>
+      <circle class="node"      cx="82" cy="42" r="6"/>
+      <circle class="node"      cx="99" cy="84" r="5.5"/>
+      <circle class="node"      cx="68" cy="98" r="5"/>
+    </svg>
+    <span class="masthead__word">MayaTrail</span>
+  </a>
+  <nav class="masthead__nav">
+    <a href="scenarios.html">Scenarios</a>
+    <a href="coverage.html">Coverage</a>
+    <a href="run.html">A run</a>
+    <a href="research.html">Research</a>
+    <a class="btn btn--ghost btn--sm" href="#access">Request access</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ===================================================================
+       THE BAY: pinned descent, six stations
+       =================================================================== -->
+  <div class="track" id="bay-track">
+    <section class="bay" id="bay" aria-label="How a MayaTrail run works">
+      <canvas class="bay__canvas" id="bay-canvas" aria-hidden="true"></canvas>
+      <div class="bay__safelight" aria-hidden="true"></div>
+      <div class="bay__grain" aria-hidden="true"></div>
+      <div class="bay__vignette" aria-hidden="true"></div>
+
+      <div class="bay__col">
+      <div class="bay__open" id="bay-open">
+        <h1>Evidence doesn't arrive.<br><em>It emerges.</em></h1>
+        <p>MayaTrail runs a documented cloud campaign inside your own AWS account, then shows which of your detections were watching, and which were not.</p>
+        <a class="btn btn--primary" href="#access">Request access <i class="btn__rule"></i></a>
+      </div>
+
+      <div class="bay__caps" id="bay-caps" aria-hidden="true">
+        <article class="cap">
+          <span class="cap__station">Station 01 · Compose / Connect</span>
+          <h2>A role, not a key.</h2>
+          <p>A scoped cross-account IAM role, assumed via <code>sts:AssumeRole</code> at run time. Nothing long-lived is ever handed over, and nothing is provisioned until you run something.</p>
+        </article>
+        <article class="cap">
+          <span class="cap__station">Station 02 · Expose / Deploy</span>
+          <h2>A room built to be burned.</h2>
+          <p>A disposable, intentionally vulnerable environment provisioned from code into your account. It carries a time-to-live from the moment it exists.</p>
+        </article>
+        <article class="cap">
+          <span class="cap__station">Station 03 · Develop / Attack</span>
+          <h2>The real chain, not a tabletop.</h2>
+          <p>A documented campaign executes against it, step by step: <code>T1078.004</code> → <code>T1098.001</code> → <code>T1562.008</code> → <code>T1537</code>.</p>
+        </article>
+        <article class="cap cap--verdict">
+          <span class="cap__station">Station 04 · Fix / Observe</span>
+          <h2>Two of the four never came up.</h2>
+          <p>Your own detection content is measured against the CloudTrail the run produced. The techniques nothing recorded are the ones you came here to find.</p>
+        </article>
+        <article class="cap">
+          <span class="cap__station">Station 05 · Wash / Auto-destroy</span>
+          <h2>It cleans itself up.</h2>
+          <p>A sweep runs every fifteen minutes. Expired environments are torn down whether or not anyone remembered to, so cost and blast radius both stay bounded.</p>
+        </article>
+        <article class="cap">
+          <span class="cap__station">Station 06 · Dry / Take home</span>
+          <h2>Three artifacts, not a report.</h2>
+          <p>A detection bundle, an incident-response playbook, and a signed evidence packet. Each one lands somewhere your team already keeps things.</p>
+        </article>
+      </div>
+      </div>
+
+      <div class="bay__timer">
+        <div class="bay__clock" id="bay-clock">0:00</div>
+        <div class="bay__clockCap">Elapsed in tray</div>
+        <div class="bay__now" id="bay-now">Compose</div>
+      </div>
+
+      <div class="bay__strip" id="bay-strip" aria-hidden="true">
+        <span class="is-on">Compose</span><span>Expose</span><span>Develop</span><span>Fix</span><span>Wash</span><span>Dry</span>
+      </div>
+
+      <p class="bay__hint" id="bay-hint">Scroll to walk the bench</p>
+    </section>
+  </div>
+
+  <!-- ===================================================================
+       ENAMEL: the coverage read. Numbers live here, in full light.
+       =================================================================== -->
+  <section class="enamel on-enamel" id="coverage">
+    <div class="wrap">
+      <div class="sectionHead">
+        <h2>What one run told a team about their own stack.</h2>
+        <p>Four techniques executed against real infrastructure in their account. Their existing detection content, measured against the CloudTrail the run produced.</p>
+      </div>
+
+      <div class="sheet">
+        <div class="sheet__row">
+          <div>
+            <p class="sheet__id">T1078.004 · Valid Accounts: Cloud</p>
+            <h3 class="sheet__name">Console login without MFA</h3>
+            <p class="sheet__desc">A dormant IAM user signed in from an unfamiliar location with no second factor.</p>
+          </div>
+          <p class="sheet__src"><span>Read by</span>CloudTrail</p>
+          <p class="verdict verdict--fired">Fired 0:04</p>
+        </div>
+
+        <div class="sheet__row">
+          <div>
+            <p class="sheet__id">T1098.001 · Account Manipulation</p>
+            <h3 class="sheet__name">Assumed role widened to administrator</h3>
+            <p class="sheet__desc">A policy attached mid-session, quietly turning a scoped role into a privileged one.</p>
+          </div>
+          <p class="sheet__src"><span>Read by</span>Sigma</p>
+          <p class="verdict verdict--late">Late 11:20</p>
+        </div>
+
+        <div class="sheet__row">
+          <div>
+            <p class="sheet__id">T1562.008 · Impair Defenses: Disable Cloud Logs</p>
+            <h3 class="sheet__name">VPC flow logs removed</h3>
+            <p class="sheet__desc">The source that would have carried the next stage was switched off during this one.</p>
+          </div>
+          <p class="sheet__src"><span>Read by</span>—</p>
+          <p class="verdict verdict--unread">Never fired</p>
+        </div>
+
+        <div class="sheet__row">
+          <div>
+            <p class="sheet__id">T1537 · Transfer Data to Cloud Account</p>
+            <h3 class="sheet__name">RDS snapshot shared outside the organisation</h3>
+            <p class="sheet__desc">A database copy handed to an account nobody on the team recognised.</p>
+          </div>
+          <p class="sheet__src"><span>Read by</span>—</p>
+          <p class="verdict verdict--unread">Never fired</p>
+        </div>
+      </div>
+
+      <div class="tally">
+        <div class="tally__item">
+          <p class="tally__n">1</p>
+          <p class="tally__l">Fired in time</p>
+        </div>
+        <div class="tally__item">
+          <p class="tally__n">1</p>
+          <p class="tally__l">Fired too late to matter</p>
+        </div>
+        <div class="tally__item tally__item--unread">
+          <p class="tally__n">2</p>
+          <p class="tally__l">Never fired at all</p>
+        </div>
+      </div>
+
+      <p class="stamp"><b>Illustrative</b> Example run. Not measured results. Your own run produces your own.</p>
+    </div>
+  </section>
+
+  <!-- =================== take home =================== -->
+  <section class="enamel on-enamel">
+    <div class="wrap wrap--tight">
+      <div class="sectionHead">
+        <h2>Everything comes off the line as something you can use.</h2>
+        <p>Each artifact lands in a place your team already keeps. No new tool to adopt, nothing to transcribe by hand.</p>
+      </div>
+
+      <div class="prints">
+        <article class="print">
+          <p class="print__dest">→ your detection repo</p>
+          <h3>Detection bundle</h3>
+          <p>Sigma and KQL rules for every technique the run executed, written against the telemetry it actually produced.</p>
+        </article>
+        <article class="print">
+          <p class="print__dest">→ your runbook wiki</p>
+          <h3>IR playbook</h3>
+          <p>The response walked against a real, contained compromise rather than a tabletop hypothetical.</p>
+        </article>
+        <article class="print">
+          <p class="print__dest">→ your audit folder</p>
+          <h3>Signed evidence packet</h3>
+          <p>What ran, when, against what, and what your stack did about it. Signed, and reproducible on request.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== go deeper =================== -->
+  <section class="enamel on-enamel">
+    <div class="wrap wrap--tight">
+      <nav class="deeper" aria-label="Go deeper">
+        <a href="scenarios.html"><strong>The campaigns we reproduce</strong><span>Scenarios →</span></a>
+        <a href="coverage.html"><strong>How coverage is measured</strong><span>Coverage →</span></a>
+        <a href="run.html"><strong>A run, start to evidence</strong><span>A run →</span></a>
+        <a href="research.html"><strong>Where the chains come from</strong><span>Research →</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- =================== close =================== -->
+  <section class="close" id="access">
+    <div class="wrap">
+      <h2>Find out on a Tuesday, <em>not during an incident.</em></h2>
+      <p>MayaTrail is onboarded directly by the team, one customer at a time. Tell us what you run and we will tell you honestly whether it is a fit.</p>
+      <div class="close__actions">
+        <a class="btn btn--primary" href="mailto:hello@mayatrail.tech?subject=MayaTrail%20access">Request access <i class="btn__rule"></i></a>
+        <a class="btn btn--ghost" href="scenarios.html">See what runs first</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <nav>
+      <a href="scenarios.html">Scenarios</a>
+      <a href="coverage.html">Coverage</a>
+      <a href="run.html">A run</a>
+      <a href="playbook.html">Playbook</a>
+      <a href="research.html">Research</a>
+      <a href="services.html">Services</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <small>MayaTrail · AWS attack emulation for detection engineering</small>
+  </div>
+</footer>
+
+<script src="vendor/three.min.js"></script>
+<script src="scripts/darkroom-bay.js"></script>
+<script>
+/* The masthead belongs to whichever ground is under it. Every enamel section
+   counts, not just the first: watching one only meant the logo reverted to
+   bay colours over the later white sections and vanished into them. */
+(function () {
+  var mast = document.getElementById('masthead');
+  var sections = document.querySelectorAll('.enamel');
+  if (!mast || !sections.length || !('IntersectionObserver' in window)) return;
+
+  var lit = 0;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !e.target.dataset.lit) { e.target.dataset.lit = '1'; lit++; }
+      else if (!e.isIntersecting && e.target.dataset.lit) { delete e.target.dataset.lit; lit--; }
+    });
+    mast.dataset.ground = lit > 0 ? 'enamel' : 'bay';
+  }, { rootMargin: '-72px 0px -100% 0px' });
+
+  Array.prototype.forEach.call(sections, function (s) { io.observe(s); });
+})();
+</script>
+</body>
+</html>

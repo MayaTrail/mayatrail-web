@@ -1,0 +1,20 @@
+{
+  "name": "mayatrail-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Build toolchain for site/scripts/run-experience.jsx. The site itself is static HTML; this exists only so the run page's JSX is compiled ahead of time instead of in the visitor's browser.",
+  "scripts": {
+    "build:run": "babel site/scripts/run-experience.jsx --out-file site/scripts/run-experience.js --presets @babel/preset-react",
+    "vendor": "node scripts/vendor-react.js",
+    "build": "npm run build:run && npm run vendor"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.25.9",
+    "@babel/core": "7.26.0",
+    "@babel/preset-react": "7.25.9"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

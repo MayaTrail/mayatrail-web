@@ -4,13 +4,16 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MayaTrail - Research</title>
+<meta name="description" content="MayaTrail research notes on AWS attack emulation and detection engineering." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="mayatrail-base.css" />
 <style>
   body { display: flex; flex-direction: column; min-height: 100vh; }
-  main { padding-top: 60px; flex: 1 0 auto; display: flex; flex-direction: column; }
+  main { flex: 1 0 auto; display: flex; flex-direction: column; }
   footer { margin-top: auto; }
-  .nav { position: fixed; top: 0; left: 0; right: 0; }
 
   .soon {
     max-width: 760px;
@@ -54,6 +57,7 @@
       <a href="services.html">Services</a>
       <a href="pricing.html">Pricing</a>
       <a href="research.html" class="active">Research</a>
+      <a href="blog/">Blog</a>
     </div>
     <div class="nav-readout">
       <span class="stat">v0.1 · private beta</span>
@@ -79,14 +83,15 @@
     </svg>
   </div>
   <div class="eyebrow">Research</div>
-  <h1>Field notes are <span class="em">on the way.</span></h1>
+  <h1>The teardowns live <span class="em">on the blog.</span></h1>
   <p>
-    We're building a library of cloud attack teardowns - each one shipping with a runnable
-    scenario, the CloudTrail signature, and the detection rule that should catch it.
-    Nothing's published yet. Want to know when the first one drops?
+    Our cloud attack teardowns &mdash; each one shipping with a runnable scenario, the
+    CloudTrail signature and the detection rule that should catch it &mdash; are published
+    as field notes on the blog. Longer-form research lands here when there is enough of
+    it to warrant its own shelf.
   </p>
   <div class="cta-row">
-    <a class="btn" href="mailto:admin@mayatrail.tech?subject=Notify%20me%20-%20MayaTrail%20Research">Notify me <span class="arrow">→</span></a>
+    <a class="btn" href="blog/">Read the field notes <span class="arrow">→</span></a>
     <a class="btn outline" href="run.html">Watch a live run</a>
   </div>
 </section>
@@ -101,6 +106,7 @@
     <a href="services.html">Services</a>
     <a href="pricing.html">Pricing</a>
     <a href="research.html">Research</a>
+    <a href="blog/">Blog</a>
     <a href="https://github.com/MayaTrail">GitHub ↗</a>
   </div>
 </footer>

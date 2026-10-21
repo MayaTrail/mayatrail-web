@@ -1,0 +1,42 @@
+MayaTrail website, rework preview
+=================================
+Built 2026-10-16 from mayatrail-web, branch feat/website-rework.
+
+HOW TO LOOK AT IT
+-----------------
+Unzip, then double-click index.html. Any modern browser will do.
+
+Chrome or Edge is worth using for this one. Two effects only they
+support yet: each surface fades up as you scroll it into view, and the
+hop to a blog post crossfades instead of blinking. Safari and Firefox
+show the same site without those two things, which is the intended
+fallback, not a bug.
+
+WHAT TO LOOK FOR
+----------------
+The site is ONE SCROLL. Platform, Services, Pricing and Field notes are
+four surfaces in a single page. Scroll off the end of one and you carry
+straight into the next; you should never need the tabs at the top. Watch
+the nav mark itself as each surface passes under it.
+
+On the platform surface, the bordered panel headed "Every detection ends
+in one of three places" advances on its own. Hover it, or tab into it,
+and it holds.
+
+Field notes sits at the foot of the scroll with the latest posts on it.
+A whole post is still its own page, so it can be linked and indexed on
+its own.
+
+WHAT IS NOT FINISHED
+--------------------
+- The verdict examples are examples. Every one says so on the page. No
+  emulation has been recorded yet, so nothing in those panels is
+  measured.
+- There is no product screenshot and no emulation clip anywhere. The
+  only capture we hold shows an empty tenant, so it would misrepresent
+  the build. That clip still needs recording.
+- The one post is still marked draft. It is in this bundle so you can
+  read it, but the published build shows the field-notes surface empty
+  until that flag is cleared.
+
+Questions to Abhishek.
