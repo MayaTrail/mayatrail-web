@@ -140,9 +140,11 @@ jobs:
 
       - name: Link check
         run: |
+          # blog.mayatrail.tech is excluded until the blog subdomain is set
+          # up. Remove it from the pattern below once it resolves.
           docker run --rm --network host lycheeverse/lychee:latest \
             --offline=false \
-            --exclude 'github\.com|fonts\.|unpkg\.com|cdn-cgi|mailto:' \
+            --exclude 'github\.com|fonts\.|unpkg\.com|cdn-cgi|mailto:|blog\.mayatrail\.tech' \
             --accept 200,204,301,302 \
             --no-progress \
             http://localhost:8080/ \
