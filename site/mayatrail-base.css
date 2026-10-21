@@ -298,3 +298,8 @@ section.s {
   .brand-wm { font-size: 15px; }
   .nav-links a { font-size: 12px; }
 }
+
+/* Keep the primary action beside the brand on narrow phones. */
+@media (max-width: 380px) {
+  .nav-gh { display: none; }
+}

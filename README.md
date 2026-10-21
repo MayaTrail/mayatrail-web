@@ -10,16 +10,14 @@ This repository contains the source code for the MayaTrail website: a static
 site of plain HTML and CSS, served by nginx in Docker and deployed on AWS. The
 site code lives in [`site/`](site/).
 
-Two documents, and no more:
+The public pages are:
 
-| Page | What it is for |
+| Page | Purpose |
 |---|---|
-| `site/index.html` | One scroll, four surfaces: `#platform`, `#services`, `#pricing`, `#blog`. Scrolling carries you from one into the next and the nav marks itself as each passes under it. |
-| `site/blog/` | Field notes, generated from `blog/*.md`. The home page carries the latest few; a whole post is its own document, so it can be linked and indexed on its own. |
-
-`site/services.html` and `site/pricing.html` are redirect stubs. Those URLs were
-shared before the rework, so they stay alive and land on the matching surface.
-Do not add content to them.
+| `site/index.html` | Platform overview, scenario walkthrough, evaluation, pricing and FAQs. |
+| `site/services.html` | Separately scoped security services. |
+| `site/pricing.html` | Compatibility redirect to `index.html#pricing`. |
+| `site/blog/` | Field notes generated from `blog/*.md`. |
 
 Everything deeper than that lives in the product repository at
 [github.com/MayaTrail/step1](https://github.com/MayaTrail/step1): campaign
@@ -27,9 +25,7 @@ manifests, the incident-response playbooks, and the per-service ground truth.
 The site is deliberately the shallow end. If a page starts wanting a reference
 table, the reference belongs in git where it can be reviewed and versioned.
 
-The site ships no third-party JavaScript. The only script on any page is the
-inline switcher on the home page, which degrades to a readable first panel when
-JavaScript is off.
+The site ships no third-party JavaScript. A small inline script marks the active homepage navigation item as you scroll. Content and native disclosure controls remain usable without JavaScript.
 
 ## The blog
 

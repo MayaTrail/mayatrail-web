@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MayaTrail - Cloud attack emulation</title>
-<meta name="description" content="MayaTrail provisions an intentionally vulnerable AWS environment inside your own account, runs a real adversary emulation against it, and reads your own detection sources back to you." />
+<title>MayaTrail - Validate your cloud detections</title>
+<meta name="description" content="Validate AWS and Kubernetes detections with adversary emulations in disposable labs. Inspect alert evidence, improve detection rules and retest with MayaTrail." />
+<link rel="canonical" href="https://mayatrail.tech/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,79 +64,18 @@
   .track__t { font-family: var(--sans); font-size: 15.5px; font-weight: 600; margin: 0 0 7px; letter-spacing: -0.01em; }
   .track__d { font-size: 13.5px; line-height: 1.55; color: var(--ink-3); margin: 0; max-width: 26ch; }
 
-  /* ============== THE SWITCHER ==============
-     Boxed, so a transition reads as contained rather than the page moving.
-     The tab rail is the boundary and the progress bar is the clock. */
-  .vd { max-width: 1320px; margin: 0 auto; padding: clamp(28px, 3vw, 44px) 28px clamp(64px, 7vw, 104px); }
-  .vd .h-2 { max-width: 20ch; }
-  .vd__sub { font-family: var(--sans); font-size: 16px; color: var(--ink-3); margin: 10px 0 28px; }
-
-  .sw { border: 1px solid var(--rule-2); background: transparent; }
-  .sw__tabs { display: flex; border-bottom: 1px solid var(--rule); }
-  .sw__tab {
-    flex: 1 1 0; min-width: 0;
-    padding: 18px 20px 0;
-    background: transparent; border: 0; border-right: 1px solid var(--rule);
-    font-family: inherit; text-align: left; cursor: pointer;
-    color: var(--ink-3);
-    transition: color 0.2s cubic-bezier(.16,1,.3,1);
-  }
-  .sw__tab:last-child { border-right: 0; }
-  .sw__tab .lbl {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .sw__bar { display: block; height: 2px; margin-top: 13px; width: 0; background: transparent; }
-  .sw__tab[aria-selected="true"].is-ok   { color: var(--ok); }
-  .sw__tab[aria-selected="true"].is-warm { color: var(--warm); }
-  .sw__tab[aria-selected="true"].is-hot  { color: var(--hot); }
-  .sw__tab[aria-selected="true"].is-ok   .sw__bar { background: var(--ok); }
-  .sw__tab[aria-selected="true"].is-warm .sw__bar { background: var(--warm); }
-  .sw__tab[aria-selected="true"].is-hot  .sw__bar { background: var(--hot); }
-
-  .sw__panel { display: flex; flex-wrap: wrap; }
-  .sw__panel[hidden] { display: none; }
-  .sw__copy {
-    flex: 1 1 420px; min-width: 0; padding: clamp(24px, 2.6vw, 36px);
-    display: flex; flex-direction: column; gap: 16px;
-  }
-  .sw__verdict { font-family: var(--sans); font-size: clamp(26px, 3vw, 32px); letter-spacing: -0.03em; font-weight: 600; }
-  .sw__panel.is-ok   .sw__verdict { color: var(--ok); }
-  .sw__panel.is-warm .sw__verdict { color: var(--warm); }
-  .sw__panel.is-hot  .sw__verdict { color: var(--hot); }
-  .sw__body { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0; }
-  .sw__do { margin: 8px 0 0; padding: 16px 18px; background: transparent; border: 1px solid var(--rule); }
-  .sw__do dt {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px;
-  }
-  .sw__do dd { font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
-  .sw__sample {
-    flex: 1 1 380px; min-width: 0; padding: clamp(24px, 2.6vw, 36px);
-    background: transparent; border-left: 1px solid var(--rule);
-  }
-  .sw__lbl {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px;
-  }
-  .sw__sample pre {
-    font-family: var(--mono); font-size: 13px; line-height: 2.05;
-    color: var(--ink-2); margin: 0; white-space: pre-wrap;
-  }
-  .sw__hint { margin: 14px 2px 0; font-size: 12.5px; color: var(--ink-3); }
-
-
   /* ============== WHAT IS IN IT ==============
      The run is the headline, but it is not the whole product. Rules, not
      cards: same surface treatment as everything else. Every figure here is
      counted from the product repository. */
   .kit { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(64px, 7vw, 104px); }
+  .kit > .h-2 { margin-bottom: 26px; }
   .kit__grid {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-    border: 1px solid var(--rule-2);
+    grid-auto-rows: 1fr; border: 1px solid var(--rule-2);
   }
   .kit__item {
-    padding: clamp(22px, 2.4vw, 30px);
+    min-width: 0; padding: clamp(22px, 2.4vw, 30px);
     border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
     background: transparent;
   }
@@ -151,17 +91,35 @@
   }
   .kit__d { font-family: var(--sans); font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0; }
   @media (max-width: 980px) {
-    .kit__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .kit__item:nth-child(3n) { border-right: 1px solid var(--rule); }
-    .kit__item:nth-child(2n) { border-right: 0; }
+    .kit__grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+    .kit__item { border-right: 0; }
     .kit__item:nth-last-child(-n+3) { border-bottom: 1px solid var(--rule); }
-    .kit__item:nth-last-child(-n+1) { border-bottom: 0; }
+    .kit__item:last-child { border-bottom: 0; }
   }
   @media (max-width: 640px) {
     .kit { padding-left: 18px; padding-right: 18px; }
-    .kit__grid { grid-template-columns: minmax(0, 1fr); }
-    .kit__item { border-right: 0 !important; border-bottom: 1px solid var(--rule) !important; }
-    .kit__item:last-child { border-bottom: 0 !important; }
+  }
+
+  /* ============== WHO IT IS FOR ============== */
+  .who { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(64px, 7vw, 104px); }
+  .who__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--rule-2); }
+  .who__col { padding: clamp(22px, 2.6vw, 34px); }
+  .who__col + .who__col { border-left: 1px solid var(--rule); }
+  .who__lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--cool); margin: 0 0 18px;
+  }
+  .who__row { padding: 14px 0; border-top: 1px solid var(--rule); }
+  .who__row:first-of-type { border-top: 0; padding-top: 0; }
+  .who__row:last-child { padding-bottom: 0; }
+  .who__t { font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); margin: 0 0 4px; }
+  .who__d { font-family: var(--sans); font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+  @media (max-width: 820px) {
+    .who__grid { grid-template-columns: minmax(0, 1fr); }
+    .who__col + .who__col { border-left: 0; border-top: 1px solid var(--rule); }
+  }
+  @media (max-width: 640px) {
+    .who { padding-left: 18px; padding-right: 18px; }
   }
 
   /* ============== THREE WAYS TO RUN IT ============== */
@@ -179,25 +137,11 @@
   .way a { margin-top: auto; font-size: 14px; color: var(--cool); text-decoration: none; }
   .way a:hover { color: #9cc6ff; }
 
-  /* ============== DOCS POINTER ============== */
-  .docs {
-    max-width: 1320px; margin: 0 auto;
-    padding: 0 28px;
-    display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
-  }
-  .docs__copy { flex: 999 1 420px; min-width: 0; }
-  .docs__copy h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 0 0 6px; }
-  .docs__copy p { font-size: 14px; line-height: 1.6; color: var(--ink-3); margin: 0; }
-  .docs .pill { min-width: 0; height: 46px; font-size: 13.5px; padding: 0 24px; }
-
   /* ============== RESPONSIVE ============== */
   @media (max-width: 820px) {
-    .sw__tabs { flex-wrap: wrap; }
-    .sw__tab { flex: 1 1 33%; }
-    .sw__sample { border-left: 0; border-top: 1px solid var(--rule); }
   }
   @media (max-width: 720px) {
-    .hero, .vd, .ways, .docs { padding-left: 18px; padding-right: 18px; }
+    .hero, .vd, .ways { padding-left: 18px; padding-right: 18px; }
     .track { gap: 24px; }
     .track__step { flex: 1 1 100%; }
   }
@@ -250,18 +194,20 @@
   .eng__row:last-child .eng__line { display: none; }
 
   .eng__row:nth-child(1) .eng__n { color: rgba(106,168,255,0.35); }
-  .eng__row:nth-child(2) .eng__n { color: rgba(106,168,255,0.48); }
-  .eng__row:nth-child(3) .eng__n { color: rgba(106,168,255,0.61); }
-  .eng__row:nth-child(4) .eng__n { color: rgba(106,168,255,0.74); }
-  .eng__row:nth-child(5) .eng__n { color: rgba(106,168,255,0.87); }
-  .eng__row:nth-child(6) .eng__n { color: var(--cool); }
-  .eng__row:nth-child(1) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.35), rgba(106,168,255,0.48)); }
-  .eng__row:nth-child(2) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.48), rgba(106,168,255,0.61)); }
-  .eng__row:nth-child(3) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.61), rgba(106,168,255,0.74)); }
-  .eng__row:nth-child(4) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.74), rgba(106,168,255,0.87)); }
-  .eng__row:nth-child(5) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.87), var(--cool)); }
+  .eng__row:nth-child(2) .eng__n { color: rgba(106,168,255,0.45); }
+  .eng__row:nth-child(3) .eng__n { color: rgba(106,168,255,0.55); }
+  .eng__row:nth-child(4) .eng__n { color: rgba(106,168,255,0.65); }
+  .eng__row:nth-child(5) .eng__n { color: rgba(106,168,255,0.75); }
+  .eng__row:nth-child(6) .eng__n { color: rgba(106,168,255,0.87); }
+  .eng__row:nth-child(7) .eng__n { color: var(--cool); }
+  .eng__row:nth-child(1) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.35), rgba(106,168,255,0.45)); }
+  .eng__row:nth-child(2) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.45), rgba(106,168,255,0.55)); }
+  .eng__row:nth-child(3) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.55), rgba(106,168,255,0.65)); }
+  .eng__row:nth-child(4) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.65), rgba(106,168,255,0.75)); }
+  .eng__row:nth-child(5) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.75), rgba(106,168,255,0.87)); }
+  .eng__row:nth-child(6) .eng__line { background: linear-gradient(180deg, rgba(106,168,255,0.87), var(--cool)); }
   .eng__n b { color: var(--ink-3); font-weight: 400; }
-  .eng__row:nth-child(6) .eng__n b { color: var(--cool); }
+  .eng__row:nth-child(7) .eng__n b { color: var(--cool); }
 
   .eng__t {
     font-family: var(--sans); font-size: clamp(19px, 2.2vw, 23px);
@@ -326,9 +272,11 @@
     font-family: var(--sans); font-size: clamp(16px, 2vw, 18px);
     line-height: 1.55; color: var(--ink-2); margin: 0; max-width: 62ch;
   }
+  .p-head p + p { margin-top: 16px; }
 
   /* ============== LEAD OFFER ============== */
-  .lead { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(56px, 6vw, 88px); }
+  .lead { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(40px, 4.5vw, 64px); }
+  .lead + section.s { padding-top: clamp(16px, 2vw, 28px); }
   .lead-inner {
     border: 1px solid var(--rule-2); background: transparent;
     display: grid; grid-template-columns: 1.15fr 1fr;
@@ -380,7 +328,7 @@
 
   /* ============== PLANS ============== */
   .plans {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
     border: 1px solid var(--rule-2); background: transparent;
   }
   .plan {
@@ -414,11 +362,6 @@
     color: var(--cool); border: 1px solid var(--cool); padding: 3px 9px;
   }
 
-  .fineprint {
-    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.02em;
-    text-transform: none; color: var(--ink-3);
-    margin-top: 26px; line-height: 1.9;
-  }
 
   /* ============== BILLING FACTS ============== */
   .facts {
@@ -440,7 +383,14 @@
   .fact p { font-family: var(--sans); font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0; }
 
   /* ============== FAQ ============== */
-  .faq { border-top: 1px solid var(--rule); }
+  .faq {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(24px, 4vw, 56px); align-items: start;
+    border-top: 1px solid var(--rule);
+  }
+  @media (max-width: 800px) {
+    .faq { grid-template-columns: minmax(0, 1fr); }
+  }
   .faq details { border-bottom: 1px solid var(--rule); }
   .faq summary {
     font-family: var(--sans); font-weight: 600; font-size: 15.5px; color: var(--ink);
@@ -457,7 +407,7 @@
   .faq summary:hover { color: var(--cool); }
   .faq p {
     font-family: var(--sans); font-size: 14.5px; line-height: 1.65;
-    color: var(--ink-2); margin: 0 0 22px; max-width: 80ch; padding-right: 40px;
+    color: var(--ink-2); margin: 0 0 22px; max-width: none; padding-right: 28px;
   }
 
   /* ============== CLOSE ============== */
@@ -519,60 +469,121 @@
     }
   }
 
-  /* The scroll cue at the foot of each surface, naming what comes next. */
-  .onward {
-    max-width: 1320px; margin: 0 auto;
-    padding: 0 28px clamp(56px, 6vw, 88px);
-  }
-  .onward a {
-    display: inline-flex; align-items: baseline; gap: 12px;
-    font-family: var(--sans); font-size: 15px; color: var(--ink-3);
-    text-decoration: none;
-  }
-  .onward a:hover { color: var(--cool); }
-  .onward .k {
-    font-family: var(--mono); font-size: 11px;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-4);
-  }
-  .onward a:hover .k { color: var(--cool); }
-  .onward .arrow { display: inline-block; transition: transform 0.18s; }
-  .onward a:hover .arrow { transform: translateY(3px); }
-
   /* The hero owns the first screen; the surfaces after it start from a rule. */
   .surface .svc-hero,
   .surface .p-head { padding-top: clamp(26px, 3vw, 40px); }
 
-  /* ============== FIELD NOTES ==============
-     The blog reads on the same scroll as everything else. The surface carries
-     the latest notes; a whole post is still its own document, because a post
-     should be linkable and indexable on its own. The rows are written by
-     scripts/build_blog.py between the markers in the markup below. */
-  .notes { max-width: 1320px; margin: 0 auto; padding: 0 28px clamp(64px, 7vw, 104px); }
-  .nlist { border-top: 1px solid var(--rule-2); }
-  .nrow {
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 28px;
-    padding: 26px 0; border-bottom: 1px solid var(--rule);
-    text-decoration: none; background: transparent;
-  }
-  .nrow__d {
-    flex: 0 0 150px;
+
+  .vd { max-width: 1320px; margin: 0 auto; padding: 28px 28px 72px; scroll-margin-top: 120px; }
+  .vd .h-2 { max-width: 26ch; }
+  .vd__sub { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 16px 0 28px; max-width: 76ch; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--cool); margin: 0 0 20px; }
+  .hero { padding-bottom: 42px; }
+  .hero h1 { max-width: 20ch; font-size: clamp(38px, 5.4vw, 68px); }
+  .hero .lede { max-width: 62ch; }
+  .hero__actions { margin-top: 28px; }
+  .hero__note { margin: 16px 0 0; color: var(--ink-3); font-size: 13px; }
+  .evidence { border: 1px solid var(--rule-2); position: relative; }
+  .evidence::before { content: ''; display: block; height: 2px; background: linear-gradient(90deg, var(--cool), var(--warm), var(--ok)); }
+  .evidence__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 16px; padding: 26px 28px; border-bottom: 1px solid var(--rule); }
+  .evidence__head h3 { margin: 0 0 7px; font-size: 21px; letter-spacing: -.02em; }
+  .evidence__head p { margin: 0; color: var(--ink-2); font-size: 14px; max-width: 65ch; }
+  .evidence__badge { font: 11px var(--mono); color: var(--warm); border: 1px solid var(--warm); padding: 7px 10px; white-space: nowrap; }
+  .evidence__steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .evidence__step { padding: 26px 24px; border-right: 1px solid var(--rule); }
+  .evidence__step:last-child { border-right: 0; }
+  .evidence__number { font: 11px var(--mono); color: var(--ink-3); display: block; margin-bottom: 18px; }
+  .evidence__step h4 { font-size: 16px; margin: 0 0 12px; }
+  .evidence__step p { font-size: 14px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+  .evidence__status { font: 10px var(--mono); letter-spacing: .06em; display: block; margin-top: 22px; color: var(--cool); }
+  .evidence__step:nth-child(2) .evidence__status { color: var(--warm); }
+  .evidence__step:nth-child(4) .evidence__status { color: var(--ok); }
+  .evidence__limits { border-top: 1px solid var(--rule); padding: 20px 28px; color: var(--ink-2); font-size: 13px; line-height: 1.7; margin: 0; }
+  .evidence__limits strong { color: var(--ink); }
+  .gaps { margin-top: 56px; }
+  .gaps__t { font-family: var(--sans); font-weight: 600; font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -0.025em; line-height: 1.2; margin: 8px 0 10px; }
+  .gaps__t .em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cool); letter-spacing: -0.005em; }
+  .gaps__sub { font-size: 15px; line-height: 1.6; color: var(--ink-2); max-width: 62ch; margin: 0; }
+  .gaps__after { font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 16px 2px 0; text-wrap: balance; }
+  .verdicts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr); margin-top: 24px; border: 1px solid var(--rule); }
+  .verdicts__item { padding: 26px 28px; border-right: 1px solid var(--rule); }
+  .verdicts__item:last-child { border-right: 0; }
+  .verdicts__item h3 { font-size: 16px; margin: 0 0 8px; }
+  .verdicts__item p { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+  .verdicts__item--gap { border-top: 2px solid var(--hot); margin-top: -1px; }
+  .verdicts__item--gap h3 { font-size: 20px; letter-spacing: -0.02em; }
+  .verdicts__item--gap p { font-size: 14px; }
+  .verdicts__tag {
+    display: block; margin-bottom: 12px;
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--ink-3);
   }
-  .nrow__c { flex: 1 1 420px; min-width: 0; }
-  .nrow__t {
-    display: block; font-family: var(--sans); font-size: 19px; font-weight: 600;
-    letter-spacing: -0.02em; line-height: 1.35; color: var(--ink); margin-bottom: 7px;
+  .verdicts__tag--ok { color: var(--ok); }
+  .verdicts__tag--gap { color: var(--hot); }
+  .verdicts__close { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .verdicts__close span { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+  .verdicts__close ul { margin: 10px 0 0; padding-left: 18px; }
+  .verdicts__close li { font-size: 13.5px; line-height: 1.7; color: var(--ink-2); }
+  .workflow { max-width: 1320px; margin: 0 auto; padding: 0 28px 64px; }
+  .workflow .track { margin: 30px 0 0; }
+  .getting-started { max-width: 1264px; margin: 0 auto 72px; border: 1px solid var(--rule-2); padding: clamp(24px, 4vw, 48px); }
+  .getting-started .lede { margin-top: 18px; }
+  .getting-started__steps { padding: 0; margin: 28px 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+  .getting-started__steps h3 { font-size: 15px; margin: 0 0 8px; }
+  .getting-started__steps p { color: var(--ink-2); font-size: 14px; line-height: 1.65; margin: 0; }
+  .getting-started__contact { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; border-top: 1px solid var(--rule); padding-top: 24px; }
+  .getting-started__contact p { color: var(--ink-2); font-size: 13px; margin: 0; overflow-wrap: anywhere; }
+  .getting-started__contact a:not(.pill) { color: var(--cool); }
+  #get-started { scroll-margin-top: 120px; }
+  .svc-hero .hero__actions { justify-content: flex-start; }
+  @media (max-width: 980px) {
+    .evidence__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .evidence__step:nth-child(2) { border-right: 0; }
+    .evidence__step:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
   }
-  .nrow__s { display: block; font-family: var(--sans); font-size: 14.5px; line-height: 1.6; color: var(--ink-2); max-width: 74ch; }
-  .nrow__go { flex: 0 0 auto; font-family: var(--sans); font-size: 14px; color: var(--cool); }
-  .nrow:hover .nrow__t { color: var(--cool); }
-  .nrow:hover .nrow__go { color: #9cc6ff; }
-  .nempty { font-family: var(--sans); font-size: 15px; line-height: 1.6; color: var(--ink-3); padding: 26px 0; border-bottom: 1px solid var(--rule); margin: 0; }
-  .notes__after { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; margin-top: 30px; }
   @media (max-width: 720px) {
-    .notes { padding-left: 18px; padding-right: 18px; }
-    .nrow__d { flex: 1 1 100%; }
+    .vd { padding-left: 18px; padding-right: 18px; }
+    .workflow { padding-left: 18px; padding-right: 18px; }
+    .getting-started { margin-left: 18px; margin-right: 18px; }
+    .getting-started__steps, .verdicts { grid-template-columns: 1fr; }
+    .verdicts__item { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .verdicts__item:last-child { border-bottom: 0; }
+    .surface { scroll-margin-top: 120px; }
+  }
+  @media (max-width: 480px) {
+    .evidence__steps { grid-template-columns: 1fr; }
+    .evidence__step { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .evidence__step:last-child { border-bottom: 0; }
+    .evidence__head, .evidence__limits { padding: 20px; }
+  }
+
+
+  .evidence__badge--observed { color: var(--cool); border-color: var(--cool); }
+  .record { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--rule); }
+  .record__context { padding: clamp(24px, 3vw, 36px); border-right: 1px solid var(--rule); }
+  .record__context h3 { font-size: clamp(25px, 3.1vw, 38px); line-height: 1.16; letter-spacing: -.03em; margin: 0 0 22px; }
+  .record__context p:not(.eyebrow) { font-size: 14px; line-height: 1.7; color: var(--ink-2); margin: 14px 0 0; }
+  .record__output { padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+  .record__output pre { color: var(--ink); font: 13px/1.9 var(--mono); margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .record__output > p:last-child { color: var(--ink-3); font-size: 12px; line-height: 1.6; margin: 20px 0 0; }
+  .next-proof { margin-top: 20px; border: 1px solid var(--rule-2); padding: 20px 24px; }
+  .next-proof summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  .next-proof__body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(24px, 4vw, 56px); }
+  .next-proof p:not(.eyebrow) { max-width: 68ch; font-size: 14px; line-height: 1.7; color: var(--ink-2); margin: 14px 0 0; }
+  @media (max-width: 820px) { .next-proof__body { grid-template-columns: minmax(0, 1fr); } }
+  .next-proof .eyebrow { color: var(--warm); margin-top: 24px; }
+  .scenario-shelf { margin-top: 48px; }
+  .scenario-shelf__head h3 { font-size: 21px; letter-spacing: -.02em; margin: 0 0 10px; }
+  .scenario-shelf__head p { color: var(--ink-2); font-size: 14px; line-height: 1.65; }
+  .scenario-shelf__grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--rule); margin-top: 22px; }
+  .scenario-shelf__item { padding: 26px; }
+  .scenario-shelf__item + .scenario-shelf__item { border-left: 1px solid var(--rule); }
+  .scenario-shelf__item h4 { margin: 0 0 12px; font-size: 18px; }
+  .scenario-shelf__item > p:not(.eyebrow) { font-size: 14px; line-height: 1.7; color: var(--ink-2); }
+  @media (max-width: 720px) {
+    .record, .scenario-shelf__grid { grid-template-columns: 1fr; }
+    .record__context { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .scenario-shelf__item + .scenario-shelf__item { border-left: 0; border-top: 1px solid var(--rule); }
   }
 
 </style>
@@ -585,12 +596,12 @@
     <a href="#platform" class="brand" style="margin-right:auto;"><svg class="brand-mark" width="24" height="24" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="20" x2="22" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="98" y2="90" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="60" y1="20" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="22" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><line x1="98" y1="90" x2="60" y2="64" stroke="#6aa8ff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/><circle cx="22" cy="90" r="7" fill="#6aa8ff"/><circle cx="98" cy="90" r="7" fill="#6aa8ff"/><circle cx="60" cy="64" r="6" fill="#6aa8ff"/><circle cx="60" cy="20" r="7" fill="#ff4b6e"/></svg><span class="brand-wm"><span class="bm-maya">Maya</span><span class="bm-trail">Trail</span></span></a>
     <div class="nav-links" id="nav-links">
       <a href="#platform" class="active" data-surface="platform">Platform</a>
-      <a href="#services" data-surface="services">Services</a>
+      <a href="services.html">Services</a>
       <a href="#pricing" data-surface="pricing">Pricing</a>
-      <a href="#blog" data-surface="blog">Blog</a>
+      <a href="https://blog.mayatrail.tech">Blog</a>
     </div>
-    <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
-    <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
+    <a class="nav-gh" href="https://github.com/MayaTrail">GitHub</a>
+    <a class="nav-cta" style="white-space:nowrap;" href="#get-started">Book a demo</a>
   </div>
 </nav>
 
@@ -600,14 +611,89 @@
 
   <!-- ============== HERO ============== -->
   <section class="hero">
-    <h1>Attack your cloud <span class="rest">before someone else does.</span></h1>
-    <p class="lede">Provision intentionally vulnerable AWS environments, run real adversary emulations, and prove your detections actually fire.</p>
+    <p class="eyebrow">AWS &amp; Kubernetes / Detection validation</p>
+    <h1>Find the attacks <span class="rest">your detections miss.</span></h1>
+    <p class="lede">For cloud security and detection teams: rehearse adversary techniques in disposable labs in your test account, inspect the alerts your SIEM sends back, and improve your detections through retesting.</p>
 
+
+
+    <div class="hero__actions">
+      <a class="pill" href="#get-started">Book a demo</a>
+      <a class="pill line" href="#example">See an example</a>
+    </div>
+    <p class="hero__note">Start with a conversation. No cloud connection needed for the demo.</p>
+  </section>
+
+  <!-- Scenario walkthrough describes shipped behavior and content; it is not a customer result. -->
+  <section class="vd" id="example" aria-labelledby="example-title">
+    <p class="eyebrow">Inside an emulation</p>
+    <h2 class="h-2" id="example-title">One technique. <span class="em">A concrete detection question.</span></h2>
+    <p class="vd__sub">Can your team distinguish routine Windows administration from a burst of credential-hunting requests?</p>
+    <div class="evidence">
+      <div class="evidence__head"><div><h3>Credential hunting through EC2 password requests</h3><p>Retrieve EC2 Windows Password Data / AWS atomic emulation</p></div><span class="evidence__badge evidence__badge--observed">SCENARIO WALKTHROUGH</span></div>
+      <div class="record">
+        <div class="record__context"><p class="eyebrow">Attack behavior</p><h3>30 API requests.<br>No target instances required.</h3><p>The emulation calls <code>ec2:GetPasswordData</code> against generated fake instance IDs. It reproduces credential-hunting behavior without provisioning Windows instances or retrieving real administrator passwords.</p><p>The expected API response is <code>InvalidInstanceID.NotFound</code>. The detection question is whether repeated failed requests from one principal are recognized as suspicious activity.</p></div>
+        <div class="record__output"><p class="eyebrow">Scenario configuration</p><pre>API         ec2:GetPasswordData
+Requests    30
+Targets     Generated fake instance IDs
+Resources   No target infrastructure required
+Response    Scenario-specific IR playbook
+Content     Sigma detections and KQL detections</pre><p>Configuration of the shipped emulation. Detection results depend on the telemetry, rules and alert integration in the environment being tested.</p></div>
+      </div>
+      <div class="evidence__steps">
+        <div class="evidence__step"><span class="evidence__number">01 / EMULATE</span><h4>Reproduce the burst</h4><p>Execute the atomic technique through MayaTrail and inspect the API responses in the execution output.</p><span class="evidence__status">FOCUSED ATTACK BEHAVIOR</span></div>
+        <div class="evidence__step"><span class="evidence__number">02 / VALIDATE</span><h4>See what your SIEM caught</h4><p>Your SIEM runs the detection rules and forwards fired alerts to MayaTrail. We match those alerts to the emulation, highlight techniques with no matching alert, and suggest detection content for you to review and deploy in your SIEM.</p><span class="evidence__status">ALERT EVIDENCE + DETECTION GAPS</span></div>
+        <div class="evidence__step"><span class="evidence__number">03 / INVESTIGATE</span><h4>Follow the evidence</h4><p>Use the playbook to inspect the caller, request rate, error codes and target instances. Establish whether any target was real before treating credentials as exposed.</p><span class="evidence__status">SCENARIO-SPECIFIC GUIDANCE</span></div>
+        <div class="evidence__step"><span class="evidence__number">04 / IMPROVE</span><h4>Tune and retest</h4><p>Review telemetry and alert delivery, adjust the detection for your environment, then repeat the exercise and compare the supporting alert evidence.</p><span class="evidence__status">REPEATABLE VALIDATION</span></div>
+      </div>
+    </div>
+    <details class="next-proof"><summary>Where does detection happen?</summary><div class="next-proof__body"><p>Your SIEM evaluates the telemetry and runs the detection logic, including any correlation rules. MayaTrail receives the fired alerts you forward; it does not run those rules against your raw logs. It matches received alerts to the exercised techniques and shows the supporting evidence and detection gaps.</p><p>A technique with no matching alert needs investigation: the cause could be a missing rule, missing telemetry or an alert-delivery problem. MayaTrail provides suggested detection content and response guidance. Your team reviews and applies changes in the SIEM, then repeats the exercise to validate the result.</p></div></details>
+    <div class="gaps" aria-labelledby="gaps-title">
+      <p class="eyebrow">Detection gaps</p>
+      <h3 class="gaps__t" id="gaps-title">The gap is the finding. <span class="em">Everything else supports it.</span></h3>
+      <p class="gaps__sub">For each exercised technique, inspect the matching alerts, any detection gaps and anything left unmeasured.</p>
+      <div class="verdicts" aria-label="How to interpret detection evidence">
+        <div class="verdicts__item">
+          <span class="verdicts__tag verdicts__tag--ok">Fired</span>
+          <h3>Your detection saw it</h3>
+          <p>Inspect the matching alert and whether it identifies an exact rule or supports detection of the technique. Keep the rule, and retest it later.</p>
+        </div>
+        <div class="verdicts__item verdicts__item--gap">
+          <span class="verdicts__tag verdicts__tag--gap">Detection gap</span>
+          <h3>No matching alert observed</h3>
+          <p>The technique ran, but MayaTrail received no matching alert. Investigate the detection rule, telemetry and alert delivery to establish the cause.</p>
+          <div class="verdicts__close">
+            <span>What MayaTrail provides</span>
+            <ul>
+              <li>Suggested detection content with supported SIEM exports</li>
+              <li>Relevant preventive policies for your team to review</li>
+              <li>A response playbook to guide investigation</li>
+            </ul>
+          </div>
+        </div>
+        <div class="verdicts__item">
+          <span class="verdicts__tag">Unmeasured</span>
+          <h3>Not enough evidence</h3>
+          <p>Missing integration or insufficient evidence leaves the outcome unknown. Untested rules are kept separate from failed detections.</p>
+        </div>
+      </div>
+      <p class="gaps__after">Apply changes in your detection stack, then repeat the exercise. Compare alert evidence across equivalent exercises to validate improvements and investigate possible regressions.</p>
+    </div>
+    <div class="scenario-shelf">
+      <div class="scenario-shelf__head"><h3>Start with an atomic technique. Build toward a campaign.</h3><p>Two examples from a growing catalog: a focused logging-control exercise, and a longer campaign across multiple cloud services.</p></div>
+      <div class="scenario-shelf__grid">
+        <article class="scenario-shelf__item"><p class="eyebrow">One of many atomic scenarios</p><h4>Stop CloudTrail logging</h4><p>The catalog describes stopping a lab trail, then restoring logging after 30 seconds. It is a focused exercise for investigating audit-logging tampering.</p></article>
+        <article class="scenario-shelf__item"><p class="eyebrow">One of many campaigns</p><h4>AMBERSQUID</h4><p>The catalog combines malicious-container execution, persistence, multi-service mining behavior and defense evasion into a longer campaign. Documented and simulated phases are identified in the product.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="workflow" aria-labelledby="workflow-title">
+    <h2 class="h-2" id="workflow-title">One exercise. <span class="em">A repeatable loop.</span></h2>
     <ol class="track">
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>1</b></span><span class="track__line"></span></div>
         <div class="track__t">Deploy a lab</div>
-        <p class="track__d">Spin up a vulnerable stack in your test account.</p>
+        <p class="track__d">Provision a disposable vulnerable stack in a dedicated test account.</p>
       </li>
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>2</b></span><span class="track__line"></span></div>
@@ -616,265 +702,108 @@
       </li>
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>3</b></span><span class="track__line"></span></div>
-        <div class="track__t">Check detections</div>
-        <p class="track__d">Read your SIEM's alerts back, whether the rules are ours or yours.</p>
+        <div class="track__t">Find the detection gaps</div>
+        <p class="track__d">Forward detection alerts from your SIEM. Inspect matching evidence and separate missing alerts from unvalidated results.</p>
       </li>
       <li class="track__step">
         <div class="track__rail"><span class="track__n"><b>4</b></span><span class="track__line"></span></div>
         <div class="track__t">Close the gap</div>
-        <p class="track__d">Take the rule, the guardrail and the playbook, then tear the lab down in one command.</p>
+        <p class="track__d">Use supported detection rules, preventive policies and response playbooks to address findings. Retest, then verify lab cleanup.</p>
       </li>
     </ol>
-
-    <div class="hero__actions">
-      <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
-      <a class="pill gh" href="https://github.com/MayaTrail/step1">View the repo</a>
-    </div>
   </section>
-
-  <!-- ============== THE SWITCHER ============== -->
-  <section class="vd">
-    <h2 class="h-2">Every detection ends in one of <span class="em">three</span> places.</h2>
-    <p class="vd__sub">Per technique, per source. No score, no percentage, no maturity band.</p>
-
-    <div class="sw" id="sw">
-      <div class="sw__tabs" role="tablist" aria-label="What a detection can conclude">
-        <button type="button" class="sw__tab is-ok"   role="tab" id="tab-fired"  aria-controls="panel-fired"  aria-selected="true"><span class="lbl">Fired</span><span class="sw__bar"></span></button>
-        <button type="button" class="sw__tab is-warm" role="tab" id="tab-nologs" aria-controls="panel-nologs" aria-selected="false" tabindex="-1"><span class="lbl">No logs</span><span class="sw__bar"></span></button>
-        <button type="button" class="sw__tab is-hot"  role="tab" id="tab-silent" aria-controls="panel-silent" aria-selected="false" tabindex="-1"><span class="lbl">Silent</span><span class="sw__bar"></span></button>
-      </div>
-
-      <div class="sw__panels">
-        <div class="sw__panel is-ok" role="tabpanel" id="panel-fired" aria-labelledby="tab-fired">
-          <div class="sw__copy">
-            <div class="sw__verdict">Fired</div>
-            <p class="sw__body">Your rule saw the technique and raised the alert. The control did its job, and now you have the evidence that it did.</p>
-            <dl class="sw__do">
-              <dt>What you do about it</dt>
-              <dd>Keep the rule, and test it again later. A rule that fires today goes quiet when a log source moves or a filter gets edited, and nothing tells you.</dd>
-            </dl>
-          </div>
-          <div class="sw__sample">
-            <p class="sw__lbl">Example, not a measured result</p>
-            <pre>scarleteel / T1552.005
-  splunk       FIRED
-  guardduty    FIRED
-
-codefinger / T1486
-  opensearch   FIRED</pre>
-          </div>
-        </div>
-
-        <div class="sw__panel is-warm" role="tabpanel" id="panel-nologs" aria-labelledby="tab-nologs" hidden>
-          <div class="sw__copy">
-            <div class="sw__verdict">No logs</div>
-            <p class="sw__body">The telemetry never arrived. No rule could have caught this, however good the rule was, because there was nothing to match against.</p>
-            <dl class="sw__do">
-              <dt>What you do about it</dt>
-              <dd>A logging and budget problem, not a detection problem. Turn the source on, then run it again.</dd>
-            </dl>
-          </div>
-          <div class="sw__sample">
-            <p class="sw__lbl">Example, not a measured result</p>
-            <pre>dangerdev / T1078.004
-  cloudtrail   NO LOGS
-  guardduty    NO LOGS
-
-ecscape / T1552.007
-  splunk       NO LOGS</pre>
-          </div>
-        </div>
-
-        <div class="sw__panel is-hot" role="tabpanel" id="panel-silent" aria-labelledby="tab-silent" hidden>
-          <div class="sw__copy">
-            <div class="sw__verdict">Silent</div>
-            <p class="sw__body">The logs were there. The technique ran. Nothing fired. This is the gap you did not know you had, and the reason the emulation exists.</p>
-            <dl class="sw__do">
-              <dt>What you do about it</dt>
-              <dd>We hand back the rule that closes it, compiled for the SIEM you actually run.</dd>
-            </dl>
-          </div>
-          <div class="sw__sample">
-            <p class="sw__lbl">Example, not a measured result</p>
-            <pre>ambersquid / T1496
-  splunk       SILENT
-  guardduty    SILENT
-
-dangerdev / T1098.003
-  opensearch   SILENT</pre>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="sw__hint">Panel advances on its own. Hover or tab in to hold it.</p>
-  </section>
-
 
   <!-- ============== WHAT IS IN IT ============== -->
   <section class="kit">
-    <h2 class="h-2">The emulation is the headline. <span class="em">This is the rest of it.</span></h2>
+    <h2 class="h-2">Built to help you <span class="em">act on the findings.</span></h2>
 
     <div class="kit__grid">
       <div class="kit__item">
-        <span class="kit__n">5 campaigns &middot; 40 techniques</span>
-        <h3 class="kit__t">An attack library, as code</h3>
-        <p class="kit__d">SCARLETEEL 2.0, AMBERSQUID, Codefinger, DangerDev and ECScape, modelled on documented incidents, plus forty single-technique AWS emulations you can run on their own. Every phase is mapped to ATT&amp;CK.</p>
+        <span class="kit__n">Incidents &amp; security research</span>
+        <h3 class="kit__t">Campaigns and research scenarios</h3>
+        <p class="kit__d">Rehearse attack chains based on documented incidents and security research. Research-based scenarios such as ECScape sit alongside incident-based campaigns, with their origin and scope identified in the product.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">5 emulations</span>
-        <h3 class="kit__t">Kubernetes, not only AWS</h3>
-        <p class="kit__d">RBAC impersonation, PSA bypass through PV abuse, a writable /var/log host escape and two MITM paths including CVE-2020-8554, run against a cluster rather than an account.</p>
+        <span class="kit__n">AWS and Kubernetes emulations</span>
+        <h3 class="kit__t">Focused technique emulations</h3>
+        <p class="kit__d">Test a specific behavior across cloud and Kubernetes. Choose an atomic technique, inspect its ATT&amp;CK mapping and supporting content, and repeat the exercise when your controls change.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">Sigma &middot; KQL &middot; 2 SIEM targets</span>
+        <span class="kit__n">Sigma &middot; KQL &middot; Splunk &middot; OpenSearch</span>
         <h3 class="kit__t">Detection content that ships</h3>
-        <p class="kit__d">Every emulation carries Sigma and KQL rules. Write or AI-draft your own, score them against synthetic events, and compile the lot to Splunk SPL or OpenSearch.</p>
+        <p class="kit__d">Review shipped Sigma and KQL content, author your own rules, and test them against synthetic events. Export supported rules to Splunk SPL or OpenSearch for use in your detection stack.</p>
       </div>
       <div class="kit__item">
         <span class="kit__n">Signed webhook</span>
-        <h3 class="kit__t">It grades your rules, not ours</h3>
-        <p class="kit__d">Your SIEM posts its alerts back and they are matched on a ladder: exact when the alert names a rule we ship, by technique when you wrote your own, weak when it only landed in the window. A weak match is shown and never counted as a pass.</p>
+        <h3 class="kit__t">Evidence for your own detections</h3>
+        <p class="kit__d">Match forwarded alerts to a shipped rule or an exercised technique. Inspect the evidence and match confidence; an alert that only shares the observation window is never counted as a pass.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">Emulation over emulation</span>
+        <span class="kit__n">Tracked run after run</span>
         <h3 class="kit__t">Coverage history</h3>
-        <p class="kit__d">Reliability per rule across every emulation, with the alert behind each change. A rule that stopped firing is not the same as one that never fired, and a rule no emulation reached is reported as unmeasured rather than as a failure.</p>
+        <p class="kit__d">Compare exercises to see detections that started or stopped firing, with supporting alert evidence. Keep unmeasured rules separate from observed detection gaps.</p>
       </div>
       <div class="kit__item">
         <span class="kit__n">Read only</span>
         <h3 class="kit__t">Attack graph</h3>
-        <p class="kit__d">A scan of the IAM you already have that finds the privilege-escalation paths already in it, and links each one to the emulation that rehearses it.</p>
+        <p class="kit__d">Explore privilege-escalation paths through existing cloud identities and permissions. Link a discovered path to the emulation that rehearses it.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">97 policies</span>
+        <span class="kit__n">Policies</span>
         <h3 class="kit__t">Guardrails</h3>
-        <p class="kit__d">Service control policies for the gaps an emulation exposes, from denying KMS key deletion to blocking unapproved regions, so what you close stays closed.</p>
+        <p class="kit__d">Review SCPs, RCPs and other preventive policies relevant to your findings, from restricting encryption-key deletion to blocking unapproved regions. Assess scope before enforcing a control.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">115 playbooks</span>
+        <span class="kit__n">Playbooks</span>
         <h3 class="kit__t">Incident response, written down</h3>
-        <p class="kit__d">A playbook per detection across CloudTrail, GuardDuty, IAM, S3, RDS, EKS and the rest, shipped as documentation and editable, so the alert arrives with its response attached.</p>
+        <p class="kit__d">Give analysts investigation and response guidance across identity, storage, databases, Kubernetes and more. Review and adapt the documented steps for your environment.</p>
       </div>
       <div class="kit__item">
-        <span class="kit__n">TTL &middot; STS &middot; immutable log</span>
-        <h3 class="kit__t">Safe to run on a Tuesday</h3>
-        <p class="kit__d">A scoped cross-account role assumed at run time, no long-lived keys, a cost estimate before you start, a TTL that destroys the lab, and an audit entry for every connect, deploy, attack and destroy.</p>
+        <span class="kit__n">TTL &middot; scoped role &middot; audit log</span>
+        <h3 class="kit__t">Scoped access and lab lifecycle controls</h3>
+        <p class="kit__d">Temporary access through a scoped cross-account role, pre-run cost estimates, scheduled cleanup and lifecycle audit entries. Review permissions before connecting and verify that cleanup completes.</p>
       </div>
     </div>
   </section>
 
-  <!-- ============== THREE WAYS TO RUN IT ============== -->
-  <section class="ways">
-    <div class="way">
-      <h3>Run it with us</h3>
-      <p>Our engineers drive the emulations inside your account, grade every technique against your own detections, and write it up.</p>
-      <a href="#pricing">See what an assessment costs &rarr;</a>
-    </div>
-    <div class="way">
-      <h3>Run it yourself</h3>
-      <p>The platform, the campaign library and the detection content, on your own schedule.</p>
-      <a href="#pricing">See what a licence costs &rarr;</a>
-    </div>
-    <div class="way">
-      <h3>Bring in the team</h3>
-      <p>Red teaming, response drills, training and hardening, delivered by our engineers as work in its own right.</p>
-      <a href="#services">See what the team does &rarr;</a>
+  <section class="who">
+    <h2 class="h-2">For the security teams that <span class="em">own cloud.</span></h2>
+    <p class="vd__sub">From the engineer tuning a rule to the security lead deciding what to improve next.</p>
+    <div class="who__grid">
+      <div class="who__col"><p class="who__lbl">Validate and improve</p>
+        <div class="who__row"><p class="who__t">Detection and cloud security engineers</p><p class="who__d">Rehearse supported techniques, inspect alert evidence and retest detection changes. Pair findings with relevant preventive controls.</p></div>
+        <div class="who__row"><p class="who__t">SOC analysts and responders</p><p class="who__d">Use exercises and response playbooks to practice investigation. Detection evidence is one input; human response readiness needs its own assessment.</p></div>
+      </div>
+      <div class="who__col"><p class="who__lbl">Decide with evidence</p>
+        <div class="who__row"><p class="who__t">Security leads, CTOs and CISOs</p><p class="who__d">See what was tested, the evidence observed, remaining uncertainty and what changed after remediation.</p></div>
+        <div class="who__row"><p class="who__t">A complement to your security program</p><p class="who__d">Repeatable lab exercises complement posture reviews and penetration testing. Results apply to the exercised environment and techniques, not every path through your production estate.</p></div>
+      </div>
     </div>
   </section>
 
-  <!-- ============== DOCS POINTER ============== -->
-  <section class="docs">
-    <div class="docs__copy">
-      <h3>Everything else is in the repo</h3>
-      <p>Campaign manifests, 115 incident-response playbooks and per-service ground truth live in git, versioned and reviewable. The site stops where the documentation starts.</p>
-    </div>
-    <a class="pill gh" href="https://github.com/MayaTrail/step1">github.com/MayaTrail</a>
+  <section class="getting-started" id="get-started" aria-labelledby="start-title">
+    <p class="eyebrow">Start with one useful exercise</p>
+    <h2 class="h-2" id="start-title">See the workflow. <span class="em">Then choose your next step.</span></h2>
+    <p class="lede">Tell us what you want to validate. We will walk through the platform and agree a practical evaluation with your team.</p>
+    <ol class="getting-started__steps">
+      <li><h3>01 / Discuss your setup</h3><p>Share your cloud platform, detection stack and the problem you want to investigate.</p></li>
+      <li><h3>02 / Take a guided demo</h3><p>Explore the emulations, detection content and evidence workflow. You do not need to connect AWS for this conversation.</p></li>
+      <li><h3>03 / Agree an evaluation</h3><p>Discuss exploratory access, lab availability and one guided exercise. Validate your own detections when your test account and SIEM integration are ready.</p></li>
+    </ol>
+    <div class="getting-started__contact"><a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20demo&amp;body=Cloud%20platform%3A%0ASIEM%20%2F%20detection%20stack%3A%0AWhat%20we%20want%20to%20validate%3A%0A">Email us for a demo</a><p>Prefer to write directly? <a href="mailto:admin@mayatrail.tech?subject=MayaTrail%20demo&amp;body=Cloud%20platform%3A%0ASIEM%20%2F%20detection%20stack%3A%0AWhat%20we%20want%20to%20validate%3A%0A">admin@mayatrail.tech</a><br>Include your cloud, SIEM and evaluation goal.</p></div>
   </section>
 
 
-  <div class="onward">
-    <a href="#services"><span class="k">Next</span><span>When you want people on the problem</span><span class="arrow">&darr;</span></a>
-  </div>
+
   </section>
 
   <section class="surface" id="services">
     <p class="surface__lbl">Services</p>
-
-  <!-- ============== HERO ============== -->
-  <section class="svc-hero">
-    <h2 class="svc-h">Hands-on security work. <span class="rest">Separate from the platform.</span></h2>
-    <p>
-      These engagements stand on their own. Our engineers do the assessments, the red teaming, the
-      response drills and the hardening whether or not you ever licence the platform. Where our own
-      tooling makes the work faster we use it, but none of it is a prerequisite. Each engagement
-      chains into the next, so a workshop can grow into a full program.
-    </p>
-  </section>
-
-  <!-- ============== ENGAGEMENT RAIL ============== -->
-  <section class="eng">
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>01</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">AWS Security training</h2>
-        <div class="eng__tags"><span>workshop</span><span>hands-on</span><span>team upskilling</span></div>
-        <p class="eng__d">Hands-on sessions on the real AWS attack surface, IAM, STS and the data services, taught through live emulations instead of slides. Your engineers learn how attackers actually move, by watching it happen.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>02</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">Incident response training</h2>
-        <div class="eng__tags"><span>live-fire</span><span>tabletop</span><span>blue team</span></div>
-        <p class="eng__d">Tabletop and live-fire IR drills against cloud breach scenarios. Your responders work real CloudTrail evidence from a cloud breach as it unfolds, so the practice looks exactly like the day it matters.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>03</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">AWS security assessment and review</h2>
-        <div class="eng__tags"><span>posture</span><span>identity</span><span>logging</span></div>
-        <p class="eng__d">A structured review of your AWS posture, identity, logging coverage and blast radius, benchmarked against how named adversaries actually operate rather than a generic checklist.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>04</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">Red teaming</h2>
-        <div class="eng__tags"><span>adversary emulation</span><span>full chain</span><span>findings report</span></div>
-        <p class="eng__d">Full adversary emulation against your environment. The named APT chains, run for real, end to end, with a findings report that maps every step to what your detections did and did not catch.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>05</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">CI/CD security</h2>
-        <div class="eng__tags"><span>pipeline</span><span>supply chain</span><span>secrets</span></div>
-        <p class="eng__d">Secure the path from commit to deploy: pipeline identity, build-time secrets, supply-chain integrity and artifact signing, so the way you ship code is not the way you get breached.</p>
-      </div>
-    </div>
-
-    <div class="eng__row">
-      <div class="eng__rail"><span class="eng__n"><b>06</b></span><span class="eng__line"></span></div>
-      <div>
-        <h2 class="eng__t">Infrastructure security</h2>
-        <div class="eng__tags"><span>network</span><span>IaC</span><span>guardrails</span></div>
-        <p class="eng__d">Harden the cloud foundation: network design, infrastructure-as-code and account guardrails, so the gaps we find stay closed and do not quietly reopen on the next deploy.</p>
-      </div>
-    </div>
-
-  </section>
-
-
-
-  <div class="onward">
-    <a href="#pricing"><span class="k">Next</span><span>What it costs</span><span class="arrow">&darr;</span></a>
-  </div>
+    <section class="svc-hero">
+      <h2 class="svc-h">Need help beyond <span class="rest">the platform?</span></h2>
+      <p>Cloud assessments, red teaming, response exercises and hands-on training are separately scoped engagements. Platform onboarding and ongoing product support are included in the annual subscription.</p>
+      <div class="hero__actions"><a class="pill line" href="services.html">Explore security services</a></div>
+    </section>
   </section>
 
   <section class="surface" id="pricing">
@@ -882,11 +811,15 @@ dangerdev / T1098.003
 
   <!-- ============== HERO ============== -->
   <section class="p-head">
-    <h2 class="p-h">Start with an assessment. <span class="rest">Keep it running if it earns its place.</span></h2>
+    <h2 class="p-h">Pricing is set with you. <span class="rest">Write to us and we will scope it.</span></h2>
     <p>
-      Most teams buy the assessment first, because it answers the question on its own:
-      which of these attacks does your stack actually catch? If the answer is uncomfortable, the
-      subscription is how you keep checking.
+      Every engagement and plan depends on your cloud accounts and
+      your detection stack, so the quickest way to a number is to ask. Write to
+      <a href="mailto:admin@mayatrail.tech?subject=MayaTrail%20pricing&amp;body=Cloud%20platform%3A%0ANumber%20of%20cloud%20accounts%3A%0ASIEM%20%2F%20detection%20stack%3A%0AWhat%20you%20want%20to%20run%3A%0A" style="color:var(--cool); text-decoration:none;">admin@mayatrail.tech</a>
+      and tell us what you want to run.
+    </p>
+    <p>
+      Start with a demo and decide whether a scoped assessment or an annual platform subscription fits your needs. We agree the evaluation scope, access requirements and deliverables with you first.
     </p>
   </section>
 
@@ -896,31 +829,29 @@ dangerdev / T1098.003
       <div class="lead-body">
         <span class="from">Cloud detection assessment</span>
         <div class="price">
-          $20,000 &ndash; 30,000
-          <span class="unit">one-off &middot; 2&ndash;3 weeks</span>
+          Contact us
+          <span class="unit">one-off &middot; scope and timing agreed with you</span>
         </div>
         <ul class="spec">
-          <li>Our engineers run the engagement. It is consulting work, scoped to <b>one AWS account</b> of yours and reached through a scoped, read-and-emulate role. No long-lived keys, ever.</li>
-          <li>We review your <b>posture, identity and logging coverage</b>, then put it under attack: <b>real adversary campaigns</b> (SCARLETEEL&nbsp;2.0, AMBERSQUID, Codefinger, DangerDev, ECScape) against a disposable environment provisioned <b>inside that account of yours</b>, well away from production, and destroyed on a TTL.</li>
-          <li>Because the attack happens <b>in your account</b>, it lands in <b>your CloudTrail</b> and reaches <b>your SIEM</b> like any other activity. Your detections get a real chance to fire.</li>
-          <li>We read that CloudTrail back and grade every step: fired, no logs, or silent.</li>
-          <li>You get the <b>detection rules</b> that close the gaps, compiled for your SIEM.</li>
-          <li>Buyable on a services line. Most teams do not need a new vendor process for it.</li>
+          <li>Our engineers run the engagement. It is consulting work, scoped to <b>one cloud account</b> of yours and reached through a scoped cross-account role. No long-lived keys, ever.</li>
+          <li>We review your <b>posture, identity and logging coverage</b>.</li>
+          <li>You get <b>supported detection content</b> and recommendations for the findings, with available SIEM export formats agreed in scope.</li>
+          <li>Scope, deliverables, access and procurement requirements agreed before work begins.</li>
         </ul>
         <div class="lead-actions">
-          <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment">Book an assessment</a>
+          <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment&amp;body=Cloud%20platform%3A%0ASIEM%20%2F%20detection%20stack%3A%0ANumber%20of%20cloud%20accounts%3A%0AWhat%20we%20want%20assessed%3A%0A">Discuss an assessment</a>
         </div>
       </div>
       <div class="lead-side">
         <div class="deliver">What you walk away with</div>
         <ul class="deliver-list">
-          <li>A coverage report per campaign: every technique, and what your stack did about it</li>
-          <li>Sigma rules for the gaps, converted to Splunk SPL or OpenSearch</li>
-          <li>An incident-response playbook per campaign</li>
-          <li>The CloudTrail evidence behind every verdict, so you can check our working</li>
-          <li>A list of the techniques we <i>cannot</i> yet test for, stated plainly</li>
+          <li>A written report on your posture, identity and logging coverage, and where the gaps are</li>
+          <li>Relevant Sigma rules with supported Splunk SPL or OpenSearch exports</li>
+          <li>Relevant incident-response playbooks and remediation guidance</li>
+          <li>The evidence behind every finding, so you can check our working</li>
+          <li>A list of what the review did <i>not</i> cover, stated plainly</li>
         </ul>
-        <p class="lead-note">The assessment credits against your first year if you go on to subscribe.</p>
+        <p class="lead-note">An assessment is optional. Any follow-on subscription is scoped and quoted separately.</p>
       </div>
     </div>
   </section>
@@ -930,45 +861,31 @@ dangerdev / T1098.003
     <div class="section-head">
       <h2 class="h-2">Then keep it <span class="em">running</span></h2>
       <p>
-        Detections rot. A rule that fired last quarter goes quiet after a log source moves or a
-        filter gets edited, and nothing tells you. An annual plan re-runs the campaigns as
-        often as you like and flags the rules that stopped firing.
+        Logging and detection changes can affect rules that worked before. Repeat and schedule exercises with your annual plan, then compare received alert evidence to investigate possible regressions.
       </p>
     </div>
 
     <div class="plans">
       <div class="plan">
-        <h3 class="plan-name">Open source</h3>
-        <p class="plan-for">Run the emulation core yourself, on your own infrastructure.</p>
-        <div class="plan-price">Free<span class="per">self-hosted</span></div>
-        <ul class="spec">
-          <li>The emulation packages, Pulumi recipes and CLI</li>
-          <li>Runs as a documented Docker Compose stack</li>
-          <li>Community support</li>
-          <li>You operate it, you keep it running</li>
-        </ul>
-        <a class="pill gh" href="https://github.com/MayaTrail/step1">View on GitHub</a>
-      </div>
-
-      <div class="plan">
-        <h3 class="plan-name">Team <span class="plan-flag">Most teams</span></h3>
-        <p class="plan-for">An engineering team that wants the loop running without operating it.</p>
-        <div class="plan-price">$25,000<span class="per">per year &middot; 1 AWS account</span></div>
+        <h3 class="plan-name">Team</h3>
+        <p class="plan-for">A security team that wants repeatable exercises, with onboarding and product support.</p>
+        <div class="plan-price">Contact us<span class="per">annual subscription &middot; account scope agreed</span></div>
         <ul class="spec">
           <li>Hosted, with the full campaign and single-technique library</li>
           <li><b>Scheduled emulations</b>, queued for the date and time you choose</li>
           <li><b>Regression detection</b>: rules that used to fire and stopped</li>
           <li>Evidence reports, exportable</li>
-          <li>SIEM rule export for every detection</li>
-          <li><b>Unlimited re-runs.</b> We never charge you for testing again</li>
+          <li>Detection exports in supported SIEM formats</li>
+          <li><b>Onboarding and ongoing product support included</b></li>
+          <li>Re-run allowances and connected-account scope agreed in your plan</li>
         </ul>
-        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20Team%20plan">Talk to us</a>
+        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20Team%20plan&amp;body=Cloud%20platform%3A%0ANumber%20of%20cloud%20accounts%3A%0ASIEM%20%2F%20detection%20stack%3A%0ATeam%20size%20and%20goals%3A%0A">Talk to us</a>
       </div>
 
       <div class="plan">
         <h3 class="plan-name">Enterprise</h3>
         <p class="plan-for">Several accounts, several teams, and someone who has to sign off on the evidence.</p>
-        <div class="plan-price">$75,000<span class="per">per year &middot; from 5 AWS accounts</span></div>
+        <div class="plan-price">Contact us<span class="per">annual subscription &middot; multiple teams and accounts</span></div>
         <ul class="spec">
           <li>Everything in Team</li>
           <li>Multiple connected accounts</li>
@@ -976,61 +893,48 @@ dangerdev / T1098.003
           <li>Named engineer, quarterly review</li>
           <li>Security review and procurement support</li>
         </ul>
-        <a class="pill line" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20Enterprise">Talk to us</a>
+        <a class="pill line" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20Enterprise&amp;body=Cloud%20platform%3A%0ANumber%20of%20cloud%20accounts%3A%0ASIEM%20%2F%20detection%20stack%3A%0ATeams%20involved%20and%20goals%3A%0A">Talk to us</a>
       </div>
     </div>
-
-    <p class="fineprint">
-      Prices in USD, excluding tax &middot; billed annually &middot; the unit is the connected AWS account
-      &middot; additional accounts $2,000 &ndash; 3,000 each
-    </p>
   </section>
 
   <!-- ============== HOW BILLING WORKS ============== -->
   <section class="s" style="padding-top:0;">
     <div class="section-head">
       <h2 class="h-2">How the billing <span class="em">actually works</span></h2>
-      <p>No seats, no per-emulation metering, no surprises on the invoice. Here is the whole model.</p>
+      <p>We agree the subscription scope before you commit. Cloud infrastructure costs are separate from the platform subscription.</p>
     </div>
 
     <div class="facts">
       <div class="fact wide">
-        <h3>Everything runs in your account, not ours</h3>
+        <h3>Validate the environment you actually exercise</h3>
         <p>
-          We provision the disposable environment inside your AWS account and attack it from there,
-          well away from production. That is not a deployment detail. It is the only way the
-          activity reaches your CloudTrail and therefore your SIEM. An emulation in our cloud
-          would prove nothing about your detections.
+          Customer validation uses a disposable lab in your test account, with telemetry routed to your detection stack. A demonstration lab explains the workflow; it does not establish coverage in your environment. Agree the account, permissions and logging configuration before connecting.
         </p>
       </div>
       <div class="fact">
-        <h3>You are billed per connected AWS account</h3>
+        <h3>Account scope is part of your quote</h3>
         <p>
-          Not per seat and not per user. Detection teams are small and we would rather three more
-          of your engineers used it than not. Add an account and it is $2,000 &ndash; 3,000 more.
+          Tell us which accounts and teams need access. Your quote will state the included scope, support and terms for adding accounts.
         </p>
       </div>
       <div class="fact">
-        <h3>Re-running is free and always will be</h3>
+        <h3>Retesting belongs in the evaluation</h3>
         <p>
-          Re-running is the behaviour that proves the product works, so charging for it would be
-          charging you for the thing we want you to do. Run a campaign fifty times in a week if
-          that is what closing the gap takes.
+          Agree an exercise you can repeat after a detection change. Platform usage terms are set in your plan, and each exercise can incur cloud infrastructure costs.
         </p>
       </div>
       <div class="fact">
-        <h3>The AWS spend is yours, and it is small</h3>
+        <h3>Review cloud costs before provisioning</h3>
         <p>
-          Emulations run in your own account, so the infrastructure appears on your bill rather
-          than ours. Our own estimates put a campaign in the order of cents per hour, and every
-          environment carries a TTL and destroys itself.
+          Infrastructure in your account appears on your cloud bill. Costs depend on the scenario, region, services and duration. Review the estimate before deployment, use scheduled cleanup and verify resources were removed.
         </p>
       </div>
       <div class="fact">
         <h3>We never hold long-lived keys</h3>
         <p>
-          Access is a scoped cross-account IAM role, assumed through STS at run time. You can
-          revoke it in one action, and nothing we store can be used to get back in.
+          Access is a scoped cross-account role, assumed at run time with short-lived credentials. You can
+          revoke the role trust to stop new sessions. Review active-session revocation separately with your AWS administrator.
         </p>
       </div>
     </div>
@@ -1044,59 +948,40 @@ dangerdev / T1098.003
     </div>
 
     <div class="faq">
-      <details>
-        <summary>Why pay, when the core is open source and so is everything else in this space?</summary>
-        <p>
-          Because running the attack is the easy half. Stratus, CloudGoat, Pacu and Atomic Red Team
-          will all execute technique against your cloud for free, and so will our own core. None of
-          them tell you whether your detections noticed. What you are paying for is the verdict
-          (fired, no logs, or silent, measured against your real CloudTrail) and
-          the loop that closes the gap and then checks it stayed closed.
-        </p>
-      </details>
+      <details><summary>What data does the alert integration use?</summary><p>The validation workflow receives detection alerts forwarded by your SIEM, rather than bulk raw logs. Alerts can still contain sensitive fields. Before connecting, agree which fields are sent, who can access them, retention and deletion requirements, and the permissions used for the exercise.</p></details>
+      <details><summary>Do we need a working SIEM to get started?</summary><p>No SIEM is needed for a conversation or guided product walkthrough. To validate your own detections, you need the relevant telemetry in your SIEM and a verified alert-forwarding integration. An emulation without that integration can demonstrate execution, but cannot prove that your detections fired.</p></details>
       <details>
         <summary>Is there a free hosted tier?</summary>
         <p>
-          No. A hosted emulation assumes a role in your AWS account and provisions real infrastructure;
-          that is not something we are willing to hand out unattended to people we have never
-          spoken to. Self-host the open source core for free, or talk to us.
+          There is no public free hosted tier. Start with a guided demo, then discuss exploratory access and lab availability. Customer-connected exercises require agreed cloud access and SIEM setup; browsing and the initial demo do not.
         </p>
       </details>
       <details>
-        <summary>Which clouds do you support?</summary>
+        <summary>Which clouds and platforms does it cover?</summary>
         <p>
-          AWS, and Kubernetes for cluster-level attacks. The five campaigns, the forty
-          single-technique emulations and the whole coverage model are built on CloudTrail,
-          and five Kubernetes emulations cover RBAC impersonation, PSA bypass, a writable
-          /var/log host escape and two MITM paths including CVE-2020-8554. Azure and GCP are
-          not supported. The plugin model is built to reach them and we would rather be
-          genuinely good at one cloud than shallow across three.
+          We started with AWS and Kubernetes, and went deep on both. For AWS that includes
+          incident-based campaigns, research-based scenarios and single-technique emulations.
+          For Kubernetes it is emulations of cluster-level attacks. Azure and GCP are next on
+          the roadmap.
+          Emulations package the attack behavior and supporting content, with infrastructure where the scenario requires it. Scope and prerequisites are stated in the product.
         </p>
       </details>
       <details>
         <summary>Do you do anything destructive to our environment?</summary>
         <p>
-          No. Campaigns run against a disposable environment we provision from code inside your
-          account, not against your production estate, and every environment carries a TTL and is
-          destroyed on schedule. The point is to generate the telemetry your detections should
-          catch, not to compromise you.
+          Emulations act on disposable resources provisioned for the exercise, and some scenarios intentionally change or destroy those resources. Use a dedicated test account and review the scenario permissions, boundaries and costs first. Cleanup is scheduled; confirm that it completes and investigate any remaining resources.
         </p>
       </details>
       <details>
         <summary>What if the assessment shows our coverage is fine?</summary>
         <p>
-          Then you have evidence you did not have before, and you should not buy the subscription
-          yet. We would rather you came back when a re-test matters than pay for a year of
-          confirming something you already know.
+          Then you have evidence for the techniques and environment assessed. Decide whether recurring exercises, detection changes or response practice justify a subscription. A successful exercise does not establish complete coverage.
         </p>
       </details>
       <details>
         <summary>What can you not test for?</summary>
         <p>
-          Every campaign declares the techniques it executes, and the product reports any of them
-          that no detection rule covers, separately from rules that ran and stayed quiet,
-          because those are our gap and not yours. You see that list in the product and in the
-          assessment report. We would rather show you the hole than round the number up.
+          Each campaign declares its techniques and scope. Lab evidence cannot establish coverage for untested techniques, every production attack path or the quality of a human investigation. Without a working alert integration, detection outcomes remain unvalidated. Review unsupported and unmeasured items alongside the findings.
         </p>
       </details>
     </div>
@@ -1107,120 +992,35 @@ dangerdev / T1098.003
     <div class="close-inner">
       <h2 class="h-2">Find out what your stack <span class="em">misses</span></h2>
       <p>
-        Tell us which AWS account you would point this at and what you are already running for
-        detection. We will tell you honestly whether we can find anything worth your money.
+        Tell us what you run for cloud security and detection. We will discuss a useful first exercise, the evidence it could produce and what it would leave untested.
       </p>
       <div class="close-row">
-        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment">Book an assessment</a>
-        <a class="pill line" href="#platform">See what an emulation concludes</a>
+        <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20assessment&amp;body=Cloud%20platform%3A%0ASIEM%20%2F%20detection%20stack%3A%0ANumber%20of%20cloud%20accounts%3A%0AWhat%20we%20want%20assessed%3A%0A">Discuss an assessment</a>
+        <a class="pill line" href="#example">Inspect the scenario</a>
       </div>
     </div>
   </section>
 
-  <div class="onward">
-    <a href="#blog"><span class="k">Next</span><span>What we are learning while we build it</span><span class="arrow">&darr;</span></a>
-  </div>
-  </section>
-
-  <section class="surface" id="blog">
-    <p class="surface__lbl">Field notes</p>
-
-  <section class="notes">
-    <h2 class="h-2">Field notes. <span class="em">Written while running these.</span></h2>
-    <p class="vd__sub">What the emulations teach us about cloud detection, published as we learn it.</p>
-
-    <div class="nlist">
-<!-- BLOG:ENTRIES -->
-      <p class="nempty">Notes land here as we publish them.</p>
-<!-- /BLOG:ENTRIES -->
-    </div>
-
-    <div class="notes__after">
-      <a class="pill line" href="blog/">All field notes</a>
-      <a class="pill gh" href="blog/feed.xml">Subscribe by RSS</a>
-    </div>
-  </section>
   </section>
 
   <footer>
     <span><b style="color:var(--ink-2)">&copy; 2026 MAYATRAIL TECH</b></span>
     <div class="links">
       <a href="#platform">Platform</a>
-      <a href="#services">Services</a>
+      <a href="services.html">Services</a>
       <a href="#pricing">Pricing</a>
-      <a href="#blog">Blog</a>
-      <a class="gh" href="https://github.com/MayaTrail/step1">GitHub &#8599;</a>
+      <a href="https://blog.mayatrail.tech">Blog &#8599;</a>
+      <a class="gh" href="https://github.com/MayaTrail">GitHub &#8599;</a>
     </div>
   </footer>
 
 </main>
 
 <script>
-/* The verdict switcher.
-   Auto-advances, fills a progress rail, holds on hover or keyboard focus, and
-   does not move at all when the visitor has asked for reduced motion. The tabs
-   are real buttons, so arrow keys work; with JavaScript off the first panel is
-   the only one not hidden and the page still reads. */
-(function () {
-  var root = document.getElementById('sw');
-  if (!root) return;
-
-  var tabs   = Array.prototype.slice.call(root.querySelectorAll('.sw__tab'));
-  var panels = Array.prototype.slice.call(root.querySelectorAll('.sw__panel'));
-  var bars   = tabs.map(function (t) { return t.querySelector('.sw__bar'); });
-  var DWELL  = 4200;
-  var TICK   = 60;
-
-  var i = 0, p = 0, held = false;
-  var reduced = false;
-  try {
-    reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  } catch (e) { reduced = false; }
-
-  function show(n) {
-    i = n; p = 0;
-    tabs.forEach(function (t, k) {
-      t.setAttribute('aria-selected', k === n ? 'true' : 'false');
-      t.tabIndex = k === n ? 0 : -1;
-      bars[k].style.width = (k === n && reduced) ? '100%' : '0%';
-    });
-    panels.forEach(function (el, k) { el.hidden = k !== n; });
-  }
-
-  function step() {
-    if (held) return;
-    p += (TICK / DWELL) * 100;
-    if (p >= 100) show((i + 1) % panels.length);
-    else bars[i].style.width = p + '%';
-  }
-
-  tabs.forEach(function (t, n) {
-    t.addEventListener('click', function () { show(n); });
-    t.addEventListener('keydown', function (ev) {
-      var next = null;
-      if (ev.key === 'ArrowRight') next = (n + 1) % tabs.length;
-      if (ev.key === 'ArrowLeft')  next = (n - 1 + tabs.length) % tabs.length;
-      if (next === null) return;
-      ev.preventDefault();
-      show(next);
-      tabs[next].focus();
-    });
-  });
-
-  root.addEventListener('mouseenter', function () { held = true; });
-  root.addEventListener('mouseleave', function () { held = false; });
-  root.addEventListener('focusin',  function () { held = true; });
-  root.addEventListener('focusout', function () { held = false; });
-
-  show(0);
-  if (!reduced) setInterval(step, TICK);
-})();
-
 /* The nav switches itself as you scroll.
    Each surface reports when it crosses the band just under the sticky nav; the
-   last one to cross owns the tab. The URL is kept in step with replaceState so
-   the address bar matches what you are looking at without stacking history
-   entries, and so a link to /#pricing still lands where it says. */
+   last one to cross owns the tab. Explicit anchor navigation keeps its URL
+   and browser history so shared links and Back remain predictable. */
 (function () {
   var links = Array.prototype.slice.call(document.querySelectorAll('#nav-links a[data-surface]'));
   var surfaces = links
@@ -1233,10 +1033,13 @@ dangerdev / T1098.003
   function mark(id) {
     if (id === current) return;
     current = id;
-    links.forEach(function (a) { a.classList.toggle('active', a.dataset.surface === id); });
-    if (history.replaceState) {
-      history.replaceState(null, '', id === 'platform' ? location.pathname : '#' + id);
-    }
+    links.forEach(function (a) {
+      var active = a.dataset.surface === id;
+      a.classList.toggle('active', active);
+      if (active) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+
   }
 
   if ('IntersectionObserver' in window) {

@@ -76,17 +76,16 @@ jobs:
             fi
             echo "OK: $1"
           }
-          # The site is one scrolling document, so the four surfaces are
-          # asserted one by one: a page that loads but lost a section fails.
+          # Assert the platform, service summary, pricing and illustrative example.
+          # The full service catalog has its own page.
           check "" "MayaTrail"
           check "index.html" 'id="platform"'
           check "index.html" 'id="services"'
           check "index.html" 'id="pricing"'
-          check "index.html" 'id="blog"'
-          check "index.html" "Every detection ends in one of"
-          # Shared before the rework, so they stay alive and land on the
-          # matching surface. They carry no content of their own.
-          check "services.html" "index.html#services"
+          check "index.html" 'href="https://blog.mayatrail.tech"'
+          check "index.html" "SCENARIO WALKTHROUGH"
+          # Services has its own content; the old pricing URL remains a redirect.
+          check "services.html" "Hands-on security work."
           check "pricing.html" "index.html#pricing"
           check "blog/" "Field notes"
           check "blog/feed.xml" "<rss"

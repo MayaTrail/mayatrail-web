@@ -180,7 +180,7 @@ def _nav(depth: int) -> str:
     up = "../" * depth
     links = [
         ("index.html", "Platform"),
-        ("index.html#services", "Services"),
+        ("services.html", "Services"),
         ("index.html#pricing", "Pricing"),
     ]
     items = "".join(f'\n      <a href="{up}{href}">{label}</a>' for href, label in links)
@@ -193,8 +193,8 @@ def _nav(depth: int) -> str:
     <div class="nav-links">{items}
       <a href="{up}blog/" class="active">Blog</a>
     </div>
-    <a class="nav-gh" href="https://github.com/MayaTrail/step1">GitHub</a>
-    <a class="nav-cta" style="white-space:nowrap;" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
+    <a class="nav-gh" href="https://github.com/MayaTrail">GitHub</a>
+    <a class="nav-cta" style="white-space:nowrap;" href="{up}index.html#get-started">Book a demo</a>
   </div>
 </nav>"""
 
@@ -202,7 +202,7 @@ def _nav(depth: int) -> str:
 def _footer(depth: int) -> str:
     up = "../" * depth
     links = [
-        ("index.html", "Platform"), ("index.html#services", "Services"),
+        ("index.html", "Platform"), ("services.html", "Services"),
         ("index.html#pricing", "Pricing"),
     ]
     items = "".join(f'\n    <a href="{up}{href}">{label}</a>' for href, label in links)
@@ -210,7 +210,7 @@ def _footer(depth: int) -> str:
   <span><b style="color:var(--ink-2)">© 2026 MAYATRAIL TECH</b></span>
   <div class="links">{items}
     <a href="{up}blog/">Blog</a>
-    <a class="gh" href="https://github.com/MayaTrail/step1">GitHub ↗</a>
+    <a class="gh" href="https://github.com/MayaTrail">GitHub ↗</a>
   </div>
 </footer>"""
 
@@ -355,7 +355,7 @@ def render_post(post: Post, newer: Post | None, older: Post | None) -> str:
     <div class="post__cta">
       <h2 class="h-2">See this in your own AWS.</h2>
       <p>MayaTrail runs a documented cloud campaign inside your account and shows which of your detections fired.</p>
-      <a class="pill" href="mailto:admin@mayatrail.tech?subject=MayaTrail%20access%20request">Request access</a>
+      <a class="pill" href="{up}index.html#get-started">Book a demo</a>
     </div>
   </article>{around_html}
 
